@@ -15,14 +15,26 @@ Printable version on A4 page: [cheatsheet-bosh-A4.pdf](cheatsheet-bosh-A4.pdf)
 
 See more CheatSheets from Denny: [here](https://github.com/topics/denny-cheatsheets)
 
-- Container
+- Check setting
 
 | Name                                        | Summary                                 |
 | :------------------------------------------ | --------------------------------------- |
+| `bosh deployments`                          | List all bosh deployments               |
+| `bosh -d $deployment_id logs`               | Download log files                      |
+| `bosh cloud-config`                         |                                         |
+| `bosh configs`                              |                                         |
 | `bosh env`                                  |                                         |
-| `bosh deployments`                          |                                         |
-| `bosh tasks --recent 10`                    |                                         |
-| `bosh task $id`                                          |                                         |
+
+- Tasks
+| Name                                        | Summary                                 |
+| :------------------------------------------ | --------------------------------------- |
+| `bosh tasks --recent 10`                    | List recent tasks                       |
+| `bosh task $id`                             | Show task by id                         |
+
+- Misc
+| Name                                        | Summary                                 |
+| :------------------------------------------ | --------------------------------------- |
+| `apt install bosh-cli`                      | Install bosh                            |
 
 - Online Help Usage
 ```
