@@ -40,9 +40,10 @@ See more CheatSheets from Denny: [here](https://github.com/topics/denny-cheatshe
 
 - Misc
 
-| Name                                        | Summary                                 |
-| :------------------------------------------ | --------------------------------------- |
-| `apt install bosh-cli`                      | Install bosh                            |
+| Name                                        | Summary                                                      |
+| :------------------------------------------ | ---------------------------------------                      |
+| `apt install bosh-cli`                      | Install bosh                                                 |
+| `delete vm`                                 | bosh delete-vm -d service-instance_c4b06291-XXX 35043957-XXX |
 
 - Online Help Usage
 ```
@@ -150,6 +151,60 @@ Available commands:
   vms                    List all VMs in all deployments                    https://bosh.io/docs/cli-v2#vms
 
 Succeeded
+```
+
+- bosh delete vm
+
+```
+kubo@jumper:~$ bosh vms
+Using environment '30.0.X.11' as client 'ops_manager'
+
+Task 291
+Task 294
+Task 292
+Task 293
+Task 291 done
+
+Task 292 done
+
+Task 294 done
+
+Task 293 done
+
+Deployment 'XXX-container-service-37f4102408dc7e3b4fcf'
+
+Instance                                                        Process State  AZ    IPs        VM CID                                   VM Type  Active  
+XXX-container-service/6245d88f-7d52-4371-a3c2-5dc023c32fe9  running        az-1  30.0.0.12  vm-b27efb7f-c0d8-42e7-bd55-d28f68b10cb7  medium   -  
+
+1 vms
+
+Deployment 'service-instance_1ee08f0f-2e8a-45f9-a1f8-5e0d608225b4'
+
+Instance                                     Process State  AZ    IPs       VM CID                                   VM Type  Active  
+master/05e56b86-b650-4ec6-a953-3de9a736517d  running        az-1  40.0.2.2  vm-4bd0dd74-2b13-4062-bc29-d5130f29ed0e  medium   -  
+worker/7881dd78-0006-4466-a4bd-ebee59477998  running        az-1  40.0.2.4  vm-d24b71a6-55bd-418e-8694-ed8bb595acd8  medium   -  
+worker/adf1ecda-700e-4d52-a675-34c8853fd063  running        az-1  40.0.2.3  vm-73dd78c2-e3d1-4030-9805-7402af9756f8  medium   -  
+
+3 vms
+
+Deployment 'service-instance_c4b06291-ed29-4b5e-89c2-ff35547db2d2'
+
+Instance                                     Process State  AZ    IPs       VM CID                                   VM Type  Active  
+master/85496f06-26aa-4dfd-b181-1c6b7e29f655  running        az-1  40.0.1.2  vm-d6938cf5-0349-488b-96c3-9c20784076ea  medium   -  
+worker/1f4cc6b9-533a-4edf-bec1-03f2fd402b8d  stopped        az-1  40.0.1.3  vm-00cf6f5b-dfe9-46df-8856-867d5fad4d1b  medium   -  
+worker/35043957-97b4-4aa5-bfda-9d495831a7e8  running        az-1  40.0.1.4  vm-b0adf348-3faa-486d-a8f5-a05128932b9a  medium   -  
+
+Succeeded
+
+kubo@jumper:~$ bosh delete-vm -d service-instance_c4b06291-ed29-4b5e-89c2-ff35547db2d2 35043957-97b4-4aa5-bfda-9d495831a7e8
+Using environment '30.0.0.11' as client 'ops_manager'
+
+Using deployment 'service-instance_c4b06291-ed29-4b5e-89c2-ff35547db2d2'
+
+Continue? [yN]: y
+
+Task 295
+. Done
 ```
 
 <a href="https://www.dennyzhang.com"><img align="right" width="201" height="268" src="https://raw.githubusercontent.com/USDevOps/mywechat-slack-group/master/images/denny_201706.png"></a>
