@@ -15,7 +15,7 @@ Printable version on A4 page: [cheatsheet-bosh-A4.pdf](cheatsheet-bosh-A4.pdf)
 
 See more CheatSheets from Denny: [here](https://github.com/topics/denny-cheatsheets)
 
-- Check setting
+- Query status
 
 | Name                                        | Summary                                 |
 | :------------------------------------------ | --------------------------------------- |
@@ -24,14 +24,22 @@ See more CheatSheets from Denny: [here](https://github.com/topics/denny-cheatshe
 | `bosh cloud-config`                         |                                         |
 | `bosh configs`                              |                                         |
 | `bosh env`                                  |                                         |
+| `bosh vms`                                  |                                         |
+| `bosh instances`                            |                                         |
 
 - Tasks
-| Name                                        | Summary                                 |
-| :------------------------------------------ | --------------------------------------- |
-| `bosh tasks --recent 10`                    | List recent tasks                       |
-| `bosh task $id`                             | Show task by id                         |
+
+| Name                                          | Summary                                 |
+| :------------------------------------------   | --------------------------------------- |
+| `bosh tasks --recent 10`                      | List recent tasks                       |
+| `bosh task -a`                                | Attach to current task                  |
+| `bosh task $id`                               | Show task by id                         |
+| `bosh events`                                 |                                         |
+| `bosh ssh -d $deployment_name $instance_name` |                                         |
+| `bosh logs -d $deployment_name`               |                                         |
 
 - Misc
+
 | Name                                        | Summary                                 |
 | :------------------------------------------ | --------------------------------------- |
 | `apt install bosh-cli`                      | Install bosh                            |
