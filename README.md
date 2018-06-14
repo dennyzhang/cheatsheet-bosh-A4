@@ -17,33 +17,36 @@ See more CheatSheets from Denny: [here](https://github.com/topics/denny-cheatshe
 
 - Query status
 
-| Name                                        | Summary                                 |
-| :------------------------------------------ | --------------------------------------- |
-| `bosh deployments`                          | List all bosh deployments               |
-| `bosh -d $deployment_id logs`               | Download log files                      |
-| `bosh cloud-config`                         |                                         |
-| `bosh configs`                              |                                         |
-| `bosh env`                                  |                                         |
-| `bosh vms`                                  |                                         |
-| `bosh instances`                            |                                         |
+| Name                        | Command                                    |
+| :-------------------------- | ------------------------------------------ |
+| List all bosh deployments   | `bosh deployments`                         |
+| Download log files          | `bosh -d $deployment_id logs`              |
+|                             | `bosh cloud-config`                        |
+|                             | `bosh configs`                             |
+| List environment            | `bosh env`                                 |
+| List vms                    | `bosh vms`                                 |
+| Get vms per deployment      | `bosh -e $env -d $deployment vms`          |
+|                             | `bosh instances`                           |
+| Cloud consistency check     | `bosh cloud-check -d $deployment`          |
 
 - Tasks
 
-| Name                                          | Summary                                 |
-| :------------------------------------------   | --------------------------------------- |
-| `bosh tasks --recent 10`                      | List recent tasks                       |
-| `bosh task -a`                                | Attach to current task                  |
-| `bosh task $id`                               | Show task by id                         |
-| `bosh events`                                 |                                         |
-| `bosh ssh -d $deployment_name $instance_name` |                                         |
-| `bosh logs -d $deployment_name`               |                                         |
+| Name                      | Command                                       |
+| :------------------------ | ------------------------------------------    |
+| List recent tasks         | `bosh tasks --recent 10`                      |
+| Attach to current task    | `bosh task -a`                                |
+| Get task by id            | `bosh task $id`                               |
+|                           | `bosh events`                                 |
+|                           | `bosh ssh -d $deployment_name $instance_name` |
+|                           | `bosh logs -d $deployment_name`               |
 
 - Misc
 
-| Name                                        | Summary                                                      |
-| :------------------------------------------ | ---------------------------------------                      |
-| `apt install bosh-cli`                      | Install bosh                                                 |
-| `delete vm`                                 | bosh delete-vm -d service-instance_c4b06291-XXX 35043957-XXX |
+| Name                  | Command                                                        |
+| :-------------------- | -------------------------------------------------------------  |
+| Install bosh          | `apt install bosh-cli`                                         |
+| delete vm             | `bosh delete-vm -d service-instance_c4b06291-XXX 35043957-XXX` |
+| ssh to vm             | `bosh -e 192.168.30.52 -d $deployment ssh $vm`                 |
 
 - Online Help Usage
 ```
