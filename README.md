@@ -28,6 +28,8 @@ See more CheatSheets from Denny: [here](https://github.com/topics/denny-cheatshe
 | Get vms per deployment      | `bosh -e $env -d $deployment vms`          |
 |                             | `bosh instances`                           |
 | Cloud consistency check     | `bosh cloud-check -d $deployment`          |
+| Show deployment manifest    | `bosh manifest -d $deployment`             |
+| List disks                  | `bosh disks -o`                            |
 
 - Tasks
 
@@ -37,7 +39,7 @@ See more CheatSheets from Denny: [here](https://github.com/topics/denny-cheatshe
 | Attach to current task    | `bosh task -a`                                |
 | Get task by id            | `bosh task $id`                               |
 |                           | `bosh events`                                 |
-|                           | `bosh ssh -d $deployment_name $instance_name` |
+| SSH to vm                 | `bosh ssh -d $deployment_name $instance_name` |
 |                           | `bosh logs -d $deployment_name`               |
 
 - Misc
@@ -208,6 +210,468 @@ Continue? [yN]: y
 
 Task 295
 . Done
+```
+
+- bosh manifest
+
+```
+kubo@jumper:~$  bosh manifest -d service-instance_1ee08f0f-2e8a-45f9-a1f8-5e0d608225b4
+Using environment '30.0.0.11' as client 'ops_manager'
+
+Using deployment 'service-instance_1ee08f0f-2e8a-45f9-a1f8-5e0d608225b4'
+
+---
+addons:
+- name: bosh-dns-aliases
+  jobs:
+  - name: kubo-dns-aliases
+    release: kubo
+name: service-instance_1ee08f0f-2e8a-45f9-a1f8-5e0d608225b4
+releases:
+- name: kubo
+  version: 0.16.3
+- name: cfcr-etcd
+  version: 1.0.2
+- name: docker
+  version: 31.1.0
+- name: pks-nsx-t
+  version: 0.9.0
+- name: pks-vrli
+  version: 0.2.0
+- name: syslog-migration
+  version: '10'
+- name: bpm
+  version: 0.4.0
+- name: wavefront-proxy
+  version: 0.3.0
+- name: pks-helpers
+  version: 28.0.0
+stemcells:
+- alias: trusty
+  os: ubuntu-trusty
+  version: '3541.25'
+instance_groups:
+- name: apply-addons
+  lifecycle: errand
+  instances: 1
+  jobs:
+  - name: apply-specs
+    release: kubo
+    consumes:
+      cloud-provider:
+        from: master-cloud-provider
+    properties:
+      addons-spec: ''
+      admin-password: EYX_b6qlSz0Ez7jNDql7GULX
+      admin-username: admin
+      api-token: "((kubelet-password))"
+      authorization-mode: rbac
+      tls:
+        heapster: "((tls-heapster))"
+        influxdb: "((tls-influxdb))"
+        kubernetes: "((tls-kubernetes))"
+        kubernetes-dashboard: "((tls-kubernetes-dashboard))"
+  - name: syslog_forwarder
+    release: syslog-migration
+    properties:
+      syslog:
+        address: ''
+        ca_cert: 
+        migration:
+          disabled: false
+        permitted_peer: ''
+        port: '514'
+        tls_enabled: false
+        transport: tcp
+  vm_type: micro
+  stemcell: trusty
+  azs:
+  - az-1
+  networks:
+  - name: pks-1ee08f0f-2e8a-45f9-a1f8-5e0d608225b4-cluster-switch
+- name: master
+  instances: 1
+  jobs:
+  - name: bpm
+    release: bpm
+  - name: kube-apiserver
+    release: kubo
+    consumes:
+      cloud-provider:
+        from: master-cloud-provider
+    properties:
+      admin-password: EYX_b6qlSz0Ez7jNDql7GULX
+      admin-username: admin
+      authorization-mode: rbac
+      backend_port: 8443
+      kube-controller-manager-password: "((kube-controller-manager-password))"
+      kube-proxy-password: "((kube-proxy-password))"
+      kube-scheduler-password: "((kube-scheduler-password))"
+      kubelet-drain-password: "((kubelet-drain-password))"
+      kubelet-password: "((kubelet-password))"
+      port: 8443
+      route-sync-password: "((route-sync-password))"
+      service-account-public-key: "((service-account-key.public_key))"
+      tls:
+        kubernetes:
+          ca: "((tls-kubernetes.ca))"
+          certificate: "((tls-kubernetes.certificate))"
+          private_key: "((tls-kubernetes.private_key))"
+  - name: kube-controller-manager
+    release: kubo
+    consumes:
+      cloud-provider:
+        from: master-cloud-provider
+    properties:
+      api-token: "((kube-controller-manager-password))"
+      service-account-private-key: "((service-account-key.private_key))"
+      tls:
+        kubernetes: "((tls-kubernetes))"
+  - name: kube-scheduler
+    release: kubo
+    properties:
+      api-token: "((kube-scheduler-password))"
+      tls:
+        kubernetes: "((tls-kubernetes))"
+  - name: kubernetes-roles
+    release: kubo
+    consumes:
+      cloud-provider:
+        from: master-cloud-provider
+    properties:
+      admin-password: EYX_b6qlSz0Ez7jNDql7GULX
+      admin-username: admin
+      authorization-mode: rbac
+      tls:
+        kubernetes: "((tls-kubernetes))"
+  - name: etcd
+    release: cfcr-etcd
+    properties:
+      tls:
+        etcd:
+          ca: "((tls-etcd.ca))"
+          certificate: "((tls-etcd.certificate))"
+          private_key: "((tls-etcd.private_key))"
+        etcdctl:
+          ca: "((tls-etcdctl.ca))"
+          certificate: "((tls-etcdctl.certificate))"
+          private_key: "((tls-etcdctl.private_key))"
+        peer:
+          ca: "((tls-etcd.ca))"
+          certificate: "((tls-etcd.certificate))"
+          private_key: "((tls-etcd.private_key))"
+  - name: cloud-provider
+    release: kubo
+    provides:
+      cloud-provider:
+        as: master-cloud-provider
+    properties:
+      cloud-provider:
+        type: vsphere
+        vsphere:
+          datacenter: kubo-dc
+          datastore: iscsi-ds-0
+          insecure-flag: 1
+          password: Admin!23
+          server: 192.168.111.24
+          user: administrator@vsphere.local
+          vms: pcf_vms
+          working-dir: "/kubo-dc/vm/pcf_vms/aca565a2-93be-4dc2-85dd-d7a512cc0dd7"
+  - name: syslog_forwarder
+    release: syslog-migration
+    properties:
+      syslog:
+        address: ''
+        ca_cert: 
+        migration:
+          disabled: false
+        permitted_peer: ''
+        port: '514'
+        tls_enabled: false
+        transport: tcp
+  - name: pks-nsx-t-resource-check
+    release: pks-nsx-t
+    properties:
+      nsx-t-ca-cert: |-
+        -----BEGIN CERTIFICATE-----
+        MIIDZDCCAkygAwIBAgIGAWP3qchFMA0GCSqGSIb3DQEBCwUAMHMxJDAiBgNVBAMM
+        G25zeG1hbmFnZXIucGtzLnZtd2FyZS5sb2NhbDEPMA0GA1UECgwGVk13YXJlMQww
+        CgYDVQQLDANDTkExCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTESMBAGA1UEBwwJ
+        UGFsbyBBbHRvMB4XDTE4MDYxMzA1NDEyOVoXDTIzMDYxMjA1NDEyOVowczEkMCIG
+        A1UEAwwbbnN4bWFuYWdlci5wa3Mudm13YXJlLmxvY2FsMQ8wDQYDVQQKDAZWTXdh
+        cmUxDDAKBgNVBAsMA0NOQTELMAkGA1UEBhMCVVMxCzAJBgNVBAgMAkNBMRIwEAYD
+        VQQHDAlQYWxvIEFsdG8wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDZ
+        XSVftNvRA2/jQP/UL1ACKb6qR5TDNTE83ehvoZdRZUMra+R89YaS0y0jfaLk4QT0
+        jDGU/BPs6iR6HyivWwkwm8SGBxetyPkrR84UFKX9fJideRAU1TaYIc+NEn53hQjC
+        e4YR0Be5+U+yT+N8j/J8kirFydKpIk7YHSDIi3Kpa96NeHb12MhzvmEDo3Ia8bEM
+        X0oh3ZcNlCsmA2vAr8PBG4Q/ThvCG/xsWCuMTz/gKfjIn/twGl58xzH22bZsLSQN
+        cHZuZalJC4qP71UCTdpnTh9N2Bmv9v05yZEqvd452NE2l0m5AlNLlGzbBn+mekZX
+        5y47R6quaTdIpHNjrvw5AgMBAAEwDQYJKoZIhvcNAQELBQADggEBAK9mzSMZfzCs
+        ZPRXd1WF+q+OKebmhJma64QjgRzuYqCs6WI7kUqTF2k2l3o5v8e2cnJKIbig89cD
+        L7SmttBtHqdcHjKoMDujuqhCsrHntcLYYKc/cgrpQbUC8cL2eelSX0CTS4Ss2VlZ
+        saNFwvJ0Yx8P0eDIQkJ3fP57nfe6vrgAQOdU/iqhfvCqhn3RPKVXbuQTdxdBBC0X
+        8lVwa+gpSPjphOuoQvavQdi7yXB/V0ZR2a9ifEK2trrKpuMeZSaOMTbzWR3dsdCP
+        aiHDurt8SBR77mTNf0NEmeTELe6NYzOshrYV/mwLgOvzCS7UCLb7PmfgiIk3DTdc
+        9e3xcRutBgI=
+        -----END CERTIFICATE-----
+      nsx-t-host: nsxmanager.pks.vmware.local
+      nsx-t-insecure: true
+      nsx-t-password: Admin!23Admin
+      nsx-t-user: admin
+  - name: pks-nsx-t-floating-ip-association
+    release: pks-nsx-t
+    properties:
+      cluster-name: 
+      floating-ip: 192.168.150.104
+      floating-ip-pool-id: d0ece6ff-b7bb-4a55-bc22-f6ec0b7ca297
+      master-ip: 
+      nsx-t-ca-cert: |-
+        -----BEGIN CERTIFICATE-----
+        MIIDZDCCAkygAwIBAgIGAWP3qchFMA0GCSqGSIb3DQEBCwUAMHMxJDAiBgNVBAMM
+        G25zeG1hbmFnZXIucGtzLnZtd2FyZS5sb2NhbDEPMA0GA1UECgwGVk13YXJlMQww
+        CgYDVQQLDANDTkExCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTESMBAGA1UEBwwJ
+        UGFsbyBBbHRvMB4XDTE4MDYxMzA1NDEyOVoXDTIzMDYxMjA1NDEyOVowczEkMCIG
+        A1UEAwwbbnN4bWFuYWdlci5wa3Mudm13YXJlLmxvY2FsMQ8wDQYDVQQKDAZWTXdh
+        cmUxDDAKBgNVBAsMA0NOQTELMAkGA1UEBhMCVVMxCzAJBgNVBAgMAkNBMRIwEAYD
+        VQQHDAlQYWxvIEFsdG8wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDZ
+        XSVftNvRA2/jQP/UL1ACKb6qR5TDNTE83ehvoZdRZUMra+R89YaS0y0jfaLk4QT0
+        jDGU/BPs6iR6HyivWwkwm8SGBxetyPkrR84UFKX9fJideRAU1TaYIc+NEn53hQjC
+        e4YR0Be5+U+yT+N8j/J8kirFydKpIk7YHSDIi3Kpa96NeHb12MhzvmEDo3Ia8bEM
+        X0oh3ZcNlCsmA2vAr8PBG4Q/ThvCG/xsWCuMTz/gKfjIn/twGl58xzH22bZsLSQN
+        cHZuZalJC4qP71UCTdpnTh9N2Bmv9v05yZEqvd452NE2l0m5AlNLlGzbBn+mekZX
+        5y47R6quaTdIpHNjrvw5AgMBAAEwDQYJKoZIhvcNAQELBQADggEBAK9mzSMZfzCs
+        ZPRXd1WF+q+OKebmhJma64QjgRzuYqCs6WI7kUqTF2k2l3o5v8e2cnJKIbig89cD
+        L7SmttBtHqdcHjKoMDujuqhCsrHntcLYYKc/cgrpQbUC8cL2eelSX0CTS4Ss2VlZ
+        saNFwvJ0Yx8P0eDIQkJ3fP57nfe6vrgAQOdU/iqhfvCqhn3RPKVXbuQTdxdBBC0X
+        8lVwa+gpSPjphOuoQvavQdi7yXB/V0ZR2a9ifEK2trrKpuMeZSaOMTbzWR3dsdCP
+        aiHDurt8SBR77mTNf0NEmeTELe6NYzOshrYV/mwLgOvzCS7UCLb7PmfgiIk3DTdc
+        9e3xcRutBgI=
+        -----END CERTIFICATE-----
+      nsx-t-host: nsxmanager.pks.vmware.local
+      nsx-t-insecure: true
+      nsx-t-password: Admin!23Admin
+      nsx-t-user: admin
+      release-floating-ip: false
+      t0-router-id: 1748c98f-aeda-416f-b3bb-a60d1b37f441
+  vm_type: medium
+  stemcell: trusty
+  persistent_disk_type: '10240'
+  azs:
+  - az-1
+  networks:
+  - name: pks-1ee08f0f-2e8a-45f9-a1f8-5e0d608225b4-cluster-switch
+- name: worker
+  instances: 2
+  jobs:
+  - name: docker
+    release: docker
+    properties:
+      bip: 172.17.0.1/24
+      default_ulimits:
+      - nofile=65536
+      env: {}
+      flannel: false
+      ip_masq: false
+      iptables: false
+      log_level: error
+      log_options:
+      - max-size=128m
+      - max-file=2
+      storage_driver: overlay
+      store_dir: "/var/vcap/store"
+      tls_cacert: "((tls-docker.ca))"
+      tls_cert: "((tls-docker.certificate))"
+      tls_key: "((tls-docker.private_key))"
+  - name: kubernetes-dependencies
+    release: kubo
+  - name: kubelet
+    release: kubo
+    consumes:
+      cloud-provider:
+        from: worker-cloud-provider
+    properties:
+      api-token: "((kubelet-password))"
+      drain-api-token: "((kubelet-drain-password))"
+      tls:
+        kubelet: "((tls-kubelet))"
+        kubernetes: "((tls-kubernetes))"
+  - name: kube-proxy
+    release: kubo
+    properties:
+      api-token: "((kube-proxy-password))"
+      tls:
+        kubernetes: "((tls-kubernetes))"
+  - name: drain-cluster
+    release: pks-helpers
+  - name: cloud-provider
+    release: kubo
+    provides:
+      cloud-provider:
+        as: worker-cloud-provider
+    properties:
+      cloud-provider:
+        type: vsphere
+        vsphere:
+          datacenter: kubo-dc
+          datastore: iscsi-ds-0
+          insecure-flag: 1
+          password: Admin!23
+          server: 192.168.111.24
+          user: administrator@vsphere.local
+          vms: pcf_vms
+          working-dir: "/kubo-dc/vm/pcf_vms/aca565a2-93be-4dc2-85dd-d7a512cc0dd7"
+  - name: syslog_forwarder
+    release: syslog-migration
+    properties:
+      syslog:
+        address: ''
+        ca_cert: 
+        migration:
+          disabled: false
+        permitted_peer: ''
+        port: '514'
+        tls_enabled: false
+        transport: tcp
+  - name: nsx-pod-networking
+    release: pks-nsx-t
+  - name: ncp
+    release: pks-nsx-t
+    properties:
+      authorization-mode: rbac
+      nsx-t-ca-cert: |-
+        -----BEGIN CERTIFICATE-----
+        MIIDZDCCAkygAwIBAgIGAWP3qchFMA0GCSqGSIb3DQEBCwUAMHMxJDAiBgNVBAMM
+        G25zeG1hbmFnZXIucGtzLnZtd2FyZS5sb2NhbDEPMA0GA1UECgwGVk13YXJlMQww
+        CgYDVQQLDANDTkExCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTESMBAGA1UEBwwJ
+        UGFsbyBBbHRvMB4XDTE4MDYxMzA1NDEyOVoXDTIzMDYxMjA1NDEyOVowczEkMCIG
+        A1UEAwwbbnN4bWFuYWdlci5wa3Mudm13YXJlLmxvY2FsMQ8wDQYDVQQKDAZWTXdh
+        cmUxDDAKBgNVBAsMA0NOQTELMAkGA1UEBhMCVVMxCzAJBgNVBAgMAkNBMRIwEAYD
+        VQQHDAlQYWxvIEFsdG8wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDZ
+        XSVftNvRA2/jQP/UL1ACKb6qR5TDNTE83ehvoZdRZUMra+R89YaS0y0jfaLk4QT0
+        jDGU/BPs6iR6HyivWwkwm8SGBxetyPkrR84UFKX9fJideRAU1TaYIc+NEn53hQjC
+        e4YR0Be5+U+yT+N8j/J8kirFydKpIk7YHSDIi3Kpa96NeHb12MhzvmEDo3Ia8bEM
+        X0oh3ZcNlCsmA2vAr8PBG4Q/ThvCG/xsWCuMTz/gKfjIn/twGl58xzH22bZsLSQN
+        cHZuZalJC4qP71UCTdpnTh9N2Bmv9v05yZEqvd452NE2l0m5AlNLlGzbBn+mekZX
+        5y47R6quaTdIpHNjrvw5AgMBAAEwDQYJKoZIhvcNAQELBQADggEBAK9mzSMZfzCs
+        ZPRXd1WF+q+OKebmhJma64QjgRzuYqCs6WI7kUqTF2k2l3o5v8e2cnJKIbig89cD
+        L7SmttBtHqdcHjKoMDujuqhCsrHntcLYYKc/cgrpQbUC8cL2eelSX0CTS4Ss2VlZ
+        saNFwvJ0Yx8P0eDIQkJ3fP57nfe6vrgAQOdU/iqhfvCqhn3RPKVXbuQTdxdBBC0X
+        8lVwa+gpSPjphOuoQvavQdi7yXB/V0ZR2a9ifEK2trrKpuMeZSaOMTbzWR3dsdCP
+        aiHDurt8SBR77mTNf0NEmeTELe6NYzOshrYV/mwLgOvzCS7UCLb7PmfgiIk3DTdc
+        9e3xcRutBgI=
+        -----END CERTIFICATE-----
+      nsx-t-host: nsxmanager.pks.vmware.local
+      nsx-t-insecure: true
+      nsx-t-password: Admin!23Admin
+      nsx-t-user: admin
+      use-native-loadbalancer: true
+  vm_type: medium
+  stemcell: trusty
+  persistent_disk_type: '10240'
+  azs:
+  - az-1
+  networks:
+  - name: pks-1ee08f0f-2e8a-45f9-a1f8-5e0d608225b4-cluster-switch
+update:
+  canaries: 1
+  canary_watch_time: 10000-300000
+  update_watch_time: 10000-300000
+  max_in_flight: 1
+  serial: true
+properties:
+  kubernetes-api-url: https://192.168.150.104:8443
+  nsxt_network: true
+variables:
+- name: kubelet-password
+  type: password
+- name: kubelet-drain-password
+  type: password
+- name: kube-proxy-password
+  type: password
+- name: kube-controller-manager-password
+  type: password
+- name: kube-scheduler-password
+  type: password
+- name: route-sync-password
+  type: password
+- name: kubo_ca
+  type: certificate
+  options:
+    common_name: ca
+    is_ca: true
+- name: tls-kubelet
+  type: certificate
+  options:
+    alternative_names: []
+    ca: kubo_ca
+    common_name: kubelet.cfcr.internal
+    organization: system:nodes
+- name: tls-kubernetes
+  type: certificate
+  options:
+    alternative_names:
+    - 10.100.200.1
+    - kubernetes
+    - kubernetes.default
+    - kubernetes.default.svc
+    - kubernetes.default.svc.cluster.local
+    - master.cfcr.internal
+    - 192.168.150.104
+    ca: "/p-bosh/pivotal-container-service-37f4102408dc7e3b4fcf/kubo_odb_ca"
+    common_name: 192.168.150.104
+    organization: system:masters
+- name: service-account-key
+  type: rsa
+- name: tls-docker
+  type: certificate
+  options:
+    ca: kubo_ca
+    common_name: docker.cfcr.internal
+- name: tls-etcd
+  type: certificate
+  options:
+    alternative_names:
+    - master.cfcr.internal
+    ca: kubo_ca
+    common_name: master.cfcr.internal
+    extended_key_usage:
+    - client_auth
+    - server_auth
+- name: tls-etcdctl
+  type: certificate
+  options:
+    ca: kubo_ca
+    common_name: etcdClient
+    extended_key_usage:
+    - client_auth
+- name: tls-heapster
+  type: certificate
+  options:
+    alternative_names:
+    - heapster.kube-system.svc.cluster.local
+    ca: kubo_ca
+    common_name: heapster
+- name: tls-influxdb
+  type: certificate
+  options:
+    alternative_names: []
+    ca: kubo_ca
+    common_name: monitoring-influxdb
+- name: kubernetes-dashboard-ca
+  type: certificate
+  options:
+    common_name: ca
+    is_ca: true
+- name: tls-kubernetes-dashboard
+  type: certificate
+  options:
+    alternative_names: []
+    ca: kubernetes-dashboard-ca
+    common_name: kubernetesdashboard.cfcr.internal
+features:
+  use_dns_addresses: true
+
+Succeeded
 ```
 
 <a href="https://www.dennyzhang.com"><img align="right" width="201" height="268" src="https://raw.githubusercontent.com/USDevOps/mywechat-slack-group/master/images/denny_201706.png"></a>
