@@ -35,7 +35,7 @@ See more CheatSheets from Denny: [here](https://github.com/topics/denny-cheatshe
 
 | Name                      | Command                                       |
 | :------------------------ | ------------------------------------------    |
-| List recent tasks         | `bosh tasks --recent 10`                      |
+| List recent tasks         | `bosh tasks --recent`                      |
 | Attach to current task    | `bosh task -a`                                |
 | Get task by id            | `bosh task $id`                               |
 |                           | `bosh events`                                 |
@@ -48,6 +48,7 @@ See more CheatSheets from Denny: [here](https://github.com/topics/denny-cheatshe
 | :-------------------- | -------------------------------------------------------------  |
 | Install bosh          | `apt install bosh-cli`                                         |
 | delete vm             | `bosh delete-vm -d service-instance_c4b06291-XXX 35043957-XXX` |
+| delete deployment     | `bosh delete-deployment -d wf-deployment-0-7-0-dev-4`          |
 | ssh to vm             | `bosh -e 192.168.30.52 -d $deployment ssh $vm`                 |
 
 - Online Help Usage
@@ -617,7 +618,7 @@ variables:
     - kubernetes.default.svc.cluster.local
     - master.cfcr.internal
     - 192.168.150.104
-    ca: "/p-bosh/pivotal-container-service-37f4102408dc7e3b4fcf/kubo_odb_ca"
+    ca: "/p-bosh/psss-container-service-37f4102408dc7e3b4fcf/kubo_odb_ca"
     common_name: 192.168.150.104
     organization: system:masters
 - name: service-account-key
