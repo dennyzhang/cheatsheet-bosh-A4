@@ -1,5 +1,5 @@
 * org-mode configuration                                           :noexport:
-#+STARTUP: overview customtime noalign logdone hidestars
+#+STARTUP: overview customtime noalign logdone showall
 #+TITLE:  Bosh CheatSheet
 #+DESCRIPTION: 
 #+KEYWORDS: 
@@ -35,8 +35,9 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Download log files        | =bosh -d $deployment_id logs=     |
 |                           | =bosh cloud-config=               |
 |                           | =bosh configs=                    |
-| List environment          | =bosh env=                        |
+| List environment          | =bosh env=, =bosh env --json=     |
 | List vms                  | =bosh vms=                        |
+| List all instances        | =bosh instances=                  |
 | Get vms per deployment    | =bosh -e $env -d $deployment vms= |
 |                           | =bosh instances=                  |
 | Cloud consistency check   | =bosh cloud-check -d $deployment= |
@@ -45,23 +46,35 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 
 ** Tasks
 
-| Name                   | Command                                       |
-|------------------------+-----------------------------------------------|
-| List recent tasks      | =bosh tasks --recent=                         |
-| Attach to current task | =bosh task -a=                                |
-| Get task by id         | =bosh task $id=                               |
-|                        | =bosh events=                                 |
-| SSH to vm              | =bosh ssh -d $deployment_name $instance_name= |
-|                        | =bosh logs -d $deployment_name=               |
+| Name                   | Command                                                             |
+|------------------------+---------------------------------------------------------------------|
+| List recent tasks      | =bosh tasks --recent=                                               |
+| Attach to current task | =bosh task -a=                                                      |
+| Get task by id         | =bosh task $id=                                                     |
+|                        | =bosh events=                                                       |
+| SSH to vm              | =bosh ssh -d $deployment_name $instance_name=                       |
+|                        | =bosh logs -d $deployment_name=                                     |
+
+** Stellcell
+| Name            | Command                                                             |
+|-----------------+---------------------------------------------------------------------|
+| Upload stemcell | =bosh -n upload-stemcell /tmp/build/4dc76cXX/stemcell/stemcell.tgz= |
+| List stemcells  | =bosh -n stemcells=                                                 |
+
+** errand
+| Name       | Command                                                         |
+|------------+-----------------------------------------------------------------|
+| Run errand | =bosh -n -d my-deployment-0-8-0-dev-16 run-errand apply-addons= |
 
 ** Misc
 
-| Name              | Command                                                        |
-|-------------------+----------------------------------------------------------------|
-| Install bosh      | =apt install bosh-cli=                                         |
-| delete vm         | =bosh delete-vm -d service-instance_c4b06291-XXX 35043957-XXX= |
-| delete deployment | =bosh delete-deployment -d wf-deployment-0-7-0-dev-4=          |
-| ssh to vm         | =bosh -e 192.168.30.52 -d $deployment ssh $vm=                 |
+| Name                        | Command                                                                             |
+|-----------------------------+-------------------------------------------------------------------------------------|
+| bosh interpolates variables | =bosh int /tmp/build/4dc76cXXX/pks-lock/metadata --path=/ops_manager/username= [[https://bosh.io/docs/cli-int/][link]] |
+| Install bosh                | =apt install bosh-cli=                                                              |
+| delete vm                   | =bosh delete-vm -d service-instance_c4b06291-XXX 35043957-XXX=                      |
+| delete deployment           | =bosh delete-deployment -d wf-deployment-0-7-0-dev-4=                               |
+| ssh to vm                   | =bosh -e 192.168.30.52 -d $deployment ssh $vm=                                      |
 
 * Online Help Usage
 #+BEGIN_EXAMPLE
