@@ -16,9 +16,9 @@
 * Summary
 #+BEGIN_HTML
 <a href="https://www.linkedin.com/in/dennyzhang001"><img src="https://www.dennyzhang.com/wp-content/uploads/sns/linkedin.png" alt="linkedin" /></a>
-<a href="https://boshhub.com/DennyZhang"><img src="https://www.dennyzhang.com/wp-content/uploads/sns/boshhub.png" alt="boshhub" /></a>
+<a href="https://github.com/DennyZhang"><img src="https://www.dennyzhang.com/wp-content/uploads/sns/boshhub.png" alt="boshhub" /></a>
 <a href="https://www.dennyzhang.com/slack" target="_blank" rel="nofollow"><img src="http://slack.dennyzhang.com/badge.svg" alt="slack"/></a>
-<a href="https://boshhub.com/DennyZhang"><img align="right" width="200" height="183" src="https://www.dennyzhang.com/wp-content/uploads/denny/watermark/boshhub.png" /></a>
+<a href="https://github.com/DennyZhang"><img align="right" width="200" height="183" src="https://www.dennyzhang.com/wp-content/uploads/denny/watermark/boshhub.png" /></a>
 
 <br/><br/>
 
@@ -32,39 +32,39 @@ See more CheatSheets from Denny: [[https://boshhub.com/topics/denny-cheatsheets]
 * CheatSheet
 ** Query status
 
-| Name                        | Command                                    |
-| :-------------------------- | ------------------------------------------ |
-| List all bosh deployments   | `bosh deployments`                         |
-| Download log files          | `bosh -d $deployment_id logs`              |
-|                             | `bosh cloud-config`                        |
-|                             | `bosh configs`                             |
-| List environment            | `bosh env`                                 |
-| List vms                    | `bosh vms`                                 |
-| Get vms per deployment      | `bosh -e $env -d $deployment vms`          |
-|                             | `bosh instances`                           |
-| Cloud consistency check     | `bosh cloud-check -d $deployment`          |
-| Show deployment manifest    | `bosh manifest -d $deployment`             |
-| List disks                  | `bosh disks -o`                            |
+| Name                      | Command                           |
+|---------------------------+-----------------------------------|
+| List all bosh deployments | `bosh deployments`                |
+| Download log files        | `bosh -d $deployment_id logs`     |
+|                           | `bosh cloud-config`               |
+|                           | `bosh configs`                    |
+| List environment          | `bosh env`                        |
+| List vms                  | `bosh vms`                        |
+| Get vms per deployment    | `bosh -e $env -d $deployment vms` |
+|                           | `bosh instances`                  |
+| Cloud consistency check   | `bosh cloud-check -d $deployment` |
+| Show deployment manifest  | `bosh manifest -d $deployment`    |
+| List disks                | `bosh disks -o`                   |
 
 ** Tasks
 
-| Name                      | Command                                       |
-| :------------------------ | ------------------------------------------    |
-| List recent tasks         | `bosh tasks --recent`                      |
-| Attach to current task    | `bosh task -a`                                |
-| Get task by id            | `bosh task $id`                               |
-|                           | `bosh events`                                 |
-| SSH to vm                 | `bosh ssh -d $deployment_name $instance_name` |
-|                           | `bosh logs -d $deployment_name`               |
+| Name                   | Command                                       |
+|------------------------+-----------------------------------------------|
+| List recent tasks      | `bosh tasks --recent`                         |
+| Attach to current task | `bosh task -a`                                |
+| Get task by id         | `bosh task $id`                               |
+|                        | `bosh events`                                 |
+| SSH to vm              | `bosh ssh -d $deployment_name $instance_name` |
+|                        | `bosh logs -d $deployment_name`               |
 
 ** Misc
 
-| Name                  | Command                                                        |
-| :-------------------- | -------------------------------------------------------------  |
-| Install bosh          | `apt install bosh-cli`                                         |
-| delete vm             | `bosh delete-vm -d service-instance_c4b06291-XXX 35043957-XXX` |
-| delete deployment     | `bosh delete-deployment -d wf-deployment-0-7-0-dev-4`          |
-| ssh to vm             | `bosh -e 192.168.30.52 -d $deployment ssh $vm`                 |
+| Name              | Command                                                        |
+|-------------------+----------------------------------------------------------------|
+| Install bosh      | `apt install bosh-cli`                                         |
+| delete vm         | `bosh delete-vm -d service-instance_c4b06291-XXX 35043957-XXX` |
+| delete deployment | `bosh delete-deployment -d wf-deployment-0-7-0-dev-4`          |
+| ssh to vm         | `bosh -e 192.168.30.52 -d $deployment ssh $vm`                 |
 
 * Online Help Usage
 #+BEGIN_EXAMPLE
@@ -690,7 +690,7 @@ features:
 Succeeded
 #+END_EXAMPLE
 * More Resources
-https://boshhub.com/bosh-tips/tips
+https://github.com/bosh-tips/tips
 
 License: Code is licensed under [[https://www.dennyzhang.com/wp-content/mit_license.txt][MIT License]].
 #+BEGIN_HTML
