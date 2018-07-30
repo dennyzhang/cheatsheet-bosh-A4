@@ -61,10 +61,12 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Upload stemcell | =bosh -n upload-stemcell /tmp/build/4dc76cXX/stemcell/stemcell.tgz= |
 | List stemcells  | =bosh -n stemcells=                                                 |
 
-** errand
-| Name       | Command                                                         |
-|------------+-----------------------------------------------------------------|
-| Run errand | =bosh -n -d my-deployment-0-8-0-dev-16 run-errand apply-addons= |
+** Errand
+| Name                         | Command                                                                                                 |
+|------------------------------+---------------------------------------------------------------------------------------------------------|
+| List errands                 | =bosh errands -d my-deployment-0-8-0-dev-16=                                                            |
+| Run errand in a new vm       | =bosh -n -d my-deployment-0-8-0-dev-16 run-errand ${errand_name}= [[https://bosh.io/docs/cli-v2/#run-errand][run-errand]]                            |
+| Run errand in an existing vm | =bosh -n -d my-deployment-0-8-0-dev-16 run-errand ${errand_name} --instance=instance-group/instance-id= |
 
 ** Misc
 
