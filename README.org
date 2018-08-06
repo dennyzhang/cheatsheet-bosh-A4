@@ -131,6 +131,17 @@ https://bosh.io/docs/release-blobs/
  -rw------- 1 kubo kubo  15M Aug  6 10:21 telegraf:1.7-alpine.tgz
  #+END_EXAMPLE
 *** Need credentials_source to run "bosh upload-blobs"
+Need to provide config/private.yml. Something like below
+
+#+BEGIN_EXAMPLE
+---
+blobstore:
+  provider: s3
+  options:
+    access_key_id: XXXXMMMAAAMMMM
+    secret_access_key: c9EcPLbysjpafafafeweafaf23434
+#+END_EXAMPLE
+
  #+BEGIN_EXAMPLE
 
  kubo@jumper:~$ bosh upload-blobs
@@ -154,6 +165,29 @@ After we have successfully run "bosh upload-blobs", blobs.yml will be updated au
    object_id: 9028fea7-742d-4af0-784c-7dad1be15365
    sha: bf5f32036fec554f9c5dbb7fd922a5930b625594
 #+END_EXAMPLE
+*** bosh upload-blobs: console output if wrong credential
+  #+BEGIN_EXAMPLE
+  kubo@jumper:~$ bosh upload-blobs
+  Blob upload 'container-images/telegraf:1.7-alpine.tgz' (16 MB) (sha1: 71ef025187f8882035932ba04cc772f6fdf6a4e0) started
+  2018/08/06 13:51:05 Upload failed: SignatureDoesNotMatch: The request signature we calculated does not match the signature you provided. Check your Google secret key and signing method.
+	  status code: 403, request id: , host id:
+  2018/08/06 13:51:06 Upload failed: SignatureDoesNotMatch: The request signature we calculated does not match the signature you provided. Check your Google secret key and signing method.
+	  status code: 403, request id: , host id:
+  2018/08/06 13:51:06 Upload failed: SignatureDoesNotMatch: The request signature we calculated does not match the signature you provided. Check your Google secret key and signing method.
+	  status code: 403, request id: , host id:
+
+  Blob upload 'container-images/telegraf:1.7-alpine.tgz' failed
+
+  Uploading blobs:
+    Creating blob for path 'container-images/telegraf:1.7-alpine.tgz':
+      Creating blob in inner blobstore:
+        Generating blobstore ID:
+          upload failure: SignatureDoesNotMatch: The request signature we calculated does not match the signature you provided. Check your Google secret key and signing method.
+	  status code: 403, request id: , host id:
+
+  Exit code 1
+  #+END_EXAMPLE
+
 * Online Help Usage
 #+BEGIN_EXAMPLE
 kubo@jumper:~$ bosh --help
