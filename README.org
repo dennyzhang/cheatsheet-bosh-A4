@@ -17,7 +17,7 @@
 #+BEGIN_HTML
 <a href="https://www.linkedin.com/in/dennyzhang001"><img src="https://www.dennyzhang.com/wp-content/uploads/sns/linkedin.png" alt="linkedin" /></a>
 <a href="https://github.com/DennyZhang"><img src="https://www.dennyzhang.com/wp-content/uploads/sns/github.png" alt="github" /></a>
-<a href="https://www.dennyzhang.com/slack" target="_blank" rel="nofollow"><img src="http://slack.dennyzhang.com/badge.svg" alt="slack"/></a>
+<a href="https://www.dennyzhang.com/slack" target="_blank" rel="nofollow"><img src="https://slack.dennyzhang.com/badge.svg" alt="slack"/></a>
 <a href="https://github.com/DennyZhang"><img align="right" width="200" height="183" src="https://www.dennyzhang.com/wp-content/uploads/denny/watermark/github.png" /></a>
 
 <br/><br/>
@@ -28,6 +28,36 @@
 File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or star [[https://github.com/DennyZhang/cheatsheet-bosh-A4][this repo]].
 
 See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][#denny-cheatsheets]]
+
+** Basic
+- Concepts
+| Name                       | Comment                                                                                   |
+|----------------------------+-------------------------------------------------------------------------------------------|
+| Bosh Addon                 | A release job that is colocated on all VMs managed by the Director.                       |
+| Bosh Agent                 | A process that runs continuously on each VM that BOSH deploys. one Agent process per VM   |
+| Cloud ID (CID)             | ID returned from the Cloud identifying particular resource such as VM or disk.            |
+| Deployment                 | An encapsulation of software and configuration that BOSH can deploy to the cloud.         |
+| Bosh Director              | The Director is the orchestrator of deployments.                                          |
+| Director Blobstore         | A repository where BOSH stores release artifacts, logs, stemcells, and other content, etc |
+| Bosh Errand                | A short-lived job that can be triggered by an operator any time after the deploy.         |
+| Bosh Event                 | Actions taken by the Director (via user or system control) are recorded as events         |
+| Bosh Jumpbox               | A VM that acts as a single access point for the Director and deployed VMs.                |
+| Deployment manifest        | A YAML file that identifies one or more releases, stemcells and configurations            |
+| Operations file (ops file) | A YAML file that includes multiple operations to be applied to a different YAML file.     |
+| Stemcells                  | A generic VM image that BOSH clones and configures during deployment.                     |
+
+https://bosh.io/docs/terminology
+
+- Commands
+| Name                        | Command                                                                             |
+|-----------------------------+-------------------------------------------------------------------------------------|
+| Install bosh                | =apt install bosh-cli=                                                              |
+| Bosh Command                | [[https://bosh.io/docs/cli-v2/][link from pivotal]]                                                                   |
+| bosh interpolates variables | =bosh int /tmp/build/4dc76cXXX/pks-lock/metadata --path=/ops_manager/username= [[https://bosh.io/docs/cli-int/][link]] |
+| delete vm                   | =bosh delete-vm -d service-instance_c4b06291-XXX 35043957-XXX=                      |
+| delete deployment           | =bosh delete-deployment -d wf-deployment-0-7-0-dev-4=                               |
+| ssh to vm                   | =bosh -e 192.168.30.52 -d $deployment ssh $vm=                                      |
+
 ** Query status
 | Name                      | Command                           |
 |---------------------------+-----------------------------------|
@@ -46,14 +76,15 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 
 ** Tasks
 
-| Name                   | Command                                                             |
-|------------------------+---------------------------------------------------------------------|
-| List recent tasks      | =bosh tasks --recent=                                               |
-| Attach to current task | =bosh task -a=                                                      |
-| Get task by id         | =bosh task $id=                                                     |
-|                        | =bosh events=                                                       |
-| SSH to vm              | =bosh ssh -d $deployment_name $instance_name=                       |
-|                        | =bosh logs -d $deployment_name=                                     |
+| Name                          | Command                                        |
+|-------------------------------+------------------------------------------------|
+| List recent tasks             | =bosh tasks --recent=                          |
+| Attach to current task        | =bosh task -a=                                 |
+| Get task by id                | =bosh task $id=                                |
+|                               | =bosh events=                                  |
+| SSH to vm                     | =bosh ssh -d $deployment_name $instance_name=  |
+| Get all logs for a deployment | =bosh logs -d $deployment_name=                |
+| Get log for one vm            | =bosh logs -d $deployment_name $instance_name= |
 
 ** Stellcell
 | Name            | Command                                                             |
@@ -62,22 +93,67 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | List stemcells  | =bosh -n stemcells=                                                 |
 
 ** Errand
-| Name                         | Command                                                                                                 |
-|------------------------------+---------------------------------------------------------------------------------------------------------|
-| List errands                 | =bosh errands -d my-deployment-0-8-0-dev-16=                                                            |
-| Run errand in a new vm       | =bosh -n -d my-deployment-0-8-0-dev-16 run-errand ${errand_name}= [[https://bosh.io/docs/cli-v2/#run-errand][run-errand]]                            |
-| Run errand in an existing vm | =bosh -n -d my-deployment-0-8-0-dev-16 run-errand ${errand_name} --instance=instance-group/instance-id= |
+| Name                                  | Command                                                                                           |
+|---------------------------------------+---------------------------------------------------------------------------------------------------|
+| List errands                          | =bosh errands -d my-deployment-0-8-0-dev-16=                                                      |
+| Run errand in a new vm                | =bosh -n -d my-deployment-0-8-0-dev-16 run-errand ${errand_name}=                     |
+| Run errand in a new vm with env alive | =bosh -n -d my-deployment-0-8-0-dev-16 run-errand ${errand_name} --keep-alive=                    |
+| Run errand in an existing vm          | bosh -n -d my-deployment-0-8-0-dev-16 run-errand ${errand_name} --instance=worker/instance-id=XXX |
 
-** Misc
+run-errand: [[https://bosh.io/docs/cli-v2/#run-errand][link]]
+** bosh blobs
+https://bosh.io/docs/release-blobs/
 
-| Name                        | Command                                                                             |
-|-----------------------------+-------------------------------------------------------------------------------------|
-| bosh interpolates variables | =bosh int /tmp/build/4dc76cXXX/pks-lock/metadata --path=/ops_manager/username= [[https://bosh.io/docs/cli-int/][link]] |
-| Install bosh                | =apt install bosh-cli=                                                              |
-| delete vm                   | =bosh delete-vm -d service-instance_c4b06291-XXX 35043957-XXX=                      |
-| delete deployment           | =bosh delete-deployment -d wf-deployment-0-7-0-dev-4=                               |
-| ssh to vm                   | =bosh -e 192.168.30.52 -d $deployment ssh $vm=                                      |
+*** add-blob
+ #+BEGIN_EXAMPLE
+ kubo@jumper:/tmp/tmp.RgJNFQbFsV$ docker pull telegraf:1.7-alpine
+ ^[[O1.7-alpine: Pulling from library/telegraf
+ a073c86ecf9e: Pull complete
+ 5e3fc09cd317: Pull complete
+ 42f39ed2e134: Pull complete
+ 28dc5f846df8: Pull complete
+ cbf4ff759895: Pull complete
+ Digest: sha256:9bc4e7316f97ebdf33d0c1edfbf3fb0de2e7db7769d393f46463ef203c8f2c33
+ Status: Downloaded newer image for telegraf:1.7-alpine
+ kubo@jumper:/tmp/tmp.RgJNFQbFsV$ docker save telegraf:1.7-alpine | gzip > telegraf:1.7-alpine.tgz
+ #+END_EXAMPLE
 
+ #+BEGIN_EXAMPLE
+ kubo@jumper:~$ bosh add-blob /tmp/tmp.RgJNFQbFsV/telegraf:1.7-alpine.tgz container-images/telegraf:1.7-alpine.tgz
+ Added blob 'container-images/telegraf:1.7-alpine.tgz'
+
+ Succeeded
+ #+END_EXAMPLE
+
+ #+BEGIN_EXAMPLE
+ kubo@jumper:~$ ls -lth blobs/container-images
+ total 237M
+ -rw------- 1 kubo kubo  15M Aug  6 10:21 telegraf:1.7-alpine.tgz
+ #+END_EXAMPLE
+*** Need credentials_source to run "bosh upload-blobs"
+ #+BEGIN_EXAMPLE
+
+ kubo@jumper:~$ bosh upload-blobs
+ Blob upload 'container-images/dummy_image:4.27.tgz' (232 MB) (sha1: ee47c68465ea8352513c0e706517af7eb744ee74) started
+
+ Blob upload 'container-images/dummy_image:4.27.tgz' failed
+
+ Uploading blobs:
+   Creating blob for path 'container-images/dummy_image:4.27.tgz':
+     Creating blob in inner blobstore:
+       Generating blobstore ID:
+         the client operates in read only mode. Change 'credentials_source' parameter value
+
+ Exit code 1
+ #+END_EXAMPLE
+*** How to get size, object_id, sha for blobs.yml?
+After we have successfully run "bosh upload-blobs", blobs.yml will be updated automatically.
+#+BEGIN_EXAMPLE
+ container-images/telegraf:1.6-alpine.tgz:
+   size: 14016537
+   object_id: 9028fea7-742d-4af0-784c-7dad1be15365
+   sha: bf5f32036fec554f9c5dbb7fd922a5930b625594
+#+END_EXAMPLE
 * Online Help Usage
 #+BEGIN_EXAMPLE
 kubo@jumper:~$ bosh --help
@@ -710,3 +786,7 @@ License: Code is licensed under [[https://www.dennyzhang.com/wp-content/mit_lice
 
 <a href="https://www.dennyzhang.com"><img align="right" src="https://raw.githubusercontent.com/USDevOps/mywechat-slack-group/master/images/dns_small.png"></a>
 #+END_HTML
+* #  --8<-------------------------- separator ------------------------>8-- :noexport:
+* TODO Update errand setting                                       :noexport:
+https://bosh.io/docs/errands/
+* TODO Login to vm and debug                                       :noexport:
