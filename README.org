@@ -86,7 +86,7 @@ https://bosh.io/docs/terminology
 | Get all logs for a deployment | =bosh logs -d $deployment_name=                |
 | Get log for one vm            | =bosh logs -d $deployment_name $instance_name= |
 
-** Stellcell
+** Stemcell
 | Name            | Command                                                             |
 |-----------------+---------------------------------------------------------------------|
 | Upload stemcell | =bosh -n upload-stemcell /tmp/build/4dc76cXX/stemcell/stemcell.tgz= |
