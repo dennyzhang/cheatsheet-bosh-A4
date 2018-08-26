@@ -25,11 +25,11 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 - Concepts
 | Name                       | Comment                                                                                   |
 |----------------------------+-------------------------------------------------------------------------------------------|
+| Bosh Director              | The Director is the orchestrator of deployments.                                          |
 | Bosh Addon                 | A release job that is colocated on all VMs managed by the Director.                       |
 | Bosh Agent                 | A process that runs continuously on each VM that BOSH deploys. one Agent process per VM   |
 | Cloud ID (CID)             | ID returned from the Cloud identifying particular resource such as VM or disk.            |
 | Deployment                 | An encapsulation of software and configuration that BOSH can deploy to the cloud.         |
-| Bosh Director              | The Director is the orchestrator of deployments.                                          |
 | Director Blobstore         | A repository where BOSH stores release artifacts, logs, stemcells, and other content, etc |
 | Bosh Errand                | A short-lived job that can be triggered by an operator any time after the deploy.         |
 | Bosh Event                 | Actions taken by the Director (via user or system control) are recorded as events         |
@@ -37,6 +37,10 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Deployment manifest        | A YAML file that identifies one or more releases, stemcells and configurations            |
 | Operations file (ops file) | A YAML file that includes multiple operations to be applied to a different YAML file.     |
 | Stemcells                  | A generic VM image that BOSH clones and configures during deployment.                     |
+
+Links:
+
+https://bosh.cloudfoundry.org/stemcells/
 
 https://bosh.io/docs/terminology
 
@@ -816,7 +820,6 @@ License: Code is licensed under [[https://www.dennyzhang.com/wp-content/mit_lice
 #+END_HTML
 ** org-mode configuration                                          :noexport:
  #+STARTUP: overview customtime noalign logdone showall
- #+TITLE:  Bosh CheatSheet
  #+DESCRIPTION: 
  #+KEYWORDS: 
  #+AUTHOR: Denny Zhang
@@ -834,3 +837,5 @@ License: Code is licensed under [[https://www.dennyzhang.com/wp-content/mit_lice
 https://bosh.io/docs/errands/
 * TODO Login to vm and debug                                       :noexport:
 * TODO bosh interpolate                                            :noexport:
+* DONE bosh cli lessons learned: bosh client, bosh auth, bosh facility tool are mixed up :noexport:
+  CLOSED: [2018-08-22 Wed 10:18]
