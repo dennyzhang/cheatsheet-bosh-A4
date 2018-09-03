@@ -1,9 +1,11 @@
 * Bosh CheatSheet                                                     :Tools:
 :PROPERTIES:
 :type:     cloudfoundry
+:export_file_name: cheatsheet-bosh-a4.pdf
 :END:
 
-Blog URL: https://cheatsheet.dennyzhang.com/cheatsheet-bosh, Category: [[https://cheatsheet.dennyzhang.com/category/tools/][tools]]
+Blog URL: https://cheatsheet.dennyzhang.com/cheatsheet-bosh
+Category: [[https://cheatsheet.dennyzhang.com/category/tools/][tools]]
 
 #+BEGIN_HTML
 <a href="https://github.com/dennyzhang/cheatsheet-bosh-A4"><img align="right" width="200" height="183" src="https://www.dennyzhang.com/wp-content/uploads/denny/watermark/github.png" /></a>
@@ -344,8 +346,7 @@ After we have successfully run "bosh upload-blobs", blobs.yml will be updated au
  Task 295
  . Done
  #+END_EXAMPLE
-
- - bosh manifest
+*** bosh manifest                                                  :noexport:
 
  #+BEGIN_EXAMPLE
  kubo@jumper:~$  bosh manifest -d service-instance_1ee08f0f-2e8a-45f9-a1f8-5e0d608225b4
