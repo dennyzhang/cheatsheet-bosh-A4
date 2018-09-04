@@ -1,11 +1,8 @@
 * Bosh CheatSheet                                                     :Tools:
 :PROPERTIES:
 :type:     cloudfoundry
-:export_file_name: cheatsheet-bosh-a4.pdf
+:export_file_name: cheatsheet-bosh-A4.pdf
 :END:
-
-Blog URL: https://cheatsheet.dennyzhang.com/cheatsheet-bosh
-Category: [[https://cheatsheet.dennyzhang.com/category/tools/][tools]]
 
 #+BEGIN_HTML
 <a href="https://github.com/dennyzhang/cheatsheet-bosh-A4"><img align="right" width="200" height="183" src="https://www.dennyzhang.com/wp-content/uploads/denny/watermark/github.png" /></a>
@@ -18,6 +15,10 @@ Category: [[https://cheatsheet.dennyzhang.com/category/tools/][tools]]
 <br/><br/>
 <a href="http://makeapullrequest.com" target="_blank" rel="nofollow"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"/></a>
 #+END_HTML
+
+- PDF Link: [[https://github.com/dennyzhang/cheatsheet-bosh-A4/blob/master/cheatsheet-bosh-A4.pdf][cheatsheet-bosh-A4.pdf]]
+- Blog URL: https://cheatsheet.dennyzhang.com/cheatsheet-bosh
+- Category: [[https://cheatsheet.dennyzhang.com/category/tools/][tools]]
 
 File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or star [[https://github.com/DennyZhang/cheatsheet-bosh-A4][this repo]].
 
