@@ -24,38 +24,14 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 
 See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][#denny-cheatsheets]]
 
-** Basic
-- Concepts
-| Name                       | Comment                                                                                   |
-|----------------------------+-------------------------------------------------------------------------------------------|
-| Bosh Director              | The Director is the orchestrator of deployments.                                          |
-| Bosh Addon                 | A release job that is colocated on all VMs managed by the Director.                       |
-| Bosh Agent                 | A process that runs continuously on each VM that BOSH deploys. one Agent process per VM   |
-| Cloud ID (CID)             | ID returned from the Cloud identifying particular resource such as VM or disk.            |
-| Deployment                 | An encapsulation of software and configuration that BOSH can deploy to the cloud.         |
-| Director Blobstore         | A repository where BOSH stores release artifacts, logs, stemcells, and other content, etc |
-| Bosh Errand                | A short-lived job that can be triggered by an operator any time after the deploy.         |
-| Bosh Event                 | Actions taken by the Director (via user or system control) are recorded as events         |
-| Bosh Jumpbox               | A VM that acts as a single access point for the Director and deployed VMs.                |
-| Deployment manifest        | A YAML file that identifies one or more releases, stemcells and configurations            |
-| Operations file (ops file) | A YAML file that includes multiple operations to be applied to a different YAML file.     |
-| Stemcells                  | A generic VM image that BOSH clones and configures during deployment.                     |
-
-Links:
-
-https://bosh.cloudfoundry.org/stemcells/
-
-https://bosh.io/docs/terminology
-
-- Commands
-| Name                        | Command                                                                             |
-|-----------------------------+-------------------------------------------------------------------------------------|
-| Install bosh                | =apt install bosh-cli=                                                              |
-| Bosh Command                | [[https://bosh.io/docs/cli-v2/][link from pivotal]]                                                                   |
-| bosh interpolates variables | =bosh int /tmp/build/4dc76cXXX/pks-lock/metadata --path=/ops_manager/username= [[https://bosh.io/docs/cli-int/][link]] |
-| delete vm                   | =bosh delete-vm -d service-instance_c4b06291-XXX 35043957-XXX=                      |
-| delete deployment           | =bosh delete-deployment -d wf-deployment-0-7-0-dev-4=                               |
-| ssh to vm                   | =bosh -e 192.168.30.52 -d $deployment ssh $vm=                                      |
+** Commands
+| Name                   | Command                                                                             |
+|------------------------+-------------------------------------------------------------------------------------|
+| bosh                   | =apt install bosh-cli=,  [[https://bosh.io/docs/cli-v2/][link: pivotal bosh command]]                                 |
+| Interpolates variables | =bosh int /tmp/build/4dc76cXXX/pks-lock/metadata --path=/ops_manager/username= [[https://bosh.io/docs/cli-int/][link]] |
+| Delete a vm            | =bosh delete-vm -d service-instance_c4b06291-XXX 35043957-XXX=                      |
+| Delete a deployment    | =bosh delete-deployment -d wf-deployment-0-7-0-dev-4=                               |
+| SSH to vm              | =bosh -e 192.168.30.52 -d $deployment ssh $vm=                                      |
 
 ** Query status
 | Name                      | Command                           |
@@ -84,6 +60,15 @@ https://bosh.io/docs/terminology
 | SSH to vm                     | =bosh ssh -d $deployment_name $instance_name=  |
 | Get all logs for a deployment | =bosh logs -d $deployment_name=                |
 | Get log for one vm            | =bosh logs -d $deployment_name $instance_name= |
+
+** Bosh Release
+| Name                            | Command                                                                                    |
+|---------------------------------+--------------------------------------------------------------------------------------------|
+| Release folder                  | =/var/tempest/releases=                                                                    |
+| Create a local release          | =bosh create-release --tarball=myrelease-0.4.0.tgz=                                        |
+| Inspect a release               | =bosh inspect-release <my-release>/<release-version>=                                      |
+| Export a release                | =bosh -d <deployment> export-release <my-release>/<release-version> ubuntu-trusty/3586.36= |
+| Create a release from directory | =bosh init-release --dir <my-release>=                                                     |
 
 ** Stemcell
 | Name            | Command                                                             |
@@ -186,6 +171,27 @@ After we have successfully run "bosh upload-blobs", blobs.yml will be updated au
 
   Exit code 1
   #+END_EXAMPLE
+** Concepts
+| Name                       | Comment                                                                                   |
+|----------------------------+-------------------------------------------------------------------------------------------|
+| Bosh Director              | The Director is the orchestrator of deployments.                                          |
+| Bosh Addon                 | A release job that is colocated on all VMs managed by the Director.                       |
+| Bosh Agent                 | A process that runs continuously on each VM that BOSH deploys. one Agent process per VM   |
+| Cloud ID (CID)             | ID returned from the Cloud identifying particular resource such as VM or disk.            |
+| Deployment                 | An encapsulation of software and configuration that BOSH can deploy to the cloud.         |
+| Director Blobstore         | A repository where BOSH stores release artifacts, logs, stemcells, and other content, etc |
+| Bosh Errand                | A short-lived job that can be triggered by an operator any time after the deploy.         |
+| Bosh Event                 | Actions taken by the Director (via user or system control) are recorded as events         |
+| Bosh Jumpbox               | A VM that acts as a single access point for the Director and deployed VMs.                |
+| Deployment manifest        | A YAML file that identifies one or more releases, stemcells and configurations            |
+| Operations file (ops file) | A YAML file that includes multiple operations to be applied to a different YAML file.     |
+| Stemcells                  | A generic VM image that BOSH clones and configures during deployment.                     |
+
+Links:
+
+https://bosh.cloudfoundry.org/stemcells/
+
+https://bosh.io/docs/terminology
 ** Online Help Usage
  #+BEGIN_EXAMPLE
  kubo@jumper:~$ bosh --help
@@ -810,6 +816,8 @@ After we have successfully run "bosh upload-blobs", blobs.yml will be updated au
  #+END_EXAMPLE
 ** More Resources
 https://github.com/bosh-tips/tips
+
+http://engineering.pivotal.io/post/compiled-releases-for-pipelines/
 
 License: Code is licensed under [[https://www.dennyzhang.com/wp-content/mit_license.txt][MIT License]].
 #+BEGIN_HTML
