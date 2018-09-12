@@ -24,7 +24,7 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 
 See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][#denny-cheatsheets]]
 
-** Commands
+** Bosh Commands
 | Name                   | Command                                                                             |
 |------------------------+-------------------------------------------------------------------------------------|
 | bosh                   | =apt install bosh-cli=,  [[https://bosh.io/docs/cli-v2/][link: pivotal bosh command]]                                 |
@@ -32,6 +32,7 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Delete a vm            | =bosh delete-vm -d service-instance_c4b06291-XXX 35043957-XXX=                      |
 | Delete a deployment    | =bosh delete-deployment -d wf-deployment-0-7-0-dev-4=                               |
 | SSH to vm              | =bosh -e 192.168.30.52 -d $deployment ssh $vm=                                      |
+| bosh log               | =/var/vcap/bosh/log=                                                                |
 
 ** Query status
 | Name                      | Command                           |
@@ -68,21 +69,63 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Create a local release          | =bosh create-release --tarball=myrelease-0.4.0.tgz=                                        |
 | Inspect a release               | =bosh inspect-release <my-release>/<release-version>=                                      |
 | Export a release                | =bosh -d <deployment> export-release <my-release>/<release-version> ubuntu-trusty/3586.36= |
+| Tile entrance file              | =/var/tempest/workspaces/default/metadata/*.yml=                                           |
+| Tile jobs folder                | =/var/vcap/jobs=                                                                           |
+| Delete release                  | =bosh -n delete-release <my-release>/<release-version> --force=                            |
+| Upload release                  | =bosh -n upload-release /tmp/my-release-0.22.0.tgz=                                        |
 | Create a release from directory | =bosh init-release --dir <my-release>=                                                     |
+| List release                    | =bosh releases=                                                                            |
+
+** Ops manager
+| Name                                   | Command                                                                  |
+|----------------------------------------+--------------------------------------------------------------------------|
+| Release folder                         | =/var/tempest/releases=                                                  |
+| Restart Ops Manager                    | =service tempest-web stop/start=                                         |
+| Change file permision for your release | =chown tempest-web:tempest-web /var/tempest/releases/<your-release.tgz>= |
+
+** Deployment
+| Name              | Command                                                  |
+|-------------------+----------------------------------------------------------|
+| Delete deployment | =bosh -n -d <deployment-name> delete-deployment --force= |
+
+** Tile
+*** Forms in Tile
+| Name            | Command                                                                             |
+|-----------------+-------------------------------------------------------------------------------------|
+| Forms Reference | https://docs.pivotal.io/tiledev/2-1/product-template-reference.html#form-properties |
+| Example         | [[https://github.com/pivotal-cf-experimental/ops-manager-example/blob/master/example-product/metadata/example-product.yml.erb][example-product/metadata/example-product.yml.erb]]                                                                              |
+
+*** Reference
+| Name                       | Command                                                                             |
+|----------------------------+-------------------------------------------------------------------------------------|
+| Product Template Reference | https://docs.pivotal.io/tiledev/2-2/product-template-reference.html                 |
+| Property Reference         | https://docs.pivotal.io/tiledev/2-2/property-reference.html                         |
+| Tile Generator             | https://docs.pivotal.io/tiledev/2-1/tile-generator.html                             |
+| stemcells                  | https://bosh.io/stemcells/, [[https://network.pivotal.io/products/stemcells/#/releases/139780][Download link]]                                           |
+
+** Tools
+| Name | Comment                                     |
+|------+---------------------------------------------|
+| kiln | Kiln helps you maintain tile metadata. [[https://github.com/pivotal-cf/kiln][link]] |
+
+- Commands
+| Name | Command |
+|------+---------|
+|      |         |
 
 ** Stemcell
-| Name            | Command                                                             |
-|-----------------+---------------------------------------------------------------------|
-| Upload stemcell | =bosh -n upload-stemcell /tmp/build/4dc76cXX/stemcell/stemcell.tgz= |
-| List stemcells  | =bosh -n stemcells=                                                 |
+| Name            | Command                                     |
+|-----------------+---------------------------------------------|
+| Upload stemcell | =bosh -n upload-stemcell /tmp/stemcell.tgz= |
+| List stemcells  | =bosh -n stemcells=                         |
 
 ** Errand
-| Name                                  | Command                                                                                           |
-|---------------------------------------+---------------------------------------------------------------------------------------------------|
-| List errands                          | =bosh errands -d my-deployment-0-8-0-dev-16=                                                      |
-| Run errand in a new vm                | =bosh -n -d my-deployment-0-8-0-dev-16 run-errand ${errand_name}=                     |
-| Run errand in a new vm with env alive | =bosh -n -d my-deployment-0-8-0-dev-16 run-errand ${errand_name} --keep-alive=                    |
-| Run errand in an existing vm          | bosh -n -d my-deployment-0-8-0-dev-16 run-errand ${errand_name} --instance=worker/instance-id=XXX |
+| Name                                  | Command                                                                              |
+|---------------------------------------+--------------------------------------------------------------------------------------|
+| List errands                          | =bosh errands -d <deployment>=                                                       |
+| Run errand in a new vm                | =bosh -n -d <deployment> run-errand <errand_name>=                                   |
+| Run errand in a new vm with env alive | =bosh -n -d <deployment> run-errand <errand_name> --keep-alive=                      |
+| Run errand in an existing vm          | =bosh -n -d <deployment> run-errand <errand_name> --instance=worker/instance-id=XXX= |
 
 run-errand: [[https://bosh.io/docs/cli-v2/#run-errand][link]]
 ** bosh blobs
