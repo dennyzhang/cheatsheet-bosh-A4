@@ -35,20 +35,18 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | bosh log               | =/var/vcap/bosh/log=                                                                |
 
 ** Query status
-| Name                      | Command                           |
-|---------------------------+-----------------------------------|
-| List all bosh deployments | =bosh deployments=                |
-| Download log files        | =bosh -d $deployment_id logs=     |
-|                           | =bosh cloud-config=               |
-|                           | =bosh configs=                    |
-| List environment          | =bosh env=, =bosh env --json=     |
-| List vms                  | =bosh vms=                        |
-| List all instances        | =bosh instances=                  |
-| Get vms per deployment    | =bosh -e $env -d $deployment vms= |
-|                           | =bosh instances=                  |
-| Cloud consistency check   | =bosh cloud-check -d $deployment= |
-| Show deployment manifest  | =bosh manifest -d $deployment=    |
-| List disks                | =bosh disks -o=                   |
+| Name                      | Command                                             |
+|---------------------------+-----------------------------------------------------|
+| List all bosh deployments | =bosh deployments=                                  |
+| Download log files        | =bosh -d $deployment_id logs=                       |
+| bosh config               | =bosh cloud-config=, =bosh configs=                 |
+| List environment          | =bosh env=, =bosh env --json=                       |
+| List vms                  | =bosh vms=                                          |
+| List all instances        | =bosh instances=                                    |
+| Get vms per deployment    | =bosh -e $env -d $deployment vms=, =bosh instances= |
+| Cloud consistency check   | =bosh cloud-check -d $deployment=                   |
+| Show deployment manifest  | =bosh manifest -d $deployment=                      |
+| List disks                | =bosh disks -o=                                     |
 
 ** Tasks
 
@@ -57,10 +55,10 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | List recent tasks             | =bosh tasks --recent=                          |
 | Attach to current task        | =bosh task -a=                                 |
 | Get task by id                | =bosh task $id=                                |
-|                               | =bosh events=                                  |
-| SSH to vm                     | =bosh ssh -d $deployment_name $instance_name=  |
+| SSH to vm                     | =bosh -d $deployment_name ssh $instance_name=  |
 | Get all logs for a deployment | =bosh logs -d $deployment_name=                |
 | Get log for one vm            | =bosh logs -d $deployment_name $instance_name= |
+| List bosh events              | =bosh events=                                  |
 
 ** Bosh Release
 | Name                            | Command                                                                                    |
@@ -69,8 +67,6 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Create a local release          | =bosh create-release --tarball=myrelease-0.4.0.tgz=                                        |
 | Inspect a release               | =bosh inspect-release <my-release>/<release-version>=                                      |
 | Export a release                | =bosh -d <deployment> export-release <my-release>/<release-version> ubuntu-trusty/3586.36= |
-| Tile entrance file              | =/var/tempest/workspaces/default/metadata/*.yml=                                           |
-| Tile jobs folder                | =/var/vcap/jobs=                                                                           |
 | Delete release                  | =bosh -n delete-release <my-release>/<release-version> --force=                            |
 | Upload release                  | =bosh -n upload-release /tmp/my-release-0.22.0.tgz=                                        |
 | Create a release from directory | =bosh init-release --dir <my-release>=                                                     |
@@ -82,36 +78,31 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Release folder                         | =/var/tempest/releases=                                                  |
 | Restart Ops Manager                    | =service tempest-web stop/start=                                         |
 | Change file permision for your release | =chown tempest-web:tempest-web /var/tempest/releases/<your-release.tgz>= |
+| Tile entrance file                     | =/var/tempest/workspaces/default/metadata/*.yml=                         |
+| Tile jobs folder                       | =/var/vcap/jobs=                                                         |
 
 ** Deployment
 | Name              | Command                                                  |
 |-------------------+----------------------------------------------------------|
 | Delete deployment | =bosh -n -d <deployment-name> delete-deployment --force= |
 
-** Tile
-*** Forms in Tile
-| Name            | Command                                                                             |
-|-----------------+-------------------------------------------------------------------------------------|
-| Forms Reference | https://docs.pivotal.io/tiledev/2-1/product-template-reference.html#form-properties |
-| Example         | [[https://github.com/pivotal-cf-experimental/ops-manager-example/blob/master/example-product/metadata/example-product.yml.erb][example-product/metadata/example-product.yml.erb]]                                                                              |
+** Errand
+| Name                                  | Command                                                                              |
+|---------------------------------------+--------------------------------------------------------------------------------------|
+| List errands                          | =bosh errands -d <deployment>=                                                       |
+| Run errand in a new vm                | =bosh -n -d <deployment> run-errand <errand_name>=  [[https://bosh.io/docs/cli-v2/#run-errand][link: run-errand]]                 |
+| Run errand in a new vm with env alive | =bosh -n -d <deployment> run-errand <errand_name> --keep-alive=                      |
+| Run errand in an existing vm          | =bosh -n -d <deployment> run-errand <errand_name> --instance=worker/instance-id=XXX= |
 
-*** Reference
+** Tile
 | Name                       | Command                                                                             |
 |----------------------------+-------------------------------------------------------------------------------------|
+| Forms Reference            | https://docs.pivotal.io/tiledev/2-1/product-template-reference.html#form-properties |
+| Example                    | [[https://github.com/pivotal-cf-experimental/ops-manager-example/blob/master/example-product/metadata/example-product.yml.erb][example-product/metadata/example-product.yml.erb]]                                    |
 | Product Template Reference | https://docs.pivotal.io/tiledev/2-2/product-template-reference.html                 |
 | Property Reference         | https://docs.pivotal.io/tiledev/2-2/property-reference.html                         |
 | Tile Generator             | https://docs.pivotal.io/tiledev/2-1/tile-generator.html                             |
 | stemcells                  | https://bosh.io/stemcells/, [[https://network.pivotal.io/products/stemcells/#/releases/139780][Download link]]                                           |
-
-** Tools
-| Name | Comment                                     |
-|------+---------------------------------------------|
-| kiln | Kiln helps you maintain tile metadata. [[https://github.com/pivotal-cf/kiln][link]] |
-
-- Commands
-| Name | Command |
-|------+---------|
-|      |         |
 
 ** Stemcell
 | Name            | Command                                     |
@@ -119,15 +110,10 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Upload stemcell | =bosh -n upload-stemcell /tmp/stemcell.tgz= |
 | List stemcells  | =bosh -n stemcells=                         |
 
-** Errand
-| Name                                  | Command                                                                              |
-|---------------------------------------+--------------------------------------------------------------------------------------|
-| List errands                          | =bosh errands -d <deployment>=                                                       |
-| Run errand in a new vm                | =bosh -n -d <deployment> run-errand <errand_name>=                                   |
-| Run errand in a new vm with env alive | =bosh -n -d <deployment> run-errand <errand_name> --keep-alive=                      |
-| Run errand in an existing vm          | =bosh -n -d <deployment> run-errand <errand_name> --instance=worker/instance-id=XXX= |
-
-run-errand: [[https://bosh.io/docs/cli-v2/#run-errand][link]]
+** Tools
+| Name | Comment                                     |
+|------+---------------------------------------------|
+| kiln | Kiln helps you maintain tile metadata. [[https://github.com/pivotal-cf/kiln][link]] |
 ** bosh blobs
 https://bosh.io/docs/release-blobs/
 
@@ -903,3 +889,10 @@ https://bosh.io/docs/errands/
 * TODO bosh interpolate                                            :noexport:
 * DONE bosh cli lessons learned: bosh client, bosh auth, bosh facility tool are mixed up :noexport:
   CLOSED: [2018-08-22 Wed 10:18]
+* TODO tile packages                                               :noexport:
+https://bosh.io/docs/packages/
+
+https://gitlab.eng.vmware.com/PKS/wavefront-proxy-release/issues/14
+
+https://gitlab.eng.vmware.com/PKS/pks-vrli-release/commit/7f8bda1c5ce9a9c44c2f41c6ee88a9f5ad5eb461
+
