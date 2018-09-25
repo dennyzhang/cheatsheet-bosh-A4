@@ -16,13 +16,22 @@
 <a href="http://makeapullrequest.com" target="_blank" rel="nofollow"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"/></a>
 #+END_HTML
 
-- PDF Link: [[https://github.com/dennyzhang/cheatsheet-bosh-A4/blob/master/cheatsheet-bosh-A4.pdf][cheatsheet-bosh-A4.pdf]]
+- PDF Link: [[https://github.com/dennyzhang/cheatsheet-bosh-A4/blob/master/cheatsheet-bosh-A4.pdf][cheatsheet-bosh-A4.pdf]], Category: [[https://cheatsheet.dennyzhang.com/category/tools/][tools]]
 - Blog URL: https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4
-- Category: [[https://cheatsheet.dennyzhang.com/category/tools/][tools]]
 
 File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or star [[https://github.com/DennyZhang/cheatsheet-bosh-A4][this repo]].
 
 See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][#denny-cheatsheets]]
+
+** Concepts
+| Name                          | Command                       |
+|-------------------------------+-------------------------------|
+| Release                       |                               |
+| Jobs                          |                               |
+| Errands                       |                               |
+| Tile                          |                               |
+| BBR (bosh-backup-and-restore) | [[https://docs.cloudfoundry.org/bbr/][link: bosh-backup-and-restore]] |
+| bbl (bosh-bootloader)         | [[https://github.com/cloudfoundry/bosh-bootloader][GitHub: bosh-bootloader]]       |
 
 ** Bosh Commands
 | Name                   | Command                                                                             |
@@ -37,7 +46,7 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 ** Query status
 | Name                      | Command                                             |
 |---------------------------+-----------------------------------------------------|
-| List all bosh deployments | =bosh deployments=                                  |
+| List all bosh deployments | =bosh -n deployments=                               |
 | Download log files        | =bosh -d $deployment_id logs=                       |
 | bosh config               | =bosh cloud-config=, =bosh configs=                 |
 | List environment          | =bosh env=, =bosh env --json=                       |
@@ -63,6 +72,7 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 ** Bosh Release
 | Name                            | Command                                                                                    |
 |---------------------------------+--------------------------------------------------------------------------------------------|
+| List release                    | =bosh -n releases=                                                                         |
 | Release folder                  | =/var/tempest/releases=                                                                    |
 | Create a local release          | =bosh create-release --tarball=myrelease-0.4.0.tgz=                                        |
 | Inspect a release               | =bosh inspect-release <my-release>/<release-version>=                                      |
@@ -70,7 +80,6 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Delete release                  | =bosh -n delete-release <my-release>/<release-version> --force=                            |
 | Upload release                  | =bosh -n upload-release /tmp/my-release-0.22.0.tgz=                                        |
 | Create a release from directory | =bosh init-release --dir <my-release>=                                                     |
-| List release                    | =bosh releases=                                                                            |
 
 ** Ops manager
 | Name                                   | Command                                                                  |
@@ -118,7 +127,7 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 https://bosh.io/docs/release-blobs/
 
 *** add-blob
- #+BEGIN_EXAMPLE
+#+BEGIN_EXAMPLE
  kubo@jumper:/tmp/tmp.RgJNFQbFsV$ docker pull telegraf:1.7-alpine
  ^[[O1.7-alpine: Pulling from library/telegraf
  a073c86ecf9e: Pull complete
@@ -129,20 +138,20 @@ https://bosh.io/docs/release-blobs/
  Digest: sha256:9bc4e7316f97ebdf33d0c1edfbf3fb0de2e7db7769d393f46463ef203c8f2c33
  Status: Downloaded newer image for telegraf:1.7-alpine
  kubo@jumper:/tmp/tmp.RgJNFQbFsV$ docker save telegraf:1.7-alpine | gzip > telegraf:1.7-alpine.tgz
- #+END_EXAMPLE
+#+END_EXAMPLE
 
- #+BEGIN_EXAMPLE
+#+BEGIN_EXAMPLE
  kubo@jumper:~$ bosh add-blob /tmp/tmp.RgJNFQbFsV/telegraf:1.7-alpine.tgz container-images/telegraf:1.7-alpine.tgz
  Added blob 'container-images/telegraf:1.7-alpine.tgz'
 
  Succeeded
- #+END_EXAMPLE
+#+END_EXAMPLE
 
- #+BEGIN_EXAMPLE
+#+BEGIN_EXAMPLE
  kubo@jumper:~$ ls -lth blobs/container-images
  total 237M
  -rw------- 1 kubo kubo  15M Aug  6 10:21 telegraf:1.7-alpine.tgz
- #+END_EXAMPLE
+#+END_EXAMPLE
 *** Need credentials_source to run "bosh upload-blobs"
 Need to provide config/private.yml. Something like below
 
@@ -155,7 +164,7 @@ blobstore:
     secret_access_key: c9EcPLbysjpafafafeweafaf23434
 #+END_EXAMPLE
 
- #+BEGIN_EXAMPLE
+#+BEGIN_EXAMPLE
 
  kubo@jumper:~$ bosh upload-blobs
  Blob upload 'container-images/dummy_image:4.27.tgz' (232 MB) (sha1: ee47c68465ea8352513c0e706517af7eb744ee74) started
@@ -169,7 +178,7 @@ blobstore:
          the client operates in read only mode. Change 'credentials_source' parameter value
 
  Exit code 1
- #+END_EXAMPLE
+#+END_EXAMPLE
 *** How to get size, object_id, sha for blobs.yml?
 After we have successfully run "bosh upload-blobs", blobs.yml will be updated automatically.
 #+BEGIN_EXAMPLE
@@ -222,7 +231,7 @@ https://bosh.cloudfoundry.org/stemcells/
 
 https://bosh.io/docs/terminology
 ** Online Help Usage
- #+BEGIN_EXAMPLE
+#+BEGIN_EXAMPLE
  kubo@jumper:~$ bosh --help
  Usage:
    bosh [OPTIONS] <command>
@@ -327,11 +336,11 @@ https://bosh.io/docs/terminology
    vms                    List all VMs in all deployments                    https://bosh.io/docs/cli-v2#vms
 
  Succeeded
- #+END_EXAMPLE
+#+END_EXAMPLE
 
  - bosh delete vm
 
- #+BEGIN_EXAMPLE
+#+BEGIN_EXAMPLE
  kubo@jumper:~$ bosh vms
  Using environment '30.0.X.11' as client 'ops_manager'
 
@@ -381,10 +390,10 @@ https://bosh.io/docs/terminology
 
  Task 295
  . Done
- #+END_EXAMPLE
+#+END_EXAMPLE
 *** bosh manifest                                                  :noexport:
 
- #+BEGIN_EXAMPLE
+#+BEGIN_EXAMPLE
  kubo@jumper:~$  bosh manifest -d service-instance_1ee08f0f-2e8a-45f9-a1f8-5e0d608225b4
  Using environment '30.0.0.11' as client 'ops_manager'
 
@@ -842,7 +851,7 @@ https://bosh.io/docs/terminology
    use_dns_addresses: true
 
  Succeeded
- #+END_EXAMPLE
+#+END_EXAMPLE
 ** More Resources
 https://github.com/bosh-tips/tips
 
@@ -857,7 +866,7 @@ License: Code is licensed under [[https://www.dennyzhang.com/wp-content/mit_lice
 <a href="https://github.com/dennyzhang"><img align="bottom"src="https://www.dennyzhang.com/wp-content/uploads/sns/github.png" alt="github" /></a>
 <a href="https://www.dennyzhang.com/slack" target="_blank" rel="nofollow"><img align="bottom" src="https://slack.dennyzhang.com/badge.svg" alt="slack"/></a>
 #+END_HTML
-** org-mode configuration                                          :noexport:
+* org-mode configuration                                           :noexport:
 #+STARTUP: overview customtime noalign logdone showall
 #+DESCRIPTION: 
 #+KEYWORDS: 
