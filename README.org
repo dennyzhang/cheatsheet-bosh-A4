@@ -22,7 +22,6 @@
 File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or star [[https://github.com/DennyZhang/cheatsheet-bosh-A4][this repo]].
 
 See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][#denny-cheatsheets]]
-
 ** Concepts
 | Name                          | Command                       |
 |-------------------------------+-------------------------------|
@@ -32,8 +31,9 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Tile                          |                               |
 | BBR (bosh-backup-and-restore) | [[https://docs.cloudfoundry.org/bbr/][link: bosh-backup-and-restore]] |
 | bbl (bosh-bootloader)         | [[https://github.com/cloudfoundry/bosh-bootloader][GitHub: bosh-bootloader]]       |
-
-** Bosh Commands
+| Manifest                              |                               |
+** Bosh
+*** Bosh Commands
 | Name                   | Command                                                                             |
 |------------------------+-------------------------------------------------------------------------------------|
 | bosh                   | =apt install bosh-cli=,  [[https://bosh.io/docs/cli-v2/][link: pivotal bosh command]]                                 |
@@ -42,23 +42,20 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Delete a deployment    | =bosh delete-deployment -d wf-deployment-0-7-0-dev-4=                               |
 | SSH to vm              | =bosh -e 192.168.30.52 -d $deployment ssh $vm=                                      |
 | bosh log               | =/var/vcap/bosh/log=                                                                |
-
-** Query status
+*** Bosh Query status
 | Name                      | Command                                             |
 |---------------------------+-----------------------------------------------------|
 | List all bosh deployments | =bosh -n deployments=                               |
 | Download log files        | =bosh -d $deployment_id logs=                       |
+| Show deployment manifest  | =bosh manifest -d $deployment=                      |
 | bosh config               | =bosh cloud-config=, =bosh configs=                 |
 | List environment          | =bosh env=, =bosh env --json=                       |
 | List vms                  | =bosh vms=                                          |
 | List all instances        | =bosh instances=                                    |
 | Get vms per deployment    | =bosh -e $env -d $deployment vms=, =bosh instances= |
 | Cloud consistency check   | =bosh cloud-check -d $deployment=                   |
-| Show deployment manifest  | =bosh manifest -d $deployment=                      |
 | List disks                | =bosh disks -o=                                     |
-
-** Tasks
-
+*** Bosh Tasks
 | Name                          | Command                                        |
 |-------------------------------+------------------------------------------------|
 | List recent tasks             | =bosh tasks --recent=                          |
@@ -68,8 +65,16 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Get all logs for a deployment | =bosh logs -d $deployment_name=                |
 | Get log for one vm            | =bosh logs -d $deployment_name $instance_name= |
 | List bosh events              | =bosh events=                                  |
-
-** Bosh Release
+*** Deployment
+| Name              | Command                                                  |
+|-------------------+----------------------------------------------------------|
+| Delete deployment | =bosh -n -d <deployment-name> delete-deployment --force= |
+*** monit
+| Name                                | Command                        |
+|-------------------------------------+--------------------------------|
+| List bosh deployed daemon processes | =monit summary=                |
+| Restart a given daemon processes    | =monit restart <process_name>= | 
+** Release
 | Name                            | Command                                                                                    |
 |---------------------------------+--------------------------------------------------------------------------------------------|
 | List release                    | =bosh -n releases=                                                                         |
@@ -80,21 +85,14 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Delete release                  | =bosh -n delete-release <my-release>/<release-version> --force=                            |
 | Upload release                  | =bosh -n upload-release /tmp/my-release-0.22.0.tgz=                                        |
 | Create a release from directory | =bosh init-release --dir <my-release>=                                                     |
-
-** Ops manager
-| Name                                   | Command                                                                  |
-|----------------------------------------+--------------------------------------------------------------------------|
-| Release folder                         | =/var/tempest/releases=                                                  |
-| Restart Ops Manager                    | =service tempest-web stop/start=                                         |
-| Change file permision for your release | =chown tempest-web:tempest-web /var/tempest/releases/<your-release.tgz>= |
-| Tile entrance file                     | =/var/tempest/workspaces/default/metadata/*.yml=                         |
-| Tile jobs folder                       | =/var/vcap/jobs=                                                         |
-
-** Deployment
-| Name              | Command                                                  |
-|-------------------+----------------------------------------------------------|
-| Delete deployment | =bosh -n -d <deployment-name> delete-deployment --force= |
-
+*** Manifest
+| Name | Command |
+|------+---------|
+|      |         |
+*** Tools
+| Name | Comment                                     |
+|------+---------------------------------------------|
+| kiln | Kiln helps you maintain tile metadata. [[https://github.com/pivotal-cf/kiln][link]] |
 ** Errand
 | Name                                  | Command                                                                              |
 |---------------------------------------+--------------------------------------------------------------------------------------|
@@ -102,8 +100,21 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Run errand in a new vm                | =bosh -n -d <deployment> run-errand <errand_name>=  [[https://bosh.io/docs/cli-v2/#run-errand][link: run-errand]]                 |
 | Run errand in a new vm with env alive | =bosh -n -d <deployment> run-errand <errand_name> --keep-alive=                      |
 | Run errand in an existing vm          | =bosh -n -d <deployment> run-errand <errand_name> --instance=worker/instance-id=XXX= |
-
-** Tile
+** Stemcell
+| Name            | Command                                     |
+|-----------------+---------------------------------------------|
+| Upload stemcell | =bosh -n upload-stemcell /tmp/stemcell.tgz= |
+| List stemcells  | =bosh -n stemcells=                         |
+** [#A] Tile
+*** Ops manager
+| Name                                   | Command                                                                  |
+|----------------------------------------+--------------------------------------------------------------------------|
+| Release folder                         | =/var/tempest/releases=                                                  |
+| Restart Ops Manager                    | =service tempest-web stop/start=                                         |
+| Change file permision for your release | =chown tempest-web:tempest-web /var/tempest/releases/<your-release.tgz>= |
+| Tile entrance file                     | =/var/tempest/workspaces/default/metadata/*.yml=                         |
+| Tile jobs folder                       | =/var/vcap/jobs=                                                         |
+*** Tile
 | Name                       | Command                                                                             |
 |----------------------------+-------------------------------------------------------------------------------------|
 | Forms Reference            | https://docs.pivotal.io/tiledev/2-1/product-template-reference.html#form-properties |
@@ -112,20 +123,8 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Property Reference         | https://docs.pivotal.io/tiledev/2-2/property-reference.html                         |
 | Tile Generator             | https://docs.pivotal.io/tiledev/2-1/tile-generator.html                             |
 | stemcells                  | https://bosh.io/stemcells/, [[https://network.pivotal.io/products/stemcells/#/releases/139780][Download link]]                                           |
-
-** Stemcell
-| Name            | Command                                     |
-|-----------------+---------------------------------------------|
-| Upload stemcell | =bosh -n upload-stemcell /tmp/stemcell.tgz= |
-| List stemcells  | =bosh -n stemcells=                         |
-
-** Tools
-| Name | Comment                                     |
-|------+---------------------------------------------|
-| kiln | Kiln helps you maintain tile metadata. [[https://github.com/pivotal-cf/kiln][link]] |
 ** bosh blobs
 https://bosh.io/docs/release-blobs/
-
 *** add-blob
 #+BEGIN_EXAMPLE
  kubo@jumper:/tmp/tmp.RgJNFQbFsV$ docker pull telegraf:1.7-alpine
@@ -358,26 +357,26 @@ https://bosh.io/docs/terminology
 
  Deployment 'XXX-container-service-37f4102408dc7e3b4fcf'
 
- Instance                                                        Process State  AZ    IPs        VM CID                                   VM Type  Active  
- XXX-container-service/6245d88f-7d52-4371-a3c2-5dc023c32fe9  running        az-1  30.0.0.12  vm-b27efb7f-c0d8-42e7-bd55-d28f68b10cb7  medium   -  
+ Instance                                                        Process State  AZ    IPs        VM CID                                   VM Type  Active
+ XXX-container-service/6245d88f-7d52-4371-a3c2-5dc023c32fe9  running        az-1  30.0.0.12  vm-b27efb7f-c0d8-42e7-bd55-d28f68b10cb7  medium   -
 
  1 vms
 
  Deployment 'service-instance_1ee08f0f-2e8a-45f9-a1f8-5e0d608225b4'
 
- Instance                                     Process State  AZ    IPs       VM CID                                   VM Type  Active  
- master/05e56b86-b650-4ec6-a953-3de9a736517d  running        az-1  40.0.2.2  vm-4bd0dd74-2b13-4062-bc29-d5130f29ed0e  medium   -  
- worker/7881dd78-0006-4466-a4bd-ebee59477998  running        az-1  40.0.2.4  vm-d24b71a6-55bd-418e-8694-ed8bb595acd8  medium   -  
- worker/adf1ecda-700e-4d52-a675-34c8853fd063  running        az-1  40.0.2.3  vm-73dd78c2-e3d1-4030-9805-7402af9756f8  medium   -  
+ Instance                                     Process State  AZ    IPs       VM CID                                   VM Type  Active
+ master/05e56b86-b650-4ec6-a953-3de9a736517d  running        az-1  40.0.2.2  vm-4bd0dd74-2b13-4062-bc29-d5130f29ed0e  medium   -
+ worker/7881dd78-0006-4466-a4bd-ebee59477998  running        az-1  40.0.2.4  vm-d24b71a6-55bd-418e-8694-ed8bb595acd8  medium   -
+ worker/adf1ecda-700e-4d52-a675-34c8853fd063  running        az-1  40.0.2.3  vm-73dd78c2-e3d1-4030-9805-7402af9756f8  medium   -
 
  3 vms
 
  Deployment 'service-instance_c4b06291-ed29-4b5e-89c2-ff35547db2d2'
 
- Instance                                     Process State  AZ    IPs       VM CID                                   VM Type  Active  
- master/85496f06-26aa-4dfd-b181-1c6b7e29f655  running        az-1  40.0.1.2  vm-d6938cf5-0349-488b-96c3-9c20784076ea  medium   -  
- worker/1f4cc6b9-533a-4edf-bec1-03f2fd402b8d  stopped        az-1  40.0.1.3  vm-00cf6f5b-dfe9-46df-8856-867d5fad4d1b  medium   -  
- worker/35043957-97b4-4aa5-bfda-9d495831a7e8  running        az-1  40.0.1.4  vm-b0adf348-3faa-486d-a8f5-a05128932b9a  medium   -  
+ Instance                                     Process State  AZ    IPs       VM CID                                   VM Type  Active
+ master/85496f06-26aa-4dfd-b181-1c6b7e29f655  running        az-1  40.0.1.2  vm-d6938cf5-0349-488b-96c3-9c20784076ea  medium   -
+ worker/1f4cc6b9-533a-4edf-bec1-03f2fd402b8d  stopped        az-1  40.0.1.3  vm-00cf6f5b-dfe9-46df-8856-867d5fad4d1b  medium   -
+ worker/35043957-97b4-4aa5-bfda-9d495831a7e8  running        az-1  40.0.1.4  vm-b0adf348-3faa-486d-a8f5-a05128932b9a  medium   -
 
  Succeeded
 
@@ -455,7 +454,7 @@ https://bosh.io/docs/terminology
      properties:
        syslog:
          address: ''
-         ca_cert: 
+         ca_cert:
          migration:
            disabled: false
          permitted_peer: ''
@@ -561,7 +560,7 @@ https://bosh.io/docs/terminology
      properties:
        syslog:
          address: ''
-         ca_cert: 
+         ca_cert:
          migration:
            disabled: false
          permitted_peer: ''
@@ -600,10 +599,10 @@ https://bosh.io/docs/terminology
    - name: pks-nsx-t-floating-ip-association
      release: pks-nsx-t
      properties:
-       cluster-name: 
+       cluster-name:
        floating-ip: 192.168.150.104
        floating-ip-pool-id: d0ece6ff-b7bb-4a55-bc22-f6ec0b7ca297
-       master-ip: 
+       master-ip:
        nsx-t-ca-cert: |-
          -----BEGIN CERTIFICATE-----
          MIIDZDCCAkygAwIBAgIGAWP3qchFMA0GCSqGSIb3DQEBCwUAMHMxJDAiBgNVBAMM
@@ -704,7 +703,7 @@ https://bosh.io/docs/terminology
      properties:
        syslog:
          address: ''
-         ca_cert: 
+         ca_cert:
          migration:
            disabled: false
          permitted_peer: ''
@@ -868,8 +867,8 @@ License: Code is licensed under [[https://www.dennyzhang.com/wp-content/mit_lice
 #+END_HTML
 * org-mode configuration                                           :noexport:
 #+STARTUP: overview customtime noalign logdone showall
-#+DESCRIPTION: 
-#+KEYWORDS: 
+#+DESCRIPTION:
+#+KEYWORDS:
 #+LATEX_HEADER: \usepackage[margin=0.6in]{geometry}
 #+LaTeX_CLASS_OPTIONS: [8pt]
 #+LATEX_HEADER: \usepackage[english]{babel}
@@ -889,8 +888,8 @@ License: Code is licensed under [[https://www.dennyzhang.com/wp-content/mit_lice
 #+OPTIONS:   TeX:t LaTeX:nil skip:nil d:nil todo:t pri:nil tags:not-in-toc
 #+EXPORT_EXCLUDE_TAGS: exclude noexport
 #+SEQ_TODO: TODO HALF ASSIGN | DONE BYPASS DELEGATE CANCELED DEFERRED
-#+LINK_UP:   
-#+LINK_HOME: 
+#+LINK_UP:
+#+LINK_HOME:
 * #  --8<-------------------------- separator ------------------------>8-- :noexport:
 * TODO Update errand setting                                       :noexport:
 https://bosh.io/docs/errands/
@@ -904,4 +903,3 @@ https://bosh.io/docs/packages/
 https://gitlab.eng.vmware.com/PKS/wavefront-proxy-release/issues/14
 
 https://gitlab.eng.vmware.com/PKS/pks-vrli-release/commit/7f8bda1c5ce9a9c44c2f41c6ee88a9f5ad5eb461
-
