@@ -1,6 +1,6 @@
 * Bosh CheatSheet                                                     :Tools:
 :PROPERTIES:
-:type:     cloudfoundry
+:type:     pivotal, pks, vmware
 :export_file_name: cheatsheet-bosh-A4.pdf
 :END:
 
@@ -22,59 +22,71 @@
 File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or star [[https://github.com/DennyZhang/cheatsheet-bosh-A4][this repo]].
 
 See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][#denny-cheatsheets]]
-** Concepts
-| Name                          | Command                       |
-|-------------------------------+-------------------------------|
-| Release                       |                               |
-| Jobs                          |                               |
-| Errands                       |                               |
-| Tile                          |                               |
-| BBR (bosh-backup-and-restore) | [[https://docs.cloudfoundry.org/bbr/][link: bosh-backup-and-restore]] |
-| bbl (bosh-bootloader)         | [[https://github.com/cloudfoundry/bosh-bootloader][GitHub: bosh-bootloader]]       |
-| Manifest                              |                               |
-** Bosh
-*** Bosh Commands
-| Name                   | Command                                                                             |
-|------------------------+-------------------------------------------------------------------------------------|
-| bosh                   | =apt install bosh-cli=,  [[https://bosh.io/docs/cli-v2/][link: pivotal bosh command]]                                 |
-| Interpolates variables | =bosh int /tmp/build/4dc76cXXX/pks-lock/metadata --path=/ops_manager/username= [[https://bosh.io/docs/cli-int/][link]] |
-| Delete a vm            | =bosh delete-vm -d service-instance_c4b06291-XXX 35043957-XXX=                      |
-| Delete a deployment    | =bosh delete-deployment -d wf-deployment-0-7-0-dev-4=                               |
-| SSH to vm              | =bosh -e 192.168.30.52 -d $deployment ssh $vm=                                      |
-| bosh log               | =/var/vcap/bosh/log=                                                                |
-*** Bosh Query status
-| Name                      | Command                                             |
-|---------------------------+-----------------------------------------------------|
-| List all bosh deployments | =bosh -n deployments=                               |
-| Download log files        | =bosh -d $deployment_id logs=                       |
-| Show deployment manifest  | =bosh manifest -d $deployment=                      |
-| bosh config               | =bosh cloud-config=, =bosh configs=                 |
-| List environment          | =bosh env=, =bosh env --json=                       |
-| List vms                  | =bosh vms=                                          |
-| List all instances        | =bosh instances=                                    |
-| Get vms per deployment    | =bosh -e $env -d $deployment vms=, =bosh instances= |
-| Cloud consistency check   | =bosh cloud-check -d $deployment=                   |
-| List disks                | =bosh disks -o=                                     |
-*** Bosh Tasks
+
+Related post: [[https://cheatsheet.dennyzhang.com/cheatsheet-concourse-A4][Concourse CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSheet]]
+
+** Bosh Concepts
+| Name                          | Comment                                                                                   |
+|-------------------------------+-------------------------------------------------------------------------------------------|
+| Bosh Director                 | The Director is the orchestrator of deployments.                                          |
+| Bosh Addon                    | A release job that is colocated on all VMs managed by the Director.                       |
+| Bosh Agent                    | A process that runs continuously on each VM that BOSH deploys. one Agent process per VM   |
+| Cloud ID (CID)                | ID returned from the Cloud identifying particular resource such as VM or disk.            |
+| Stemcells                     | A generic VM image that BOSH clones and configures during deployment. [[https://bosh.cloudfoundry.org/stemcells/][link: stemcell]]      |
+| Deployment                    | An encapsulation of software and configuration that BOSH can deploy to the cloud.         |
+| Jobs                          |                                                                                           |
+| Tile                          |                                                                                           |
+| Release                       |                                                                                           |
+| Bosh Errand                   | A short-lived job that can be triggered by an operator any time after the deploy.         |
+| Bosh Event                    | Actions taken by the Director (via user or system control) are recorded as events         |
+| Manifest                      | A YAML file that identifies one or more releases, stemcells and configurations            |
+| Operations file (ops file)    | A YAML file that includes multiple operations to be applied to a different YAML file.     |
+| Director Blobstore            | A repository where BOSH stores release artifacts, logs, stemcells, and other content, etc |
+| BBR (bosh-backup-and-restore) | [[https://docs.cloudfoundry.org/bbr/][link: bosh-backup-and-restore]]                                                             |
+| Bosh Jumpbox                  | A VM that acts as a single access point for the Director and deployed VMs.                |
+| bbl (bosh-bootloader)         | [[https://github.com/cloudfoundry/bosh-bootloader][GitHub: bosh-bootloader]]                                                                   |
+| Link                          | https://bosh.io/docs/terminology                                                          |
+** Bosh Basic
+| Name                      | Command                                                                             |
+|---------------------------+-------------------------------------------------------------------------------------|
+| bosh                      | =apt install bosh-cli=,  [[https://bosh.io/docs/cli-v2/][link: pivotal bosh command]]                                 |
+| Interpolates variables    | =bosh int /tmp/build/4dc76cXXX/pks-lock/metadata --path=/ops_manager/username= [[https://bosh.io/docs/cli-int/][link]] |
+| Delete a deployment       | =bosh delete-deployment -d wf-deployment-0-7-0-dev-4=                               |
+| bosh log                  | =/var/vcap/bosh/log=                                                                |
+| List all bosh deployments | =bosh -n deployments=                                                               |
+| Download log files        | =bosh -d $deployment_id logs=                                                       |
+| Show deployment manifest  | =bosh manifest -d $deployment=                                                      |
+| bosh config               | =bosh cloud-config=, =bosh configs=                                                 |
+| List environment          | =bosh env=, =bosh env --json=                                                       |
+| List all instances        | =bosh instances=                                                                    |
+| Get vms per deployment    | =bosh -e $env -d $deployment vms=, =bosh instances=                                 |
+| Cloud consistency check   | =bosh cloud-check -d $deployment=                                                   |
+| List disks                | =bosh disks -o=                                                                     |
+** Bosh VM
+| Name        | Command                                                        |
+|-------------+----------------------------------------------------------------|
+| List vms    | =bosh vms=                                                     |
+| Delete a vm | =bosh delete-vm -d service-instance_c4b06291-XXX 35043957-XXX= |
+| SSH to vm   | =bosh -e 192.168.30.52 -d $deployment ssh $vm=                 |
+** Bosh Deployment
+| Name                          | Command                                             |
+|-------------------------------+-----------------------------------------------------|
+| List bosh deployments         | =bosh deployments=                                  |
+| Delete bosh deployment        | =bosh -n -d <deployment> delete-deployment --force= |
+| Get deployment manifest yaml  | =bosh manifest -d <deployment> > my.yaml=           |
+| Run bosh deployment from yaml | =bosh deploy -d <deployment> my.yaml=               |
+** Bosh Tasks
 | Name                          | Command                                        |
 |-------------------------------+------------------------------------------------|
 | List recent tasks             | =bosh tasks --recent=                          |
 | Attach to current task        | =bosh task -a=                                 |
 | Get task by id                | =bosh task $id=                                |
+| Get task detail msg           | =bosh task $id --debug=                        |
 | SSH to vm                     | =bosh -d $deployment_name ssh $instance_name=  |
 | Get all logs for a deployment | =bosh logs -d $deployment_name=                |
 | Get log for one vm            | =bosh logs -d $deployment_name $instance_name= |
 | List bosh events              | =bosh events=                                  |
-*** Deployment
-| Name              | Command                                                  |
-|-------------------+----------------------------------------------------------|
-| Delete deployment | =bosh -n -d <deployment-name> delete-deployment --force= |
-*** monit
-| Name                                | Command                        |
-|-------------------------------------+--------------------------------|
-| List bosh deployed daemon processes | =monit summary=                |
-| Restart a given daemon processes    | =monit restart <process_name>= | 
-** Release
+** Bosh Release
 | Name                            | Command                                                                                    |
 |---------------------------------+--------------------------------------------------------------------------------------------|
 | List release                    | =bosh -n releases=                                                                         |
@@ -85,36 +97,23 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Delete release                  | =bosh -n delete-release <my-release>/<release-version> --force=                            |
 | Upload release                  | =bosh -n upload-release /tmp/my-release-0.22.0.tgz=                                        |
 | Create a release from directory | =bosh init-release --dir <my-release>=                                                     |
-*** Manifest
-| Name | Command |
-|------+---------|
-|      |         |
-*** Tools
-| Name | Comment                                     |
-|------+---------------------------------------------|
-| kiln | Kiln helps you maintain tile metadata. [[https://github.com/pivotal-cf/kiln][link]] |
-** Errand
+** Bosh Manifest
+| Name               | Command                                        |
+|--------------------+------------------------------------------------|
+| Show bosh manifest | =bosh manifest -d <deployment>= [[https://bosh.io/docs/cli-v2#manifest][link: manifest]] |
+** Bosh Errand
 | Name                                  | Command                                                                              |
 |---------------------------------------+--------------------------------------------------------------------------------------|
 | List errands                          | =bosh errands -d <deployment>=                                                       |
 | Run errand in a new vm                | =bosh -n -d <deployment> run-errand <errand_name>=  [[https://bosh.io/docs/cli-v2/#run-errand][link: run-errand]]                 |
 | Run errand in a new vm with env alive | =bosh -n -d <deployment> run-errand <errand_name> --keep-alive=                      |
 | Run errand in an existing vm          | =bosh -n -d <deployment> run-errand <errand_name> --instance=worker/instance-id=XXX= |
-** Stemcell
+** Bosh Stemcell
 | Name            | Command                                     |
 |-----------------+---------------------------------------------|
 | Upload stemcell | =bosh -n upload-stemcell /tmp/stemcell.tgz= |
 | List stemcells  | =bosh -n stemcells=                         |
-** [#A] Tile
-*** Ops manager
-| Name                                   | Command                                                                  |
-|----------------------------------------+--------------------------------------------------------------------------|
-| Release folder                         | =/var/tempest/releases=                                                  |
-| Restart Ops Manager                    | =service tempest-web stop/start=                                         |
-| Change file permision for your release | =chown tempest-web:tempest-web /var/tempest/releases/<your-release.tgz>= |
-| Tile entrance file                     | =/var/tempest/workspaces/default/metadata/*.yml=                         |
-| Tile jobs folder                       | =/var/vcap/jobs=                                                         |
-*** Tile
+** Bosh Tile
 | Name                       | Command                                                                             |
 |----------------------------+-------------------------------------------------------------------------------------|
 | Forms Reference            | https://docs.pivotal.io/tiledev/2-1/product-template-reference.html#form-properties |
@@ -123,112 +122,20 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Property Reference         | https://docs.pivotal.io/tiledev/2-2/property-reference.html                         |
 | Tile Generator             | https://docs.pivotal.io/tiledev/2-1/tile-generator.html                             |
 | stemcells                  | https://bosh.io/stemcells/, [[https://network.pivotal.io/products/stemcells/#/releases/139780][Download link]]                                           |
-** bosh blobs
-https://bosh.io/docs/release-blobs/
-*** add-blob
-#+BEGIN_EXAMPLE
- kubo@jumper:/tmp/tmp.RgJNFQbFsV$ docker pull telegraf:1.7-alpine
- ^[[O1.7-alpine: Pulling from library/telegraf
- a073c86ecf9e: Pull complete
- 5e3fc09cd317: Pull complete
- 42f39ed2e134: Pull complete
- 28dc5f846df8: Pull complete
- cbf4ff759895: Pull complete
- Digest: sha256:9bc4e7316f97ebdf33d0c1edfbf3fb0de2e7db7769d393f46463ef203c8f2c33
- Status: Downloaded newer image for telegraf:1.7-alpine
- kubo@jumper:/tmp/tmp.RgJNFQbFsV$ docker save telegraf:1.7-alpine | gzip > telegraf:1.7-alpine.tgz
-#+END_EXAMPLE
-
-#+BEGIN_EXAMPLE
- kubo@jumper:~$ bosh add-blob /tmp/tmp.RgJNFQbFsV/telegraf:1.7-alpine.tgz container-images/telegraf:1.7-alpine.tgz
- Added blob 'container-images/telegraf:1.7-alpine.tgz'
-
- Succeeded
-#+END_EXAMPLE
-
-#+BEGIN_EXAMPLE
- kubo@jumper:~$ ls -lth blobs/container-images
- total 237M
- -rw------- 1 kubo kubo  15M Aug  6 10:21 telegraf:1.7-alpine.tgz
-#+END_EXAMPLE
-*** Need credentials_source to run "bosh upload-blobs"
-Need to provide config/private.yml. Something like below
-
-#+BEGIN_EXAMPLE
----
-blobstore:
-  provider: s3
-  options:
-    access_key_id: XXXXMMMAAAMMMM
-    secret_access_key: c9EcPLbysjpafafafeweafaf23434
-#+END_EXAMPLE
-
-#+BEGIN_EXAMPLE
-
- kubo@jumper:~$ bosh upload-blobs
- Blob upload 'container-images/dummy_image:4.27.tgz' (232 MB) (sha1: ee47c68465ea8352513c0e706517af7eb744ee74) started
-
- Blob upload 'container-images/dummy_image:4.27.tgz' failed
-
- Uploading blobs:
-   Creating blob for path 'container-images/dummy_image:4.27.tgz':
-     Creating blob in inner blobstore:
-       Generating blobstore ID:
-         the client operates in read only mode. Change 'credentials_source' parameter value
-
- Exit code 1
-#+END_EXAMPLE
-*** How to get size, object_id, sha for blobs.yml?
-After we have successfully run "bosh upload-blobs", blobs.yml will be updated automatically.
-#+BEGIN_EXAMPLE
- container-images/telegraf:1.6-alpine.tgz:
-   size: 14016537
-   object_id: 9028fea7-742d-4af0-784c-7dad1be15365
-   sha: bf5f32036fec554f9c5dbb7fd922a5930b625594
-#+END_EXAMPLE
-*** bosh upload-blobs: console output if wrong credential
-  #+BEGIN_EXAMPLE
-  kubo@jumper:~$ bosh upload-blobs
-  Blob upload 'container-images/telegraf:1.7-alpine.tgz' (16 MB) (sha1: 71ef025187f8882035932ba04cc772f6fdf6a4e0) started
-  2018/08/06 13:51:05 Upload failed: SignatureDoesNotMatch: The request signature we calculated does not match the signature you provided. Check your Google secret key and signing method.
-	  status code: 403, request id: , host id:
-  2018/08/06 13:51:06 Upload failed: SignatureDoesNotMatch: The request signature we calculated does not match the signature you provided. Check your Google secret key and signing method.
-	  status code: 403, request id: , host id:
-  2018/08/06 13:51:06 Upload failed: SignatureDoesNotMatch: The request signature we calculated does not match the signature you provided. Check your Google secret key and signing method.
-	  status code: 403, request id: , host id:
-
-  Blob upload 'container-images/telegraf:1.7-alpine.tgz' failed
-
-  Uploading blobs:
-    Creating blob for path 'container-images/telegraf:1.7-alpine.tgz':
-      Creating blob in inner blobstore:
-        Generating blobstore ID:
-          upload failure: SignatureDoesNotMatch: The request signature we calculated does not match the signature you provided. Check your Google secret key and signing method.
-	  status code: 403, request id: , host id:
-
-  Exit code 1
-  #+END_EXAMPLE
-** Concepts
-| Name                       | Comment                                                                                   |
-|----------------------------+-------------------------------------------------------------------------------------------|
-| Bosh Director              | The Director is the orchestrator of deployments.                                          |
-| Bosh Addon                 | A release job that is colocated on all VMs managed by the Director.                       |
-| Bosh Agent                 | A process that runs continuously on each VM that BOSH deploys. one Agent process per VM   |
-| Cloud ID (CID)             | ID returned from the Cloud identifying particular resource such as VM or disk.            |
-| Deployment                 | An encapsulation of software and configuration that BOSH can deploy to the cloud.         |
-| Director Blobstore         | A repository where BOSH stores release artifacts, logs, stemcells, and other content, etc |
-| Bosh Errand                | A short-lived job that can be triggered by an operator any time after the deploy.         |
-| Bosh Event                 | Actions taken by the Director (via user or system control) are recorded as events         |
-| Bosh Jumpbox               | A VM that acts as a single access point for the Director and deployed VMs.                |
-| Deployment manifest        | A YAML file that identifies one or more releases, stemcells and configurations            |
-| Operations file (ops file) | A YAML file that includes multiple operations to be applied to a different YAML file.     |
-| Stemcells                  | A generic VM image that BOSH clones and configures during deployment.                     |
-
-Links:
-
-https://bosh.cloudfoundry.org/stemcells/
-
-https://bosh.io/docs/terminology
+** Bosh related Tools
+| Name                                       | Comment                                     |
+|--------------------------------------------+---------------------------------------------|
+| kiln                                       | Kiln helps you maintain tile metadata. [[https://github.com/pivotal-cf/kiln][link]] |
+| monit: List bosh deployed daemon processes | =monit summary=                             |
+| monit: Restart a given daemon processes    | =monit restart <process_name>=              |
+** Ops manager
+| Name                                   | Command                                                                  |
+|----------------------------------------+--------------------------------------------------------------------------|
+| Release folder                         | =/var/tempest/releases=                                                  |
+| Restart Ops Manager                    | =service tempest-web stop/start=                                         |
+| Change file permision for your release | =chown tempest-web:tempest-web /var/tempest/releases/<your-release.tgz>= |
+| Tile entrance file                     | =/var/tempest/workspaces/default/metadata/*.yml=                         |
+| Tile jobs folder                       | =/var/vcap/jobs=                                                         |
 ** Online Help Usage
 #+BEGIN_EXAMPLE
  kubo@jumper:~$ bosh --help
@@ -337,8 +244,147 @@ https://bosh.io/docs/terminology
  Succeeded
 #+END_EXAMPLE
 
- - bosh delete vm
+** More Resources
+https://github.com/bosh-tips/tips
 
+http://engineering.pivotal.io/post/compiled-releases-for-pipelines/
+
+License: Code is licensed under [[https://www.dennyzhang.com/wp-content/mit_license.txt][MIT License]].
+#+BEGIN_HTML
+<a href="https://www.dennyzhang.com"><img align="right" width="201" height="268" src="https://raw.githubusercontent.com/USDevOps/mywechat-slack-group/master/images/denny_201706.png"></a>
+<a href="https://www.dennyzhang.com"><img align="right" src="https://raw.githubusercontent.com/USDevOps/mywechat-slack-group/master/images/dns_small.png"></a>
+
+<a href="https://www.linkedin.com/in/dennyzhang001"><img align="bottom" src="https://www.dennyzhang.com/wp-content/uploads/sns/linkedin.png" alt="linkedin" /></a>
+<a href="https://github.com/dennyzhang"><img align="bottom"src="https://www.dennyzhang.com/wp-content/uploads/sns/github.png" alt="github" /></a>
+<a href="https://www.dennyzhang.com/slack" target="_blank" rel="nofollow"><img align="bottom" src="https://slack.dennyzhang.com/badge.svg" alt="slack"/></a>
+#+END_HTML
+* org-mode configuration                                           :noexport:
+#+STARTUP: overview customtime noalign logdone showall
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LATEX_HEADER: \usepackage[margin=0.6in]{geometry}
+#+LaTeX_CLASS_OPTIONS: [8pt]
+#+LATEX_HEADER: \usepackage[english]{babel}
+#+LATEX_HEADER: \usepackage{lastpage}
+#+LATEX_HEADER: \usepackage{fancyhdr}
+#+LATEX_HEADER: \pagestyle{fancy}
+#+LATEX_HEADER: \fancyhf{}
+#+LATEX_HEADER: \rhead{Updated: \today}
+#+LATEX_HEADER: \rfoot{\thepage\ of \pageref{LastPage}}
+#+LATEX_HEADER: \lfoot{\href{https://github.com/dennyzhang/cheatsheet-bosh-A4}{GitHub: https://github.com/dennyzhang/cheatsheet-bosh-A4}}
+#+LATEX_HEADER: \lhead{\href{https://cheatsheet.dennyzhang.com/cheatsheet-slack-A4}{Blog URL: https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4}}
+#+AUTHOR: Denny Zhang
+#+EMAIL:  denny@dennyzhang.com
+#+TAGS: noexport(n)
+#+PRIORITIES: A D C
+#+OPTIONS:   H:3 num:t toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+EXPORT_EXCLUDE_TAGS: exclude noexport
+#+SEQ_TODO: TODO HALF ASSIGN | DONE BYPASS DELEGATE CANCELED DEFERRED
+#+LINK_UP:
+#+LINK_HOME:
+* #  --8<-------------------------- separator ------------------------>8-- :noexport:
+* TODO Update errand setting                                       :noexport:
+https://bosh.io/docs/errands/
+* TODO Login to vm and debug                                       :noexport:
+* TODO bosh interpolate                                            :noexport:
+* DONE bosh cli lessons learned: bosh client, bosh auth, bosh facility tool are mixed up :noexport:
+  CLOSED: [2018-08-22 Wed 10:18]
+* TODO tile packages                                               :noexport:
+https://bosh.io/docs/packages/
+
+https://gitlab.eng.vmware.com/PKS/wavefront-proxy-release/issues/14
+
+https://gitlab.eng.vmware.com/PKS/pks-vrli-release/commit/7f8bda1c5ce9a9c44c2f41c6ee88a9f5ad5eb461
+* TODO bosh get manifest for a failed task                         :noexport:
+* TODO bosh how to retry a failed task/errand                      :noexport:
+* bosh blobs                                                       :noexport:
+https://bosh.io/docs/release-blobs/
+** add-blob
+#+BEGIN_EXAMPLE
+ kubo@jumper:/tmp/tmp.RgJNFQbFsV$ docker pull telegraf:1.7-alpine
+ ^[[O1.7-alpine: Pulling from library/telegraf
+ a073c86ecf9e: Pull complete
+ 5e3fc09cd317: Pull complete
+ 42f39ed2e134: Pull complete
+ 28dc5f846df8: Pull complete
+ cbf4ff759895: Pull complete
+ Digest: sha256:9bc4e7316f97ebdf33d0c1edfbf3fb0de2e7db7769d393f46463ef203c8f2c33
+ Status: Downloaded newer image for telegraf:1.7-alpine
+ kubo@jumper:/tmp/tmp.RgJNFQbFsV$ docker save telegraf:1.7-alpine | gzip > telegraf:1.7-alpine.tgz
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+ kubo@jumper:~$ bosh add-blob /tmp/tmp.RgJNFQbFsV/telegraf:1.7-alpine.tgz container-images/telegraf:1.7-alpine.tgz
+ Added blob 'container-images/telegraf:1.7-alpine.tgz'
+
+ Succeeded
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+ kubo@jumper:~$ ls -lth blobs/container-images
+ total 237M
+ -rw------- 1 kubo kubo  15M Aug  6 10:21 telegraf:1.7-alpine.tgz
+#+END_EXAMPLE
+** Need credentials_source to run "bosh upload-blobs"
+Need to provide config/private.yml. Something like below
+
+#+BEGIN_EXAMPLE
+---
+blobstore:
+  provider: s3
+  options:
+    access_key_id: XXXXMMMAAAMMMM
+    secret_access_key: c9EcPLbysjpafafafeweafaf23434
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+
+ kubo@jumper:~$ bosh upload-blobs
+ Blob upload 'container-images/dummy_image:4.27.tgz' (232 MB) (sha1: ee47c68465ea8352513c0e706517af7eb744ee74) started
+
+ Blob upload 'container-images/dummy_image:4.27.tgz' failed
+
+ Uploading blobs:
+   Creating blob for path 'container-images/dummy_image:4.27.tgz':
+     Creating blob in inner blobstore:
+       Generating blobstore ID:
+         the client operates in read only mode. Change 'credentials_source' parameter value
+
+ Exit code 1
+#+END_EXAMPLE
+** How to get size, object_id, sha for blobs.yml?
+After we have successfully run "bosh upload-blobs", blobs.yml will be updated automatically.
+#+BEGIN_EXAMPLE
+ container-images/telegraf:1.6-alpine.tgz:
+   size: 14016537
+   object_id: 9028fea7-742d-4af0-784c-7dad1be15365
+   sha: bf5f32036fec554f9c5dbb7fd922a5930b625594
+#+END_EXAMPLE
+** bosh upload-blobs: console output if wrong credential
+ #+BEGIN_EXAMPLE
+ kubo@jumper:~$ bosh upload-blobs
+ Blob upload 'container-images/telegraf:1.7-alpine.tgz' (16 MB) (sha1: 71ef025187f8882035932ba04cc772f6fdf6a4e0) started
+ 2018/08/06 13:51:05 Upload failed: SignatureDoesNotMatch: The request signature we calculated does not match the signature you provided. Check your Google secret key and signing method.
+         status code: 403, request id: , host id:
+ 2018/08/06 13:51:06 Upload failed: SignatureDoesNotMatch: The request signature we calculated does not match the signature you provided. Check your Google secret key and signing method.
+         status code: 403, request id: , host id:
+ 2018/08/06 13:51:06 Upload failed: SignatureDoesNotMatch: The request signature we calculated does not match the signature you provided. Check your Google secret key and signing method.
+         status code: 403, request id: , host id:
+
+ Blob upload 'container-images/telegraf:1.7-alpine.tgz' failed
+
+ Uploading blobs:
+   Creating blob for path 'container-images/telegraf:1.7-alpine.tgz':
+     Creating blob in inner blobstore:
+       Generating blobstore ID:
+         upload failure: SignatureDoesNotMatch: The request signature we calculated does not match the signature you provided. Check your Google secret key and signing method.
+         status code: 403, request id: , host id:
+
+ Exit code 1
+ #+END_EXAMPLE
+
+* bosh delete vm                                                   :noexport:
 #+BEGIN_EXAMPLE
  kubo@jumper:~$ bosh vms
  Using environment '30.0.X.11' as client 'ops_manager'
@@ -390,7 +436,7 @@ https://bosh.io/docs/terminology
  Task 295
  . Done
 #+END_EXAMPLE
-*** bosh manifest                                                  :noexport:
+* bosh manifest                                                    :noexport:
 
 #+BEGIN_EXAMPLE
  kubo@jumper:~$  bosh manifest -d service-instance_1ee08f0f-2e8a-45f9-a1f8-5e0d608225b4
@@ -851,55 +897,3 @@ https://bosh.io/docs/terminology
 
  Succeeded
 #+END_EXAMPLE
-** More Resources
-https://github.com/bosh-tips/tips
-
-http://engineering.pivotal.io/post/compiled-releases-for-pipelines/
-
-License: Code is licensed under [[https://www.dennyzhang.com/wp-content/mit_license.txt][MIT License]].
-#+BEGIN_HTML
-<a href="https://www.dennyzhang.com"><img align="right" width="201" height="268" src="https://raw.githubusercontent.com/USDevOps/mywechat-slack-group/master/images/denny_201706.png"></a>
-<a href="https://www.dennyzhang.com"><img align="right" src="https://raw.githubusercontent.com/USDevOps/mywechat-slack-group/master/images/dns_small.png"></a>
-
-<a href="https://www.linkedin.com/in/dennyzhang001"><img align="bottom" src="https://www.dennyzhang.com/wp-content/uploads/sns/linkedin.png" alt="linkedin" /></a>
-<a href="https://github.com/dennyzhang"><img align="bottom"src="https://www.dennyzhang.com/wp-content/uploads/sns/github.png" alt="github" /></a>
-<a href="https://www.dennyzhang.com/slack" target="_blank" rel="nofollow"><img align="bottom" src="https://slack.dennyzhang.com/badge.svg" alt="slack"/></a>
-#+END_HTML
-* org-mode configuration                                           :noexport:
-#+STARTUP: overview customtime noalign logdone showall
-#+DESCRIPTION:
-#+KEYWORDS:
-#+LATEX_HEADER: \usepackage[margin=0.6in]{geometry}
-#+LaTeX_CLASS_OPTIONS: [8pt]
-#+LATEX_HEADER: \usepackage[english]{babel}
-#+LATEX_HEADER: \usepackage{lastpage}
-#+LATEX_HEADER: \usepackage{fancyhdr}
-#+LATEX_HEADER: \pagestyle{fancy}
-#+LATEX_HEADER: \fancyhf{}
-#+LATEX_HEADER: \rhead{Updated: \today}
-#+LATEX_HEADER: \rfoot{\thepage\ of \pageref{LastPage}}
-#+LATEX_HEADER: \lfoot{\href{https://github.com/dennyzhang/cheatsheet-bosh-A4}{GitHub: https://github.com/dennyzhang/cheatsheet-bosh-A4}}
-#+LATEX_HEADER: \lhead{\href{https://cheatsheet.dennyzhang.com/cheatsheet-slack-A4}{Blog URL: https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4}}
-#+AUTHOR: Denny Zhang
-#+EMAIL:  denny@dennyzhang.com
-#+TAGS: noexport(n)
-#+PRIORITIES: A D C
-#+OPTIONS:   H:3 num:t toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
-#+OPTIONS:   TeX:t LaTeX:nil skip:nil d:nil todo:t pri:nil tags:not-in-toc
-#+EXPORT_EXCLUDE_TAGS: exclude noexport
-#+SEQ_TODO: TODO HALF ASSIGN | DONE BYPASS DELEGATE CANCELED DEFERRED
-#+LINK_UP:
-#+LINK_HOME:
-* #  --8<-------------------------- separator ------------------------>8-- :noexport:
-* TODO Update errand setting                                       :noexport:
-https://bosh.io/docs/errands/
-* TODO Login to vm and debug                                       :noexport:
-* TODO bosh interpolate                                            :noexport:
-* DONE bosh cli lessons learned: bosh client, bosh auth, bosh facility tool are mixed up :noexport:
-  CLOSED: [2018-08-22 Wed 10:18]
-* TODO tile packages                                               :noexport:
-https://bosh.io/docs/packages/
-
-https://gitlab.eng.vmware.com/PKS/wavefront-proxy-release/issues/14
-
-https://gitlab.eng.vmware.com/PKS/pks-vrli-release/commit/7f8bda1c5ce9a9c44c2f41c6ee88a9f5ad5eb461
