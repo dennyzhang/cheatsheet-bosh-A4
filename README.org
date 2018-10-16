@@ -26,66 +26,72 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 Related post: [[https://cheatsheet.dennyzhang.com/cheatsheet-concourse-A4][Concourse CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSheet]]
 
 ** Bosh Concepts
-| Name                          | Comment                                                                                   |
-|-------------------------------+-------------------------------------------------------------------------------------------|
-| Bosh Director                 | The Director is the orchestrator of deployments.                                          |
-| Bosh Addon                    | A release job that is colocated on all VMs managed by the Director.                       |
-| Bosh Agent                    | A process that runs continuously on each VM that BOSH deploys. one Agent process per VM   |
-| Cloud ID (CID)                | ID returned from the Cloud identifying particular resource such as VM or disk.            |
-| Stemcells                     | A generic VM image that BOSH clones and configures during deployment. [[https://bosh.cloudfoundry.org/stemcells/][link: stemcell]]      |
-| Deployment                    | An encapsulation of software and configuration that BOSH can deploy to the cloud.         |
-| Jobs                          |                                                                                           |
-| Tile                          |                                                                                           |
-| Release                       |                                                                                           |
-| Bosh Errand                   | A short-lived job that can be triggered by an operator any time after the deploy.         |
-| Bosh Event                    | Actions taken by the Director (via user or system control) are recorded as events         |
-| Manifest                      | A YAML file that identifies one or more releases, stemcells and configurations            |
-| Operations file (ops file)    | A YAML file that includes multiple operations to be applied to a different YAML file.     |
-| Director Blobstore            | A repository where BOSH stores release artifacts, logs, stemcells, and other content, etc |
-| BBR (bosh-backup-and-restore) | [[https://docs.cloudfoundry.org/bbr/][link: bosh-backup-and-restore]]                                                             |
-| Bosh Jumpbox                  | A VM that acts as a single access point for the Director and deployed VMs.                |
-| bbl (bosh-bootloader)         | [[https://github.com/cloudfoundry/bosh-bootloader][GitHub: bosh-bootloader]]                                                                   |
-| Link                          | https://bosh.io/docs/terminology                                                          |
+| Name                            | Comment                                                                                   |
+|---------------------------------+-------------------------------------------------------------------------------------------|
+| Reference                       | [[https://bosh.io/docs/terminology][link: terminology]]                                                                         |
+| [[https://bosh.cloudfoundry.org/stemcells/][Bosh Stemcells]]                  | A versioned Operating System image. [[https://network.pivotal.io/][Download stemcell]]                                     |
+| [[https://docs.pivotal.io/tiledev/2-2/tile-structure.html][Bosh Tile]]                       | A *.pivotal file containing everything needed to install/upgrade a PCF service            |
+| [[https://bosh.io/docs/terminology/#deployment][Bosh Deployment]]                 | An encapsulation of software and configuration that BOSH can deploy to the cloud.         |
+| [[https://bosh.io/docs/release/][Bosh Release]]                    | Everything needed to make a software component deployable by BOSH.                        |
+| [[https://bosh.io/docs/jobs/][Bosh Job]]                        | Each release job represents a specific chunk of work that the release performs.           |
+| [[https://bosh.io/docs/terminology/#package][Bosh Package]]                    | It contains vendored in software source and scripts to compile it.                        |
+| [[https://bosh.io/docs/errands/][Bosh Errand]]                     | A short-lived job that can be triggered by an operator any time after the deploy.         |
+|---------------------------------+-------------------------------------------------------------------------------------------|
+| Bosh Manifest                   | A YAML file that identifies one or more releases, stemcells and configurations            |
+| Bosh Operations file (ops file) | A YAML file that includes multiple operations to be applied to a different YAML file.     |
+| Bosh Event                      | Actions taken by the Director (via user or system control) are recorded as events         |
+| Bosh Director                   | The Director is the orchestrator of deployments.                                          |
+| Bosh Addon                      | A release job that is colocated on all VMs managed by the Director.                       |
+| Bosh Agent                      | A process that runs continuously on each VM that BOSH deploys. one Agent process per VM   |
+|---------------------------------+-------------------------------------------------------------------------------------------|
+| Bosh Jumpbox                    | A VM that acts as a single access point for the Director and deployed VMs.                |
+| Director Blobstore              | A repository where BOSH stores release artifacts, logs, stemcells, and other content, etc |
+| Cloud ID (CID)                  | ID returned from the Cloud identifying particular resource such as VM or disk.            |
+| [[https://docs.cloudfoundry.org/bbr/][BBR]] (bosh-backup-and-restore)   | a framework for backing up and restoring BOSH deployments and BOSH Directors.             |
+| [[https://github.com/cloudfoundry/bosh-bootloader][bbl]] (bosh-bootloader)           | a command line utility for standing up BOSH on multi-clouds                               |
+| [[https://github.com/pivotal-cf/kiln][kiln]]                            | Kiln helps you maintain tile metadata                                                     |
 ** Bosh Basic
-| Name                      | Command                                                                             |
-|---------------------------+-------------------------------------------------------------------------------------|
-| bosh                      | =apt install bosh-cli=,  [[https://bosh.io/docs/cli-v2/][link: pivotal bosh command]]                                 |
-| Interpolates variables    | =bosh int /tmp/build/4dc76cXXX/pks-lock/metadata --path=/ops_manager/username= [[https://bosh.io/docs/cli-int/][link]] |
-| Delete a deployment       | =bosh delete-deployment -d wf-deployment-0-7-0-dev-4=                               |
-| bosh log                  | =/var/vcap/bosh/log=                                                                |
-| List all bosh deployments | =bosh -n deployments=                                                               |
-| Download log files        | =bosh -d $deployment_id logs=                                                       |
-| Show deployment manifest  | =bosh manifest -d $deployment=                                                      |
-| bosh config               | =bosh cloud-config=, =bosh configs=                                                 |
-| List environment          | =bosh env=, =bosh env --json=                                                       |
-| List all instances        | =bosh instances=                                                                    |
-| Get vms per deployment    | =bosh -e $env -d $deployment vms=, =bosh instances=                                 |
-| Cloud consistency check   | =bosh cloud-check -d $deployment=                                                   |
-| List disks                | =bosh disks -o=                                                                     |
+| Name                      | Command                                                                         |
+|---------------------------+---------------------------------------------------------------------------------|
+| bosh                      | =apt install bosh-cli=, [[https://bosh.io/docs/cli-v2/][link: pivotal bosh command]]                              |
+| Interpolates variables    | =bosh int /tmp/build/4dcXX/pks-lock/metadata --path=/ops_manager/username= [[https://bosh.io/docs/cli-int/][link]] |
+| Delete a deployment       | =bosh delete-deployment -d $deployment=                                         |
+| bosh log                  | =/var/vcap/bosh/log=                                                            |
+| List all bosh deployments | =bosh -n deployments=                                                           |
+| Download log files        | =bosh -d <deployment>_id logs=                                                  |
+| Show deployment manifest  | =bosh manifest -d <deployment>=                                                 |
+| bosh config               | =bosh cloud-config=, =bosh configs=                                             |
+| List environment          | =bosh env=, =bosh env --json=                                                   |
+| List all instances        | =bosh instances=                                                                |
+| Get vms per deployment    | =bosh -e $env -d <deployment> vms=, =bosh instances=                            |
+| Cloud consistency check   | =bosh cloud-check -d <deployment>=                                              |
+| List disks                | =bosh disks -o=                                                                 |
 ** Bosh VM
-| Name        | Command                                                        |
-|-------------+----------------------------------------------------------------|
-| List vms    | =bosh vms=                                                     |
-| Delete a vm | =bosh delete-vm -d service-instance_c4b06291-XXX 35043957-XXX= |
-| SSH to vm   | =bosh -e 192.168.30.52 -d $deployment ssh $vm=                 |
+| Name                       | Command                                  |
+|----------------------------+------------------------------------------|
+| List vms                   | =bosh -d <deployment> vms=               |
+| List vms with verbose info | =bosh -d <deployment> vms --vitals=      |
+| Delete a vm                | =bosh -d <deployment> delete-vm <vm>=    |
+| SSH to vm                  | =bosh -e <env> -d <deployment> ssh <vm>= |
 ** Bosh Deployment
 | Name                          | Command                                             |
 |-------------------------------+-----------------------------------------------------|
 | List bosh deployments         | =bosh deployments=                                  |
-| Delete bosh deployment        | =bosh -n -d <deployment> delete-deployment --force= |
-| Get deployment manifest yaml  | =bosh manifest -d <deployment> > my.yaml=           |
-| Run bosh deployment from yaml | =bosh deploy -d <deployment> my.yaml=               |
-** Bosh Tasks
-| Name                          | Command                                        |
-|-------------------------------+------------------------------------------------|
-| List recent tasks             | =bosh tasks --recent=                          |
-| Attach to current task        | =bosh task -a=                                 |
-| Get task by id                | =bosh task $id=                                |
-| Get task detail msg           | =bosh task $id --debug=                        |
-| SSH to vm                     | =bosh -d $deployment_name ssh $instance_name=  |
-| Get all logs for a deployment | =bosh logs -d $deployment_name=                |
-| Get log for one vm            | =bosh logs -d $deployment_name $instance_name= |
-| List bosh events              | =bosh events=                                  |
+| Delete bosh deployment        | =bosh -n -d <deployment> delete-deployment --force=  |
+| Get deployment manifest yaml  | =bosh manifest -d <deployment> > my.yaml=            |
+| Run bosh deployment from yaml | =bosh deploy -d <deployment> my.yaml=                |
+** Bosh Task
+| Name                          | Command                                    |
+|-------------------------------+--------------------------------------------|
+| List recent tasks             | =bosh -d <deployment> tasks --recent=      |
+| List all tasks                | =bosh -d <deployment> tasks -ar=           |
+| Attach to current task        | =bosh -d <deployment> task -a=             |
+| Get task by id                | =bosh -d <deployment> task $id=            |
+| Get task detail msg           | =bosh -d <deployment> task $id --debug=    |
+| SSH to vm                     | =bosh -d <deployment> ssh $instance_name=  |
+| Get all logs for a deployment | =bosh -d <deployment> logs=                |
+| Get log for one vm            | =bosh -d <deployment> logs $instance_name= |
+| List bosh events              | =bosh events=                              |
 ** Bosh Release
 | Name                            | Command                                                                                    |
 |---------------------------------+--------------------------------------------------------------------------------------------|
@@ -97,10 +103,6 @@ Related post: [[https://cheatsheet.dennyzhang.com/cheatsheet-concourse-A4][Conco
 | Delete release                  | =bosh -n delete-release <my-release>/<release-version> --force=                            |
 | Upload release                  | =bosh -n upload-release /tmp/my-release-0.22.0.tgz=                                        |
 | Create a release from directory | =bosh init-release --dir <my-release>=                                                     |
-** Bosh Manifest
-| Name               | Command                                        |
-|--------------------+------------------------------------------------|
-| Show bosh manifest | =bosh manifest -d <deployment>= [[https://bosh.io/docs/cli-v2#manifest][link: manifest]] |
 ** Bosh Errand
 | Name                                  | Command                                                                              |
 |---------------------------------------+--------------------------------------------------------------------------------------|
@@ -108,26 +110,20 @@ Related post: [[https://cheatsheet.dennyzhang.com/cheatsheet-concourse-A4][Conco
 | Run errand in a new vm                | =bosh -n -d <deployment> run-errand <errand_name>=  [[https://bosh.io/docs/cli-v2/#run-errand][link: run-errand]]                 |
 | Run errand in a new vm with env alive | =bosh -n -d <deployment> run-errand <errand_name> --keep-alive=                      |
 | Run errand in an existing vm          | =bosh -n -d <deployment> run-errand <errand_name> --instance=worker/instance-id=XXX= |
+** Bosh Manifest
+| Name               | Command                                        |
+|--------------------+------------------------------------------------|
+| Show bosh manifest | =bosh manifest -d <deployment>= [[https://bosh.io/docs/cli-v2#manifest][link: manifest]] |
 ** Bosh Stemcell
 | Name            | Command                                     |
 |-----------------+---------------------------------------------|
 | Upload stemcell | =bosh -n upload-stemcell /tmp/stemcell.tgz= |
 | List stemcells  | =bosh -n stemcells=                         |
-** Bosh Tile
-| Name                       | Command                                                                             |
-|----------------------------+-------------------------------------------------------------------------------------|
-| Forms Reference            | https://docs.pivotal.io/tiledev/2-1/product-template-reference.html#form-properties |
-| Example                    | [[https://github.com/pivotal-cf-experimental/ops-manager-example/blob/master/example-product/metadata/example-product.yml.erb][example-product/metadata/example-product.yml.erb]]                                    |
-| Product Template Reference | https://docs.pivotal.io/tiledev/2-2/product-template-reference.html                 |
-| Property Reference         | https://docs.pivotal.io/tiledev/2-2/property-reference.html                         |
-| Tile Generator             | https://docs.pivotal.io/tiledev/2-1/tile-generator.html                             |
-| stemcells                  | https://bosh.io/stemcells/, [[https://network.pivotal.io/products/stemcells/#/releases/139780][Download link]]                                           |
-** Bosh related Tools
-| Name                                       | Comment                                     |
-|--------------------------------------------+---------------------------------------------|
-| kiln                                       | Kiln helps you maintain tile metadata. [[https://github.com/pivotal-cf/kiln][link]] |
-| monit: List bosh deployed daemon processes | =monit summary=                             |
-| monit: Restart a given daemon processes    | =monit restart <process_name>=              |
+** Bosh Monit
+| Name                                | Comment                        |
+|-------------------------------------+--------------------------------|
+| List bosh deployed daemon processes | =sudo su -=, =monit summary=   |
+| Restart a given daemon processes    | =monit restart <process_name>= |
 ** Ops manager
 | Name                                   | Command                                                                  |
 |----------------------------------------+--------------------------------------------------------------------------|
@@ -136,6 +132,14 @@ Related post: [[https://cheatsheet.dennyzhang.com/cheatsheet-concourse-A4][Conco
 | Change file permision for your release | =chown tempest-web:tempest-web /var/tempest/releases/<your-release.tgz>= |
 | Tile entrance file                     | =/var/tempest/workspaces/default/metadata/*.yml=                         |
 | Tile jobs folder                       | =/var/vcap/jobs=                                                         |
+** Bosh Tile Reference
+| Name                       | Command                                                                             |
+|----------------------------+-------------------------------------------------------------------------------------|
+| Forms Reference            | https://docs.pivotal.io/tiledev/2-1/product-template-reference.html#form-properties |
+| Product Template Reference | https://docs.pivotal.io/tiledev/2-2/product-template-reference.html                 |
+| Property Reference         | https://docs.pivotal.io/tiledev/2-2/property-reference.html                         |
+| Tile Generator             | https://docs.pivotal.io/tiledev/2-1/tile-generator.html                             |
+| Example                    | [[https://github.com/pivotal-cf-experimental/ops-manager-example/blob/master/example-product/metadata/example-product.yml.erb][example-product/metadata/example-product.yml.erb]]                                    |
 ** Online Help Usage
 #+BEGIN_EXAMPLE
  kubo@jumper:~$ bosh --help
@@ -897,3 +901,25 @@ After we have successfully run "bosh upload-blobs", blobs.yml will be updated au
 
  Succeeded
 #+END_EXAMPLE
+* #  --8<-------------------------- separator ------------------------>8-- :noexport:
+* bosh how to get the detail of one task                      :noexport:
+bosh task -a
+
+tail the log doesn't work
+** HALF get bosh task detail
+ 81
+
+
+ ID  State       Started At                    Last Activity At              User         Deployment                         Description                                                              Result
+ 90  processing  Wed Sep 26 23:12:06 UTC 2018  Wed Sep 26 23:12:06 UTC 2018  ops_manager  pks-vrops-deployment-0-6-0-dev-11  create deployment                                                        -
+ 89  done        Wed Sep 26 23:11:29 UTC 2018  Wed Sep 26 23:12:05 UTC 2018  ops_manager  pks-vrops-deployment-0-6-0-dev-11  run errand unregister from deployment pks-vrops-deployment-0-6-0-dev-11  1 succeeded, 0 errored, 0 canceled
+ 88  done        Wed Sep 26 23:10:30 UTC 2018  Wed Sep 26 23:11:27 UTC 2018  ops_manager  pks-vrops-deployment-0-6-0-dev-11  create deployment                                                        /deployments/pks-vrops-deployment-0-6-0-dev-11
+ 87  done        Wed Sep 26 23:09:51 UTC 2018  Wed Sep 26 23:10:29 UTC 2018  ops_manager  pks-vrops-deployment-0-6-0-dev-11  run errand unregister from deployment pks-vrops-deployment-0-6-0-dev-11  1 succeeded, 0 errored, 0 canceled
+ 86  done        Wed Sep 26 23:08:52 UTC 2018  Wed Sep 26 23:09:49 UTC 2018  ops_manager  pks-vrops-deployment-0-6-0-dev-11  create deployment                                                        /deployments/pks-vrops-deployment-0-6-0-dev-11
+ 85  done        Wed Sep 26 23:08:15 UTC 2018  Wed Sep 26 23:08:50 UTC 2018  ops_manager  pks-vrops-deployment-0-6-0-dev-11  run errand unregister from deployment pks-vrops-deployment-0-6-0-dev-11  0 succeeded, 1 errored, 0 canceled
+ 84  done        Wed Sep 26 23:07:15 UTC 2018  Wed Sep 26 23:08:13 UTC 2018  ops_manager  pks-vrops-deployment-0-6-0-dev-11  create deployment                                                        /deployments/pks-vrops-deployment-0-6-0-dev-11
+ 83  done        Wed Sep 26 23:06:35 UTC 2018  Wed Sep 26 23:07:14 UTC 2018  ops_manager  pks-vrops-deployment-0-6-0-dev-11  run errand unregister from deployment pks-vrops-deployment-0-6-0-dev-11  0 succeeded, 1 errored, 0 canceled
+ 82  done        Wed Sep 26 23:05:33 UTC 2018  Wed Sep 26 23:06:34 UTC 2018  ops_manager  pks-vrops-deployment-0-6-0-dev-11  create deployment                                                        /deployments/pks-vrops-deployment-0-6-0-dev-11
+ 81  done        Wed Sep 26 23:04:57 UTC 2018  Wed Sep 26 23:05:31 UTC 2018  ops_manager  pks-vrops-deployment-0-6-0-dev-11  run errand unregister from deployment pks-vrops-deployment-0-6-0-dev-11  0 succeeded, 1 errored, 0 canceled
+* bosh tile                                                        :noexport:
+** instance-groups
