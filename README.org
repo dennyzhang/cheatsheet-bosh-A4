@@ -1,4 +1,4 @@
-* Bosh CheatSheet                                                     :Tools:
+* Bosh CheatSheet                                                     :VMware:
 :PROPERTIES:
 :type:     pivotal, pks, vmware
 :export_file_name: cheatsheet-bosh-A4.pdf
@@ -23,63 +23,69 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 
 See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][#denny-cheatsheets]]
 
-Related post: [[https://cheatsheet.dennyzhang.com/cheatsheet-concourse-A4][Concourse CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSheet]]
-
+Related post: [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][Tile CheatSheet]]
+** Bosh Frequent-Used
+| Name                          | Command                                                         |
+|-------------------------------+-----------------------------------------------------------------|
+| List all tasks                | =bosh -d <deployment> tasks -ar=                                |
+| Get task detail msg           | =bosh -d <deployment> task $id --debug=                         |
+| List deployments and vms      | =bosh deployments=, =bosh -d <deployment> vms=                  |
+| Run errand in vms not deleted | =bosh -n -d <deployment> run-errand <errand_name> --keep-alive= |
 ** Bosh Concepts
-| Name                            | Comment                                                                                   |
-|---------------------------------+-------------------------------------------------------------------------------------------|
-| Reference                       | [[https://bosh.io/docs/terminology][link: terminology]]                                                                         |
-| [[https://bosh.cloudfoundry.org/stemcells/][Bosh Stemcells]]                  | A versioned Operating System image. [[https://network.pivotal.io/][Download stemcell]]                                     |
-| [[https://docs.pivotal.io/tiledev/2-2/tile-structure.html][Bosh Tile]]                       | A *.pivotal file containing everything needed to install/upgrade a PCF service            |
-| [[https://bosh.io/docs/terminology/#deployment][Bosh Deployment]]                 | An encapsulation of software and configuration that BOSH can deploy to the cloud.         |
-| [[https://bosh.io/docs/release/][Bosh Release]]                    | Everything needed to make a software component deployable by BOSH.                        |
-| [[https://bosh.io/docs/jobs/][Bosh Job]]                        | Each release job represents a specific chunk of work that the release performs.           |
-| [[https://bosh.io/docs/terminology/#package][Bosh Package]]                    | It contains vendored in software source and scripts to compile it.                        |
-| [[https://bosh.io/docs/errands/][Bosh Errand]]                     | A short-lived job that can be triggered by an operator any time after the deploy.         |
-|---------------------------------+-------------------------------------------------------------------------------------------|
-| Bosh Manifest                   | A YAML file that identifies one or more releases, stemcells and configurations            |
-| Bosh Operations file (ops file) | A YAML file that includes multiple operations to be applied to a different YAML file.     |
-| Bosh Event                      | Actions taken by the Director (via user or system control) are recorded as events         |
-| Bosh Director                   | The Director is the orchestrator of deployments.                                          |
-| Bosh Addon                      | A release job that is colocated on all VMs managed by the Director.                       |
-| Bosh Agent                      | A process that runs continuously on each VM that BOSH deploys. one Agent process per VM   |
-|---------------------------------+-------------------------------------------------------------------------------------------|
-| Bosh Jumpbox                    | A VM that acts as a single access point for the Director and deployed VMs.                |
-| Director Blobstore              | A repository where BOSH stores release artifacts, logs, stemcells, and other content, etc |
-| Cloud ID (CID)                  | ID returned from the Cloud identifying particular resource such as VM or disk.            |
-| [[https://docs.cloudfoundry.org/bbr/][BBR]] (bosh-backup-and-restore)   | a framework for backing up and restoring BOSH deployments and BOSH Directors.             |
-| [[https://github.com/cloudfoundry/bosh-bootloader][bbl]] (bosh-bootloader)           | a command line utility for standing up BOSH on multi-clouds                               |
-| [[https://github.com/pivotal-cf/kiln][kiln]]                            | Kiln helps you maintain tile metadata                                                     |
+| Name               | Comment                                                                                                |
+|--------------------+--------------------------------------------------------------------------------------------------------|
+| Reference          | [[https://bosh.io/docs/terminology][link: terminology]]                                                                                      |
+| [[https://bosh.cloudfoundry.org/stemcells/][Bosh Stemcells]]     | A versioned Operating System image. [[https://network.pivotal.io/][Download stemcell]]                                                  |
+| [[https://bosh.io/docs/terminology/#deployment][Bosh Deployment]]    | An encapsulation of software and configuration that BOSH can deploy to the cloud.                      |
+| [[https://bosh.io/docs/release/][Bosh Release]]       | Everything needed to make a software component deployable by BOSH.                                     |
+| [[https://bosh.io/docs/jobs/][Bosh Job]]           | Each release job represents a specific chunk of work that the release performs.                        |
+| [[https://bosh.io/docs/terminology/#package][Bosh Package]]       | It contains vendored in software source and scripts to compile it.                                     |
+| [[https://bosh.io/docs/errands/][Bosh Errand]]        | A short-lived job that can be triggered by an operator any time after the deploy.                      |
+|--------------------+--------------------------------------------------------------------------------------------------------|
+| [[https://docs.pivotal.io/tiledev/2-2/tile-structure.html][Bosh Tile]]          | A *.pivotal file with everything needed to install/upgrade a PCF service. [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][Tile CheatSheet]]              |
+| [[https://bosh.io/docs/terminology/#manifest][Bosh Manifest]]      | A YAML file that identifies one or more releases, stemcells and configurations                         |
+| [[https://bosh.io/docs/terminology/#operations-file][Bosh ops file]]      | A YAML file that includes multiple operations to be applied to a different YAML file.                  |
+| [[https://bosh.io/docs/terminology/#event][Bosh Event]]         | Actions taken by the Director (via user or system control) are recorded as events                      |
+|--------------------+--------------------------------------------------------------------------------------------------------|
+| Bosh Director      | The Director is the orchestrator of deployments.                                                       |
+| Bosh Addon         | A release job that is colocated on all VMs managed by the Director.                                    |
+| Bosh Agent         | A process that runs continuously on each VM that BOSH deploys. one Agent process per VM                |
+| Bosh Jumpbox       | A VM that acts as a single access point for the Director and deployed VMs.                             |
+| Director Blobstore | A repository where BOSH stores release artifacts, logs, stemcells, and other content, etc              |
+| Cloud ID (CID)     | ID returned from the Cloud identifying particular resource such as VM or disk.                         |
+| [[https://docs.cloudfoundry.org/bbr/][BBR]]                | bosh-backup-and-restore: a framework for backing up and restoring BOSH deployments and BOSH Directors. |
+| [[https://github.com/cloudfoundry/bosh-bootloader][bbl]]                | bosh-bootloader: a command line utility for standing up BOSH on multi-clouds                           |
+| [[https://github.com/pivotal-cf/kiln][kiln]]               | Kiln helps you maintain tile metadata                                                                  |
 ** Bosh Basic
 | Name                      | Command                                                                         |
 |---------------------------+---------------------------------------------------------------------------------|
 | bosh                      | =apt install bosh-cli=, [[https://bosh.io/docs/cli-v2/][link: pivotal bosh command]]                              |
+| bosh log                  | =/var/vcap/bosh/log=                                                            |
 | Interpolates variables    | =bosh int /tmp/build/4dcXX/pks-lock/metadata --path=/ops_manager/username= [[https://bosh.io/docs/cli-int/][link]] |
 | Delete a deployment       | =bosh delete-deployment -d $deployment=                                         |
-| bosh log                  | =/var/vcap/bosh/log=                                                            |
-| List all bosh deployments | =bosh -n deployments=                                                           |
+| List all bosh deployments | =bosh -n deployments=, =bosh -n deployments --json=                             |
 | Download log files        | =bosh -d <deployment>_id logs=                                                  |
 | Show deployment manifest  | =bosh manifest -d <deployment>=                                                 |
 | bosh config               | =bosh cloud-config=, =bosh configs=                                             |
-| List environment          | =bosh env=, =bosh env --json=                                                   |
+| List environment          | =bosh env=, =bosh env --json=, =bosh envs=                                      |
 | List all instances        | =bosh instances=                                                                |
 | Get vms per deployment    | =bosh -e $env -d <deployment> vms=, =bosh instances=                            |
 | Cloud consistency check   | =bosh cloud-check -d <deployment>=                                              |
 | List disks                | =bosh disks -o=                                                                 |
 ** Bosh VM
-| Name                       | Command                                  |
-|----------------------------+------------------------------------------|
-| List vms                   | =bosh -d <deployment> vms=               |
-| List vms with verbose info | =bosh -d <deployment> vms --vitals=      |
-| Delete a vm                | =bosh -d <deployment> delete-vm <vm>=    |
-| SSH to vm                  | =bosh -e <env> -d <deployment> ssh <vm>= |
+| Name                       | Command                                              |
+|----------------------------+------------------------------------------------------|
+| List vms                   | =bosh -d <deployment> vms=                           |
+| List vms with verbose info | =bosh -d <deployment> vms --vitals=                  |
+| Delete a vm                | =bosh -d <deployment> delete-vm <vm-name>/<GUID>=    |
+| SSH to vm                  | =bosh -e <env> -d <deployment> ssh <vm-name>/<GUID>= |
 ** Bosh Deployment
 | Name                          | Command                                             |
 |-------------------------------+-----------------------------------------------------|
 | List bosh deployments         | =bosh deployments=                                  |
-| Delete bosh deployment        | =bosh -n -d <deployment> delete-deployment --force=  |
-| Get deployment manifest yaml  | =bosh manifest -d <deployment> > my.yaml=            |
-| Run bosh deployment from yaml | =bosh deploy -d <deployment> my.yaml=                |
+| Delete bosh deployment        | =bosh -n -d <deployment> delete-deployment --force= |
+| Get deployment manifest yaml  | =bosh manifest -d <deployment> > my.yaml=           |
+| Run bosh deployment from yaml | =bosh deploy -d <deployment> my.yaml=               |
 ** Bosh Task
 | Name                          | Command                                    |
 |-------------------------------+--------------------------------------------|
@@ -115,10 +121,12 @@ Related post: [[https://cheatsheet.dennyzhang.com/cheatsheet-concourse-A4][Conco
 |--------------------+------------------------------------------------|
 | Show bosh manifest | =bosh manifest -d <deployment>= [[https://bosh.io/docs/cli-v2#manifest][link: manifest]] |
 ** Bosh Stemcell
-| Name            | Command                                     |
-|-----------------+---------------------------------------------|
-| Upload stemcell | =bosh -n upload-stemcell /tmp/stemcell.tgz= |
-| List stemcells  | =bosh -n stemcells=                         |
+| Name              | Command                                                                                         |
+|-------------------+-------------------------------------------------------------------------------------------------|
+| Upload stemcell   | =bosh -n upload-stemcell /tmp/stemcell.tgz=                                                     |
+| List stemcells    | =bosh -n stemcells=                                                                             |
+| Delete a stemcell | =bosh delete-stemcell <stemcell-name>/<stemcell-version>=                                       |
+| [[https://docs.pivotal.io/pivotalcf/2-3/customizing/understanding-stemcells.html][Floating stemcell]] | Floating stemcells allow upgrade to the minor versions of stemcells but not the major versions. |
 ** Bosh Monit
 | Name                                | Comment                        |
 |-------------------------------------+--------------------------------|
@@ -288,20 +296,22 @@ License: Code is licensed under [[https://www.dennyzhang.com/wp-content/mit_lice
 #+LINK_UP:
 #+LINK_HOME:
 * #  --8<-------------------------- separator ------------------------>8-- :noexport:
+* TODO Contribute back the cheatsheet to bosh community            :noexport:
+* #  --8<-------------------------- separator ------------------------>8-- :noexport:
+* TODO Get the errand output                                       :noexport:
 * TODO Update errand setting                                       :noexport:
 https://bosh.io/docs/errands/
 * TODO Login to vm and debug                                       :noexport:
 * TODO bosh interpolate                                            :noexport:
-* DONE bosh cli lessons learned: bosh client, bosh auth, bosh facility tool are mixed up :noexport:
-  CLOSED: [2018-08-22 Wed 10:18]
-* TODO tile packages                                               :noexport:
-https://bosh.io/docs/packages/
-
-https://gitlab.eng.vmware.com/PKS/wavefront-proxy-release/issues/14
-
-https://gitlab.eng.vmware.com/PKS/pks-vrli-release/commit/7f8bda1c5ce9a9c44c2f41c6ee88a9f5ad5eb461
+* #  --8<-------------------------- separator ------------------------>8-- :noexport:
+* TODO bosh get deployment definition
+get the command to re-run: create deployment
 * TODO bosh get manifest for a failed task                         :noexport:
 * TODO bosh how to retry a failed task/errand                      :noexport:
+* TODO bosh keep tailing the task
+bosh task -a -l
+
+get the latest one
 * bosh blobs                                                       :noexport:
 https://bosh.io/docs/release-blobs/
 ** add-blob
@@ -388,60 +398,7 @@ After we have successfully run "bosh upload-blobs", blobs.yml will be updated au
  Exit code 1
  #+END_EXAMPLE
 
-* bosh delete vm                                                   :noexport:
-#+BEGIN_EXAMPLE
- kubo@jumper:~$ bosh vms
- Using environment '30.0.X.11' as client 'ops_manager'
-
- Task 291
- Task 294
- Task 292
- Task 293
- Task 291 done
-
- Task 292 done
-
- Task 294 done
-
- Task 293 done
-
- Deployment 'XXX-container-service-37f4102408dc7e3b4fcf'
-
- Instance                                                        Process State  AZ    IPs        VM CID                                   VM Type  Active
- XXX-container-service/6245d88f-7d52-4371-a3c2-5dc023c32fe9  running        az-1  30.0.0.12  vm-b27efb7f-c0d8-42e7-bd55-d28f68b10cb7  medium   -
-
- 1 vms
-
- Deployment 'service-instance_1ee08f0f-2e8a-45f9-a1f8-5e0d608225b4'
-
- Instance                                     Process State  AZ    IPs       VM CID                                   VM Type  Active
- master/05e56b86-b650-4ec6-a953-3de9a736517d  running        az-1  40.0.2.2  vm-4bd0dd74-2b13-4062-bc29-d5130f29ed0e  medium   -
- worker/7881dd78-0006-4466-a4bd-ebee59477998  running        az-1  40.0.2.4  vm-d24b71a6-55bd-418e-8694-ed8bb595acd8  medium   -
- worker/adf1ecda-700e-4d52-a675-34c8853fd063  running        az-1  40.0.2.3  vm-73dd78c2-e3d1-4030-9805-7402af9756f8  medium   -
-
- 3 vms
-
- Deployment 'service-instance_c4b06291-ed29-4b5e-89c2-ff35547db2d2'
-
- Instance                                     Process State  AZ    IPs       VM CID                                   VM Type  Active
- master/85496f06-26aa-4dfd-b181-1c6b7e29f655  running        az-1  40.0.1.2  vm-d6938cf5-0349-488b-96c3-9c20784076ea  medium   -
- worker/1f4cc6b9-533a-4edf-bec1-03f2fd402b8d  stopped        az-1  40.0.1.3  vm-00cf6f5b-dfe9-46df-8856-867d5fad4d1b  medium   -
- worker/35043957-97b4-4aa5-bfda-9d495831a7e8  running        az-1  40.0.1.4  vm-b0adf348-3faa-486d-a8f5-a05128932b9a  medium   -
-
- Succeeded
-
- kubo@jumper:~$ bosh delete-vm -d service-instance_c4b06291-ed29-4b5e-89c2-ff35547db2d2 35043957-97b4-4aa5-bfda-9d495831a7e8
- Using environment '30.0.0.11' as client 'ops_manager'
-
- Using deployment 'service-instance_c4b06291-ed29-4b5e-89c2-ff35547db2d2'
-
- Continue? [yN]: y
-
- Task 295
- . Done
-#+END_EXAMPLE
 * bosh manifest                                                    :noexport:
-
 #+BEGIN_EXAMPLE
  kubo@jumper:~$  bosh manifest -d service-instance_1ee08f0f-2e8a-45f9-a1f8-5e0d608225b4
  Using environment '30.0.0.11' as client 'ops_manager'
@@ -901,8 +858,7 @@ After we have successfully run "bosh upload-blobs", blobs.yml will be updated au
 
  Succeeded
 #+END_EXAMPLE
-* #  --8<-------------------------- separator ------------------------>8-- :noexport:
-* bosh how to get the detail of one task                      :noexport:
+* bosh how to get the detail of one task                           :noexport:
 bosh task -a
 
 tail the log doesn't work
@@ -921,5 +877,91 @@ tail the log doesn't work
  83  done        Wed Sep 26 23:06:35 UTC 2018  Wed Sep 26 23:07:14 UTC 2018  ops_manager  pks-vrops-deployment-0-6-0-dev-11  run errand unregister from deployment pks-vrops-deployment-0-6-0-dev-11  0 succeeded, 1 errored, 0 canceled
  82  done        Wed Sep 26 23:05:33 UTC 2018  Wed Sep 26 23:06:34 UTC 2018  ops_manager  pks-vrops-deployment-0-6-0-dev-11  create deployment                                                        /deployments/pks-vrops-deployment-0-6-0-dev-11
  81  done        Wed Sep 26 23:04:57 UTC 2018  Wed Sep 26 23:05:31 UTC 2018  ops_manager  pks-vrops-deployment-0-6-0-dev-11  run errand unregister from deployment pks-vrops-deployment-0-6-0-dev-11  0 succeeded, 1 errored, 0 canceled
-* bosh tile                                                        :noexport:
-** instance-groups
+* #  --8<-------------------------- separator ------------------------>8-- :noexport:
+* TODO scenario: bosh detect a problematic vm (master/worker)      :noexport:
+* TODO draw a bosh diagram                                         :noexport:
+* TODO errand log convention                                       :noexport:
+#+BEGIN_EXAMPLE
+vrops-errands/018e9207-a308-4510-bc9b-c4784e839465:/var/vcap/sys/log$ ls -lth
+total 16K
+drwxrwx--- 2 vcap vcap 4.0K Oct  8 06:02 bosh-dns
+drwxrwx--- 2 root vcap 4.0K Oct  8 06:02 kubo-dns-aliases
+drwxrwx--- 2 root vcap 4.0K Oct  8 06:02 unregister
+drwxrwx--- 2 root vcap 4.0K Oct  8 06:02 register
+vrops-errands/018e9207-a308-4510-bc9b-c4784e839465:/var/vcap/sys/log$ cd ./register/
+vrops-errands/018e9207-a308-4510-bc9b-c4784e839465:/var/vcap/sys/log/register$ ls
+vrops-errands/018e9207-a308-4510-bc9b-c4784e839465:/var/vcap/sys/log/register$ ls -lth
+total 0
+vrops-errands/018e9207-a308-4510-bc9b-c4784e839465:/var/vcap/sys/log/register$ cd ..
+vrops-errands/018e9207-a308-4510-bc9b-c4784e839465:/var/vcap/sys/log$ tree
+-bash: tree: command not found
+vrops-errands/018e9207-a308-4510-bc9b-c4784e839465:/var/vcap/sys/log$ ls -lth *reg*
+unregister:
+total 0
+
+register:
+total 0
+#+END_EXAMPLE
+* HALF bosh: /tmp/build/4dc76c32/github-kubo-deployment/kubo-deployment-0.19.0/kubo-deployment/manifests :noexport:
+* TODO bosh where errand is stored?                                :noexport:
+bosh -n upload-release /tmp/build/4dc76c32/pks-release/wavefront-proxy-0.8.0-dev.16.tgz
+
+cd /tmp/a/jobs
+
+tar -cvf wavefront-proxy-errand.tgz job.MF monit templates
+rm -rf job.MF monit templates
+
+cd ..
+
+tar -cvf wavefront-proxy.tgz *
+
+bosh -n upload-release /tmp/a/wavefront-proxy.tgz --skip-tls-validation
+
+bosh -n -d wf-deployment-0-8-0-dev-16 run-errand wavefront-proxy-errand --keep-alive
+
+om --target https://30.0.0.5 --username admin --password 'Admin!23' -k curl --request GET --data '' --path /api/v0/certificate_authorities -s
+
+* TODO scenario: bosh how to tail a deployment                     :noexport:
+#+BEGIN_EXAMPLE
+ubuntu@opsman:~$ bosh tasks --recent=10
+Using environment '30.0.0.11' as client 'ops_manager'
+
+ID  State       Started At                    Last Activity At              User         Deployment                                      Description        Result
+26  processing  Tue Oct  9 17:52:54 UTC 2018  Tue Oct  9 17:52:54 UTC 2018  ops_manager  pivotal-container-service-6114061bd13957604dcb  create deployment  -
+25  done        Tue Oct  9 17:52:38 UTC 2018  Tue Oct  9 17:52:52 UTC 2018  ops_manager  -                                               create release     Created release 'wavefront-proxy/0.8.0'
+24  done        Tue Oct  9 17:51:31 UTC 2018  Tue Oct  9 17:51:54 UTC 2018  ops_manager  -                                               create release     Created release 'backup-and-restore-sdk/1.8.0'
+23  done        Tue Oct  9 17:50:44 UTC 2018  Tue Oct  9 17:50:52 UTC 2018  ops_manager  -                                               create release     Created release 'bpm/0.6.0'
+22  done        Tue Oct  9 17:50:19 UTC 2018  Tue Oct  9 17:50:32 UTC 2018  ops_manager  -                                               create release     Created release 'uaa/60.2'
+21  done        Tue Oct  9 17:49:57 UTC 2018  Tue Oct  9 17:50:02 UTC 2018  ops_manager  -                                               create release     Created release 'event-emitter/0.13.0'
+20  done        Tue Oct  9 17:49:45 UTC 2018  Tue Oct  9 17:49:46 UTC 2018  ops_manager  -                                               create release     Created release 'pks-telemetry/0.9.2'
+19  done        Tue Oct  9 17:49:38 UTC 2018  Tue Oct  9 17:49:43 UTC 2018  ops_manager  -                                               create release     Created release 'syslog-migration/11.1.1'
+18  done        Tue Oct  9 17:49:29 UTC 2018  Tue Oct  9 17:49:30 UTC 2018  ops_manager  -                                               create release     Created release 'pks-vrli/0.6.0'
+17  done        Tue Oct  9 17:49:14 UTC 2018  Tue Oct  9 17:49:25 UTC 2018  ops_manager  -                                               create release     Created release 'nsx-cf-cni/2.3.0.10066840'
+
+10 tasks
+
+Succeeded
+ubuntu@opsman:~$ bosh tasks --recent=10^C
+ubuntu@opsman:~$ bosh task -a
+Using environment '30.0.0.11' as client 'ops_manager'
+
+Task 26
+
+Task 26 | 17:52:54 | Preparing deployment: Preparing deployment (00:00:10)
+Task 26 | 17:53:17 | Preparing package compilation: Finding packages to compile (00:00:00)
+Task 26 | 17:53:17 | Compiling packages: golang-1-linux/8fb48ae1b653b7d0b49d0cbcea856bb8da8a5700
+Task 26 | 17:53:17 | Compiling packages: golang-1-linux/4f3c42aabef059e5de7860640cf39ff2b151ba32
+Task 26 | 17:55:18 | Compiling packages: golang-1-linux/8fb48ae1b653b7d0b49d0cbcea856bb8da8a5700 (00:02:01)
+Task 26 | 17:55:18 | Compiling packages: bosh-dns/138f3bd2440ba97f0a7d8912facb5d4a2b320850
+Task 26 | 17:55:19 | Compiling packages: golang-1-linux/4f3c42aabef059e5de7860640cf39ff2b151ba32 (00:02:02)
+Task 26 | 17:55:19 | Compiling packages: wavefront-alert/7ac3434157adbcd7dd2be99742f41413c6632189 (00:00:32)
+Task 26 | 17:55:58 | Compiling packages: bosh-dns/138f3bd2440ba97f0a7d8912facb5d4a2b320850 (00:00:40)
+Task 26 | 17:56:18 | Creating missing vms: pivotal-container-service/75361870-d03f-4afc-8303-6f8d301b8dce (0) (00:01:33)
+Task 26 | 17:57:51 | Updating instance pivotal-container-service: pivotal-container-service/75361870-d03f-4afc-8303-6f8d301b8dce (0) (canary)
+#+END_EXAMPLE
+
+* TODO Blog: Improvements I expecting from Bosh                    :noexport:
+** bosh retry a failed errand/task
+** bosh tail the log
+* #  --8<-------------------------- separator ------------------------>8-- :noexport:
+* TODO Bosh build the local release and test against it            :noexport:
