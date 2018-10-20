@@ -32,30 +32,31 @@ Related post: [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSh
 | List deployments and vms      | =bosh deployments=, =bosh -d <deployment> vms=                  |
 | Run errand in vms not deleted | =bosh -n -d <deployment> run-errand <errand_name> --keep-alive= |
 ** Bosh Concepts
-| Name               | Comment                                                                                                |
-|--------------------+--------------------------------------------------------------------------------------------------------|
-| Reference          | [[https://bosh.io/docs/terminology][link: terminology]]                                                                                      |
-| [[https://bosh.cloudfoundry.org/stemcells/][Bosh Stemcells]]     | A versioned Operating System image. [[https://network.pivotal.io/][Download stemcell]]                                                  |
-| [[https://bosh.io/docs/terminology/#deployment][Bosh Deployment]]    | An encapsulation of software and configuration that BOSH can deploy to the cloud.                      |
-| [[https://bosh.io/docs/release/][Bosh Release]]       | Everything needed to make a software component deployable by BOSH.                                     |
-| [[https://bosh.io/docs/jobs/][Bosh Job]]           | Each release job represents a specific chunk of work that the release performs.                        |
-| [[https://bosh.io/docs/terminology/#package][Bosh Package]]       | It contains vendored in software source and scripts to compile it.                                     |
-| [[https://bosh.io/docs/errands/][Bosh Errand]]        | A short-lived job that can be triggered by an operator any time after the deploy.                      |
-|--------------------+--------------------------------------------------------------------------------------------------------|
-| [[https://docs.pivotal.io/tiledev/2-2/tile-structure.html][Bosh Tile]]          | A *.pivotal file with everything needed to install/upgrade a PCF service. [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][Tile CheatSheet]]              |
-| [[https://bosh.io/docs/terminology/#manifest][Bosh Manifest]]      | A YAML file that identifies one or more releases, stemcells and configurations                         |
-| [[https://bosh.io/docs/terminology/#operations-file][Bosh ops file]]      | A YAML file that includes multiple operations to be applied to a different YAML file.                  |
-| [[https://bosh.io/docs/terminology/#event][Bosh Event]]         | Actions taken by the Director (via user or system control) are recorded as events                      |
-|--------------------+--------------------------------------------------------------------------------------------------------|
-| Bosh Director      | The Director is the orchestrator of deployments.                                                       |
-| Bosh Addon         | A release job that is colocated on all VMs managed by the Director.                                    |
-| Bosh Agent         | A process that runs continuously on each VM that BOSH deploys. one Agent process per VM                |
-| Bosh Jumpbox       | A VM that acts as a single access point for the Director and deployed VMs.                             |
-| Director Blobstore | A repository where BOSH stores release artifacts, logs, stemcells, and other content, etc              |
-| Cloud ID (CID)     | ID returned from the Cloud identifying particular resource such as VM or disk.                         |
-| [[https://docs.cloudfoundry.org/bbr/][BBR]]                | bosh-backup-and-restore: a framework for backing up and restoring BOSH deployments and BOSH Directors. |
-| [[https://github.com/cloudfoundry/bosh-bootloader][bbl]]                | bosh-bootloader: a command line utility for standing up BOSH on multi-clouds                           |
-| [[https://github.com/pivotal-cf/kiln][kiln]]               | Kiln helps you maintain tile metadata                                                                  |
+| Name               | Comment                                                                                                               |
+|--------------------+-----------------------------------------------------------------------------------------------------------------------|
+| Reference          | [[https://bosh.io/docs/terminology][link: terminology]]                                                                                                     |
+| [[https://bosh.cloudfoundry.org/stemcells/][Bosh Stemcells]]     | A versioned Operating System image. [[https://network.pivotal.io/][Download stemcell]]                                                                 |
+| [[https://bosh.io/docs/terminology/#deployment][Bosh Deployment]]    | An encapsulation of software and configuration that BOSH can deploy to the cloud.                                     |
+| [[https://bosh.io/docs/release/][Bosh Release]]       | Everything needed to make a software component deployable by BOSH.                                                    |
+| [[https://bosh.io/docs/jobs/][Bosh Job]]           | Each release job represents a specific chunk of work that the release performs.                                       |
+| [[https://bosh.io/docs/terminology/#package][Bosh Package]]       | It contains vendored in software source and scripts to compile it.                                                    |
+| [[https://bosh.io/docs/errands/][Bosh Errand]]        | A short-lived job that can be triggered by an operator any time after the deploy.                                     |
+|--------------------+-----------------------------------------------------------------------------------------------------------------------|
+| [[https://docs.pivotal.io/tiledev/2-2/tile-structure.html][Bosh Tile]]          | A *.pivotal file with everything needed to install/upgrade a PCF service. [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][Tile CheatSheet]]                             |
+| [[https://bosh.io/docs/terminology/#manifest][Bosh Manifest]]      | A YAML file that identifies one or more releases, stemcells and configurations                                        |
+| [[https://bosh.io/docs/terminology/#operations-file][Bosh ops file]]      | A YAML file that includes multiple operations to be applied to a different YAML file.                                 |
+| [[https://bosh.io/docs/terminology/#event][Bosh Event]]         | Actions taken by the Director (via user or system control) are recorded as events                                     |
+|--------------------+-----------------------------------------------------------------------------------------------------------------------|
+| Bosh Director      | The Director is the orchestrator of deployments.                                                                      |
+| Bosh Addon         | A release job that is colocated on all VMs managed by the Director.                                                   |
+| Bosh Agent         | A process that runs continuously on each VM that BOSH deploys. one Agent process per VM                               |
+| Bosh Jumpbox       | A VM that acts as a single access point for the Director and deployed VMs.                                            |
+| Director Blobstore | A repository where BOSH stores release artifacts, logs, stemcells, and other content, etc                             |
+| Cloud ID (CID)     | ID returned from the Cloud identifying particular resource such as VM or disk.                                        |
+| [[https://docs.cloudfoundry.org/bbr/][BBR]]                | bosh-backup-and-restore: a framework for backing up and restoring BOSH deployments and BOSH Directors.                |
+| [[https://github.com/cloudfoundry/bosh-bootloader][bbl]]                | bosh-bootloader: a command line utility for standing up BOSH on multi-clouds                                          |
+| [[https://github.com/cloudfoundry-incubator/bpm-release][bpm]]                | BOSH process manager: isolation of BOSH jobs to make they run on many different work schedulers instead of monit only |
+| [[https://github.com/pivotal-cf/kiln][kiln]]               | Kiln helps you maintain tile metadata                                                                                 |
 ** Bosh Basic
 | Name                      | Command                                                                         |
 |---------------------------+---------------------------------------------------------------------------------|
@@ -98,17 +99,30 @@ Related post: [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSh
 | Get all logs for a deployment | =bosh -d <deployment> logs=                |
 | Get log for one vm            | =bosh -d <deployment> logs $instance_name= |
 | List bosh events              | =bosh events=                              |
-** Bosh Release
-| Name                            | Command                                                                                    |
-|---------------------------------+--------------------------------------------------------------------------------------------|
-| List release                    | =bosh -n releases=                                                                         |
-| Release folder                  | =/var/tempest/releases=                                                                    |
-| Create a local release          | =bosh create-release --tarball=myrelease-0.4.0.tgz=                                        |
-| Inspect a release               | =bosh inspect-release <my-release>/<release-version>=                                      |
-| Export a release                | =bosh -d <deployment> export-release <my-release>/<release-version> ubuntu-trusty/3586.36= |
-| Delete release                  | =bosh -n delete-release <my-release>/<release-version> --force=                            |
-| Upload release                  | =bosh -n upload-release /tmp/my-release-0.22.0.tgz=                                        |
-| Create a release from directory | =bosh init-release --dir <my-release>=                                                     |
+** Bosh Job - Concepts
+| Name      | Command                                  |
+|-----------+------------------------------------------|
+| Reference | [[https://github.com/cloudfoundry-incubator/kubo-release/tree/master/jobs][Example: kubo-release/jobs]]               |
+| provides  | Export resources for other bosh releases |
+| consumes  | Use resources from other bosh releases   |
+| packages  | Packages get installed by bosh           |
+| templates | Conf files                               |
+** Bosh Release - Basic
+| Name                   | Command                                                                                    |
+|------------------------+--------------------------------------------------------------------------------------------|
+| List release           | =bosh -n releases=                                                                         |
+| Release folder         | =/var/tempest/releases=                                                                    |
+| Create a local release | =bosh create-release --tarball=myrelease-0.4.0.tgz=                                        |
+| Inspect a release      | =bosh inspect-release <my-release>/<release-version>=                                      |
+| Export a release       | =bosh -d <deployment> export-release <my-release>/<release-version> ubuntu-trusty/3586.36= |
+| Delete release         | =bosh -n delete-release <my-release>/<release-version> --force=                            |
+| Upload release         | =bosh -n upload-release /tmp/my-release-0.22.0.tgz=                                        |
+** Bosh Release - Creation
+| Name                   | Command                                                                                        |
+|------------------------+------------------------------------------------------------------------------------------------|
+| Reference              | [[https://bosh.io/docs/cli-v2/#release-creation][link: Release creation]]                                                                         |
+| Prepare the credential | To get files from S3/GCP buckets, make sure =config/private.yml= has been configured correctly |
+| Create a release       | =bosh create-release --tarball /tmp/my-release.tgz=                                            |
 ** Bosh Errand
 | Name                                  | Command                                                                              |
 |---------------------------------------+--------------------------------------------------------------------------------------|
@@ -304,11 +318,11 @@ https://bosh.io/docs/errands/
 * TODO Login to vm and debug                                       :noexport:
 * TODO bosh interpolate                                            :noexport:
 * #  --8<-------------------------- separator ------------------------>8-- :noexport:
-* TODO bosh get deployment definition
+* TODO bosh get deployment definition                              :noexport:
 get the command to re-run: create deployment
 * TODO bosh get manifest for a failed task                         :noexport:
 * TODO bosh how to retry a failed task/errand                      :noexport:
-* TODO bosh keep tailing the task
+* TODO bosh keep tailing the task                                  :noexport:
 bosh task -a -l
 
 get the latest one
@@ -965,3 +979,5 @@ Task 26 | 17:57:51 | Updating instance pivotal-container-service: pivotal-contai
 ** bosh tail the log
 * #  --8<-------------------------- separator ------------------------>8-- :noexport:
 * TODO Bosh build the local release and test against it            :noexport:
+* TODO How bosh release and errand connect with each other?        :noexport:
+* TODO what ops-files is: https://github.com/cloudfoundry-incubator/kubo-deployment/tree/998facf3e956c6d23e3723e013fccc05e0ec1ba9/manifests/ops-files :noexport:
