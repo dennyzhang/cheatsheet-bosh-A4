@@ -26,12 +26,12 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 ** Bosh Frequent-Used
 | Name                                                 | Command                                                          |
 |------------------------------------------------------+------------------------------------------------------------------|
-| List all tasks                                       | =bosh -d <deployment> tasks -ar=                                 |
+| List tasks                                           | =bosh -d <deployment> tasks -ar=, =bosh tasks -r=10=             |
 | List deployments and vms                             | =bosh deployments=, =bosh -d <deployment> vms=                   |
 | Get task detail log, especially errand stdout/stderr | =bosh -d <deployment> task $id --debug=                          |
 | Run errand, and avoid deleting the vms               | =bosh -n -d <deployment> run-errand <errand_name> --keep-alive=  |
 | Common Bosh Releases                                 | [[https://github.com/cloudfoundry-incubator/kubo-release][kubo-release]], [[https://github.com/cloudfoundry-incubator/cfcr-etcd-release][cfcr-etcd-release]], [[https://github.com/cloudfoundry-incubator/docker-boshrelease][docker-boshrelease]], [[https://github.com/cloudfoundry-incubator/pxc-release][pxc-release]] |
-| Reference                                            | [[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][Bosh CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][Tile CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-uaac-A4][UAA CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSheet]] |
+| Reference                                            | [[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][Bosh CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][Tile CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-uaa-A4][UAA CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSheet]] |
 ** Bosh vs Kubernetes
 | Bosh - VM Lifecycle Management | Kubernetes - Container Lifecycle Management      |
 |--------------------------------+--------------------------------------------------|
@@ -95,12 +95,13 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Cloud consistency check   | =bosh cloud-check -d <deployment>=                                         |
 | List disks                | =bosh disks -o=                                                            |
 ** Bosh VM
-| Name                       | Command                                              |
-|----------------------------+------------------------------------------------------|
-| List vms                   | =bosh -d <deployment> vms=                           |
-| List vms with verbose info | =bosh -d <deployment> vms --vitals=                  |
-| Delete a vm                | =bosh -d <deployment> delete-vm <vm-name>/<GUID>=    |
-| SSH to vm                  | =bosh -e <env> -d <deployment> ssh <vm-name>/<GUID>= |
+| Name                       | Command                                                                       |
+|----------------------------+-------------------------------------------------------------------------------|
+| List vms                   | =bosh -d <deployment> vms=                                                    |
+| List vms with verbose info | =bosh -d <deployment> vms --vitals=                                           |
+| Delete a vm                | =bosh -d <deployment> delete-vm <vm-name>/<GUID>=                             |
+| SSH to vm                  | =bosh -e <env> -d <deployment> ssh <vm-name>/<GUID>=                          |
+| Run SSH commands           | =bosh -e <env> -d <deployment> ssh <vm-name>/<GUID> -c "sudo cat /etc/hosts"= |
 ** Bosh Deployment
 | Name                          | Command                                             |
 |-------------------------------+-----------------------------------------------------|
@@ -116,7 +117,6 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Attach to current task        | =bosh -d <deployment> task -a=             |
 | Get task by id                | =bosh -d <deployment> task $id=            |
 | Get task detail msg           | =bosh -d <deployment> task $id --debug=    |
-| SSH to vm                     | =bosh -d <deployment> ssh $instance_name=  |
 | Get all logs for a deployment | =bosh -d <deployment> logs=                |
 | Get log for one vm            | =bosh -d <deployment> logs $instance_name= |
 | List bosh events              | =bosh events=                              |
@@ -152,6 +152,7 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Export a release       | =bosh -d <deployment> export-release <my-release>/<release-version> ubuntu-trusty/3586.36= |
 | Delete release         | =bosh -n delete-release <my-release>/<release-version> --force=                            |
 | Upload release         | =bosh -n upload-release /tmp/my-release-0.22.0.tgz=                                        |
+| Reset release          | =bosh reset-release= [[https://github.com/cloudfoundry/bosh-cli/issues/28][GitHub ticket]]                                                         |
 ** Bosh Release - Creation
 | Name             | Command                                             |
 |------------------+-----------------------------------------------------|
@@ -173,13 +174,12 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 |-------------------------------------+--------------------------------|
 | List bosh deployed daemon processes | =sudo su -=, =monit summary=   |
 | Restart a given daemon processes    | =monit restart <process_name>= |
-** Tools
-| Name | Comment                                                                                                               |
-|------+-----------------------------------------------------------------------------------------------------------------------|
-| [[https://docs.cloudfoundry.org/bbr/][bbr]]  | bosh-backup-and-restore: a framework for backing up and restoring BOSH deployments and BOSH Directors.                |
-| [[https://github.com/cloudfoundry/bosh-bootloader][bbl]]  | bosh-bootloader: a command line utility for standing up BOSH on multi-clouds                                          |
-| [[https://github.com/cloudfoundry-incubator/bpm-release][bpm]]  | BOSH process manager: isolation of BOSH jobs to make they run on many different work schedulers instead of monit only |
-| [[https://github.com/pivotal-cf/kiln][kiln]] | Kiln helps you maintain tile metadata                                                                                 |
+** Bosh Tools
+| Name                        | Comment                                                                                         |
+|-----------------------------+-------------------------------------------------------------------------------------------------|
+| [[https://docs.cloudfoundry.org/bbr/][bbr]] bosh-backup-and-restore | a framework for backing up and restoring BOSH deployments and BOSH Directors.                   |
+| [[https://github.com/cloudfoundry/bosh-bootloader][bbl]] bosh-bootloader         | a command line utility for standing up BOSH on multi-clouds                                     |
+| [[https://github.com/cloudfoundry-incubator/bpm-release][bpm]] BOSH process manager    | isolation of BOSH jobs to make they run on many different work schedulers instead of monit only |
 ** Online Help Usage
 #+BEGIN_EXAMPLE
  kubo@jumper:~$ bosh --help
@@ -887,3 +887,26 @@ total 0
 * TODO scenario: how bosh detects a problematic vm (master/worker) and do the replacement :noexport:
 * TODO scenario: bosh-dns                                          :noexport:
 * TODO scenario: bosh upgrade vm workflow                          :noexport:
+* TODO Bosh run an errand to get the manifest                      :noexport:
+* TODO bosh upload-release error                                   :noexport:
+#+BEGIN_EXAMPLE
+kubo@jumper:/home/denny/wavefront-proxy-release$ bosh upload-release
+Using environment '30.0.0.11' as client 'ops_manager'
+
+######################################################## 100.00% 482.60 KiB/s 0s
+Task 214
+
+Task 214 | 03:14:07 | Extracting release: Extracting release (00:00:00)
+Task 214 | 03:14:07 | Verifying manifest: Verifying manifest (00:00:00)
+Task 214 | 03:14:07 | Error: release 'wavefront-proxy/0.8.0+dev.1' has already been uploaded with commit_hash as '721448a' and uncommitted_changes as 'false'
+
+Task 214 Started  Wed Oct 24 03:14:07 UTC 2018
+Task 214 Finished Wed Oct 24 03:14:07 UTC 2018
+Task 214 Duration 00:00:00
+Task 214 error
+
+Uploading release file:
+  Expected task '214' to succeed but state is 'error'
+
+Exit code 1
+#+END_EXAMPLE
