@@ -28,10 +28,14 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 |------------------------------------------------------+------------------------------------------------------------------|
 | List tasks                                           | =bosh -d <deployment> tasks -ar=, =bosh tasks -r=10=             |
 | List deployments and vms                             | =bosh deployments=, =bosh -d <deployment> vms=                   |
+| Bosh get current task details                        | =bosh -d <deployment> task -a --debug=                           |
 | Get task detail log, especially errand stdout/stderr | =bosh -d <deployment> task $id --debug=                          |
 | Run errand, and avoid deleting the vms               | =bosh -n -d <deployment> run-errand <errand_name> --keep-alive=  |
 | Common Bosh Releases                                 | [[https://github.com/cloudfoundry-incubator/kubo-release][kubo-release]], [[https://github.com/cloudfoundry-incubator/cfcr-etcd-release][cfcr-etcd-release]], [[https://github.com/cloudfoundry-incubator/docker-boshrelease][docker-boshrelease]], [[https://github.com/cloudfoundry-incubator/pxc-release][pxc-release]] |
 | Reference                                            | [[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][Bosh CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][Tile CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-uaa-A4][UAA CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSheet]] |
+
+[[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][https://raw.githubusercontent.com/dennyzhang/cheatsheet-bosh-A4/master/bosh-workflow.jpg]]
+
 ** Bosh vs Kubernetes
 | Bosh - VM Lifecycle Management | Kubernetes - Container Lifecycle Management      |
 |--------------------------------+--------------------------------------------------|
@@ -61,6 +65,7 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Name               | Comment                                                                                   |
 |--------------------+-------------------------------------------------------------------------------------------|
 | Reference          | [[https://bosh.io/docs/terminology][Link: terminology]], [[https://github.com/cloudfoundry/bosh][GitHub: cloudfoundry/bosh]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][CheatSheet: Cloudfoundry Tile & OpsManager]]  |
+| Reference          | [[https://www.youtube.com/watch?v=l91q00Vu2h8][YouTube: BOSH Release]]                                                                     |
 | [[https://bosh.cloudfoundry.org/stemcells/][Bosh Stemcells]]     | A versioned Operating System image. [[https://network.pivotal.io/][Download stemcell]]                                     |
 | [[https://bosh.io/docs/terminology/#deployment][Bosh Deployment]]    | An encapsulation of software and configuration that BOSH can deploy to the cloud.         |
 | [[https://bosh.io/docs/release/][Bosh Release]]       | Everything needed to make a software component deployable by BOSH.                        |
@@ -885,7 +890,7 @@ register:
 total 0
 #+END_EXAMPLE
 * TODO scenario: how bosh detects a problematic vm (master/worker) and do the replacement :noexport:
-* TODO scenario: bosh-dns                                          :noexport:
+* TODO [#A] scenario: bosh-dns workflow                            :noexport:
 * TODO scenario: bosh upgrade vm workflow                          :noexport:
 * TODO Bosh run an errand to get the manifest                      :noexport:
 * TODO bosh upload-release error                                   :noexport:
