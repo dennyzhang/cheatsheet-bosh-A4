@@ -34,7 +34,7 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Common Bosh Releases                                 | [[https://github.com/cloudfoundry-incubator/kubo-release][kubo-release]], [[https://github.com/cloudfoundry-incubator/cfcr-etcd-release][cfcr-etcd-release]], [[https://github.com/cloudfoundry-incubator/docker-boshrelease][docker-boshrelease]], [[https://github.com/cloudfoundry-incubator/pxc-release][pxc-release]] |
 | Reference                                            | [[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][Bosh CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][Tile CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-uaa-A4][UAA CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSheet]] |
 
-[[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][https://raw.githubusercontent.com/dennyzhang/cheatsheet-bosh-A4/master/bosh-workflow-intro.jpg]]
+[[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][https://raw.githubusercontent.com/dennyzhang/cheatsheet-bosh-A4/master/bosh-workflow-intro .jpg]]
 
 ** Bosh vs Kubernetes
 | Bosh - VM Lifecycle Management | Kubernetes - Container Lifecycle Management      |
