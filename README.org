@@ -16,25 +16,25 @@
 <a href="http://makeapullrequest.com" target="_blank" rel="nofollow"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"/></a>
 #+END_HTML
 
-- PDF Link: [[https://github.com/dennyzhang/cheatsheet-bosh-A4/blob/master/cheatsheet-bosh-A4.pdf][cheatsheet-bosh-A4.pdf]], Category: [[https://cheatsheet.dennyzhang.com/category/tools/][tools]]
+- PDF Link: [[https://github.com/dennyzhang/cheatsheet-bosh-A4/blob/master/cheatsheet-bosh-A4.pdf][cheatsheet-bosh-A4.pdf]], Category: [[https://cheatsheet.dennyzhang.com/category/vmware/][vmware]]
 - Blog URL: https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4
-- Related posts: [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][Tile CheatSheet]]
+- Related posts: [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][Tile CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-chef-A4][Chef CheatSheet]], [[https://github.com/topics/denny-cheatsheets][#denny-cheatsheets]]
 
 File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or star [[https://github.com/DennyZhang/cheatsheet-bosh-A4][this repo]].
 
-See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][#denny-cheatsheets]]
-** Bosh Frequent-Used
-| Name                                                 | Command                                                          |
-|------------------------------------------------------+------------------------------------------------------------------|
-| List tasks                                           | =bosh -d <deployment> tasks -ar=, =bosh tasks -r=10=             |
-| List deployments and vms                             | =bosh deployments=, =bosh -d <deployment> vms=                   |
-| Bosh get current task details                        | =bosh -d <deployment> task -a --debug=                           |
-| Get task detail log, especially errand stdout/stderr | =bosh -d <deployment> task $id --debug=                          |
-| Run errand, and avoid deleting the vms               | =bosh -n -d <deployment> run-errand <errand_name> --keep-alive=  |
-| Common Bosh Releases                                 | [[https://github.com/cloudfoundry-incubator/kubo-release][kubo-release]], [[https://github.com/cloudfoundry-incubator/cfcr-etcd-release][cfcr-etcd-release]], [[https://github.com/cloudfoundry-incubator/docker-boshrelease][docker-boshrelease]], [[https://github.com/cloudfoundry-incubator/pxc-release][pxc-release]] |
-| Reference                                            | [[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][Bosh CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][Tile CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-uaa-A4][UAA CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSheet]] |
+[[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][https://raw.githubusercontent.com/dennyzhang/cheatsheet-bosh-A4/master/bosh-workflow-intro.jpg]]
 
-[[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][https://raw.githubusercontent.com/dennyzhang/cheatsheet-bosh-A4/master/bosh-workflow-intro .jpg]]
+** Bosh Frequent-Used
+| Name                                   | Command                                                                                  |
+|----------------------------------------+------------------------------------------------------------------------------------------|
+| List tasks                             | =bosh -d <deployment> tasks -ar=, =bosh tasks -r=10=                                     |
+| List deployments and vms               | =bosh deployments=, =bosh -d <deployment> vms=                                           |
+| Bosh get current task output           | =bosh -d <deployment> task $id --result=                                                 |
+| Bosh get task all detail log           | =bosh -d <deployment> task -a --debug=, =bosh -d <deployment> task $id --debug=          |
+| Delete a deployment                    | =bosh delete-deployment -d $deployment=, =bosh delete-deployment -d $deployment --force= |
+| Run errand, and avoid deleting the vms | =bosh -n -d <deployment> run-errand <errand_name> --keep-alive=                          |
+| Common Bosh Releases                   | [[https://github.com/cloudfoundry-incubator/kubo-release][kubo-release]], [[https://github.com/cloudfoundry-incubator/cfcr-etcd-release][cfcr-etcd-release]], [[https://github.com/cloudfoundry-incubator/docker-boshrelease][docker-boshrelease]], [[https://github.com/cloudfoundry-incubator/pxc-release][pxc-release]]                         |
+| Reference                              | [[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][Bosh CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][Tile CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-uaa-A4][UAA CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSheet]]                         |
 
 ** Bosh vs Kubernetes
 | Bosh - VM Lifecycle Management | Kubernetes - Container Lifecycle Management      |
@@ -89,7 +89,6 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 |---------------------------+----------------------------------------------------------------------------|
 | [[https://bosh.io/docs/cli-v2/][bosh]]                      | =apt install bosh-cli=, =/var/vcap/bosh/log=                               |
 | [[https://bosh.io/docs/cli-int/][Interpolates variables]]    | =bosh int /tmp/build/4dcXX/pks-lock/metadata --path=/ops_manager/username= |
-| Delete a deployment       | =bosh delete-deployment -d $deployment=                                    |
 | List all bosh deployments | =bosh -n deployments=, =bosh -n deployments --json=                        |
 | Download log files        | =bosh -d <deployment>_id logs=                                             |
 | Show deployment manifest  | =bosh manifest -d <deployment>=                                            |
@@ -107,10 +106,13 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Delete a vm                | =bosh -d <deployment> delete-vm <vm-name>/<GUID>=                             |
 | SSH to vm                  | =bosh -e <env> -d <deployment> ssh <vm-name>/<GUID>=                          |
 | Run SSH commands           | =bosh -e <env> -d <deployment> ssh <vm-name>/<GUID> -c "sudo cat /etc/hosts"= |
+
+[[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][https://raw.githubusercontent.com/dennyzhang/cheatsheet-bosh-A4/master/bosh.jpg]]
 ** Bosh Deployment
 | Name                          | Command                                             |
 |-------------------------------+-----------------------------------------------------|
 | List bosh deployments         | =bosh deployments=                                  |
+| Show detail of one deployment | =bosh -d <deployment> deployment=                   |
 | Delete bosh deployment        | =bosh -n -d <deployment> delete-deployment --force= |
 | Get deployment manifest yaml  | =bosh manifest -d <deployment> > my.yaml=           |
 | Run bosh deployment from yaml | =bosh deploy -d <deployment> my.yaml=               |
@@ -147,6 +149,8 @@ See more CheatSheets from Denny: [[https://github.com/topics/denny-cheatsheets][
 | Configure credential   | If you need to upload/download with S3/GCP buckets, make sure =config/private.yml= has been configured correctly |
 | Add local file to blob | =bosh add-blob /tmp/<telegraf:1.7-alpine.tgz> container-images/telegraf:1.7-alpine.tgz=                          |
 | Upload blobs           | =bosh upload-blobs=, make sure =config/private.yml= is correct. blobs.yml will be automatically updated          |
+| List blob              | =bosh blobs=                                                                                                     |
+| Remove blob            | =bosh remove-blob container-images/cadvisor-v0.31.0.tgz=                                                         |
 ** Bosh Release - Basic
 | Name                   | Command                                                                                    |
 |------------------------+--------------------------------------------------------------------------------------------|
@@ -338,6 +342,74 @@ License: Code is licensed under [[https://www.dennyzhang.com/wp-content/mit_lice
 ** CANCELED bosh get deployment definition                         :noexport:
    CLOSED: [2018-10-19 Fri 21:44]
  get the command to re-run: create deployment
+** DONE release ''kubo/0.21.0'' has already been uploaded with commit_hash as ''0aec88e'' and uncommitted_changes as ''false''"
+   CLOSED: [2018-11-04 Sun 00:25]
+ bosh releases
+
+ bosh delete-release
+ bosh upload-release /var/tempest/releases/kubo-0.21.0-ubuntu-xenial-97.28.tgz
+
+ #+BEGIN_EXAMPLE
+ D, [2018-11-03T06:26:53.537936 #11047] [task:50] DEBUG -- DirectorJobRunner: (0.000782s) (conn: 47409745741100) COMMIT
+ D, [2018-11-03T06:26:53.653917 #11047] [task:50] DEBUG -- DirectorJobRunner: (0.000129s) (conn: 47409745741100) BEGIN
+ D, [2018-11-03T06:26:53.654764 #11047] [task:50] DEBUG -- DirectorJobRunner: (0.000437s) (conn: 47409745741100) UPDATE "tasks" SET "event_output" = ("event_output" || '{"time":1541226413,"error":{"code":30014,"message":"release ''kubo/0.21.0'' has already been uploaded with commit_hash as ''0aec88e'' and uncommitted_changes as ''false''"}}
+ ') WHERE ("id" = 50)
+ D, [2018-11-03T06:26:53.656019 #11047] [task:50] DEBUG -- DirectorJobRunner: (0.001151s) (conn: 47409745741100) COMMIT
+ E, [2018-11-03T06:26:53.656153 #11047] [task:50] ERROR -- DirectorJobRunner: release 'kubo/0.21.0' has already been uploaded with commit_hash as '0aec88e' and uncommitted_changes as 'false'
+ /var/vcap/data/packages/director/d78a9c75b15f3057af5ab8a4a40fe1e5d2545c78/gem_home/ruby/2.4.0/gems/bosh-director-0.0.0/lib/bosh/director/jobs/update_release.rb:148:in `process_release'
+ /var/vcap/data/packages/director/d78a9c75b15f3057af5ab8a4a40fe1e5d2545c78/gem_home/ruby/2.4.0/gems/bosh-director-0.0.0/lib/bosh/director/jobs/update_release.rb:54:in `block in perform'
+ /var/vcap/data/packages/director/d78a9c75b15f3057af5ab8a4a40fe1e5d2545c78/gem_home/ruby/2.4.0/gems/bosh-director-0.0.0/lib/bosh/director/lock_helper.rb:24:in `block in with_release_lock'
+ /var/vcap/data/packages/director/d78a9c75b15f3057af5ab8a4a40fe1e5d2545c78/gem_home/ruby/2.4.0/gems/bosh-director-0.0.0/lib/bosh/director/lock_helper.rb:36:in `with_release_locks'
+ /var/vcap/data/packages/director/d78a9c75b15f3057af5ab8a4a40fe1e5d2545c78/gem_home/ruby/2.4.0/gems/bosh-director-0.0.0/lib/bosh/director/lock_helper.rb:24:in `with_release_lock'
+ /var/vcap/data/packages/director/d78a9c75b15f3057af5ab8a4a40fe1e5d2545c78/gem_home/ruby/2.4.0/gems/bosh-director-0.0.0/lib/bosh/director/jobs/update_release.rb:54:in `perform'
+ /var/vcap/data/packages/director/d78a9c75b15f3057af5ab8a4a40fe1e5d2545c78/gem_home/ruby/2.4.0/gems/bosh-director-0.0.0/lib/bosh/director/job_runner.rb:99:in `perform_job'
+ /var/vcap/data/packages/director/d78a9c75b15f3057af5ab8a4a40fe1e5d2545c78/gem_home/ruby/2.4.0/gems/bosh-director-0.0.0/lib/bosh/director/job_runner.rb:34:in `block in run'
+ /var/vcap/data/packages/director/d78a9c75b15f3057af5ab8a4a40fe1e5d2545c78/gem_home/ruby/2.4.0/gems/bosh_common-0.0.0/lib/common/thread_formatter.rb:52:in `with_thread_name'
+ /var/vcap/data/packages/director/d78a9c75b15f3057af5ab8a4a40fe1e5d2545c78/gem_home/ruby/2.4.0/gems/bosh-director-0.0.0/lib/bosh/director/job_runner.rb:34:in `run'
+ /var/vcap/data/packages/director/d78a9c75b15f3057af5ab8a4a40fe1e5d2545c78/gem_home/ruby/2.4.0/gems/bosh-director-0.0.0/lib/bosh/director/jobs/base_job.rb:10:in `perform'
+ /var/vcap/data/packages/director/d78a9c75b15f3057af5ab8a4a40fe1e5d2545c78/gem_home/ruby/2.4.0/gems/bosh-director-0.0.0/lib/bosh/director/jobs/db_job.rb:36:in `block in perform'
+ /var/vcap/data/packages/director/d78a9c75b15f3057af5ab8a4a40fe1e5d2545c78/gem_home/ruby/2.4.0/gems/bosh-director-0.0.0/lib/bosh/director/jobs/db_job.rb:83:in `block (3 levels) in run'
+ /var/vcap/data/packages/director/d78a9c75b15f3057af5ab8a4a40fe1e5d2545c78/gem_home/ruby/2.4.0/gems/eventmachine-1.2.5/lib/eventmachine.rb:1076:in `block in spawn_threadpool'
+ /var/vcap/data/packages/director/d78a9c75b15f3057af5ab8a4a40fe1e5d2545c78/gem_home/ruby/2.4.0/gems/logging-2.2.2/lib/logging/diagnostic_context.rb:474:in `block in create_with_logging_context'
+ D, [2018-11-03T06:26:53.656976 #11047] [task:50] DEBUG -- DirectorJobRunner: (0.000354s) (conn: 47409745741100) SELECT * FROM "tasks" WHERE "id" = 50
+ D, [2018-11-03T06:26:53.658250 #11047] [task:50] DEBUG -- DirectorJobRunner: (0.000116s) (conn: 47409745741100) BEGIN
+ D, [2018-11-03T06:26:53.659062 #11047] [task:50] DEBUG -- DirectorJobRunner: (0.000360s) (conn: 47409745741100) UPDATE "tasks" SET "state" = 'error', "timestamp" = '2018-11-03 06:26:53.657712+0000', "description" = 'create release', "result" = 'release ''kubo/0.21.0'' has already been uploaded with commit_hash as ''0aec88e'' and uncommitted_changes as ''false''', "output" = '/var/vcap/store/director/tasks/50', "checkpoint_time" = '2018-11-03 06:26:49.931015+0000', "type" = 'update_release', "username" = 'ops_manager', "deployment_name" = NULL, "started_at" = '2018-11-03 06:26:49.930927+0000', "event_output" = '{"time":1541226409,"stage":"Extracting release","tags":[],"total":1,"task":"Extracting release","index":1,"state":"started","progress":0}
+ {"time":1541226413,"stage":"Extracting release","tags":[],"total":1,"task":"Extracting release","index":1,"state":"finished","progress":100}
+ {"time":1541226413,"stage":"Verifying manifest","tags":[],"total":1,"task":"Verifying manifest","index":1,"state":"started","progress":0}
+ {"time":1541226413,"stage":"Verifying manifest","tags":[],"total":1,"task":"Verifying manifest","index":1,"state":"finished","progress":100}
+ {"time":1541226413,"error":{"code":30014,"message":"release ''kubo/0.21.0'' has already been uploaded with commit_hash as ''0aec88e'' and uncommitted_changes as ''false''"}}
+ ', "result_output" = '', "context_id" = '' WHERE ("id" = 50)
+ D, [2018-11-03T06:26:53.660295 #11047] [task:50] DEBUG -- DirectorJobRunner: (0.001118s) (conn: 47409745741100) COMMIT
+ I, [2018-11-03T06:26:53.660426 #11047] []  INFO -- DirectorJobRunner: Task took 3.731681985 seconds to process.
+
+ Task 50 error
+
+ Capturing task '50' output:
+   Expected task '50' to succeed but state is 'error'
+
+ Exit code 1
+ kubo@jumper:~$ bosh releases
+ Using environment '30.0.0.11' as client 'ops_manager'
+
+ Name         Version        Commit Hash
+ bosh-dns     1.10.0*        7c6515f
+ bpm          0.12.2*        74fdfe4
+ cf-mysql     36.14.0        aa04a97
+ cfcr-etcd    1.4.0*         51b6e96
+ docker       32.0.3         b4d5a45
+ ~            32.0.0*        542c382
+ kubo         0.21.0*        07a294b
+ pks-helpers  50.0.0         678c797
+ pks-vrops    0.6.0-dev.37*  1bdc6df
+
+ (*) Currently deployed
+ (+) Uncommitted changes
+
+ 9 releases
+
+ Succeeded
+ #+END_EXAMPLE
+
 * TODO Contribute back the cheatsheet to bosh community            :noexport:
 * TODO draw a bosh diagram                                         :noexport:
 * #  --8<-------------------------- separator ------------------------>8-- :noexport:
@@ -914,4 +986,129 @@ Uploading release file:
   Expected task '214' to succeed but state is 'error'
 
 Exit code 1
+#+END_EXAMPLE
+* TODO bosh add-blob: where is the folder of container-images/cadvisor-v0.31.0.tgz :noexport:
+* #  --8<-------------------------- separator ------------------------>8-- :noexport:
+* TODO [#A] bosh describe errand, especially for apply-addons      :noexport:
+#+BEGIN_EXAMPLE
+kubo@jumper:~$ bosh -d service-instance_ca0e7b72-f3a9-4f03-8ef4-50b30e5cc54f task -a
+Using environment '30.0.0.11' as client 'ops_manager'
+
+Task 288
+
+Task 288 | 07:29:22 | Preparing deployment: Preparing deployment
+Task 288 | 07:29:27 | Preparing package compilation: Finding packages to compile (00:00:00)
+Task 288 | 07:29:27 | Preparing deployment: Preparing deployment (00:00:05)
+Task 288 | 07:29:27 | Creating missing vms: apply-addons/dc9da312-f6a3-4cb3-b10e-f625655f2684 (0)^C
+kubo@jumper:~$ bosh vms
+Using environment '30.0.0.11' as client 'ops_manager'
+
+Task 290
+Task 289
+Task 290 done
+
+Task 289 done
+
+Deployment 'pivotal-container-service-df708a37b5cc6f87d080'
+
+Instance                                                        Process State  AZ    IPs        VM CID                                   VM Type  Active
+pivotal-container-service/a1b4e31d-4644-4564-88d8-a59fcb74ef4b  running        az-1  30.0.0.12  vm-143ac8d6-73ce-45c7-be6c-1ac96c05223e  large    true
+
+1 vms
+
+Deployment 'service-instance_ca0e7b72-f3a9-4f03-8ef4-50b30e5cc54f'
+
+Instance                                     Process State  AZ    IPs       VM CID                                   VM Type      Active
+master/f5bd3cde-7276-485c-835a-48b2d72a76a0  running        az-1  30.0.3.2  vm-52b543a3-f0f4-4ee9-bd5f-e47e286dbc78  medium.disk  true
+worker/46e1bdac-a132-4e66-870f-c9b191b1f5fd  running        az-1  30.0.3.3  vm-7f740139-cba0-448f-9a4e-c03aac1e8e06  large        true
+worker/79877e92-6680-4659-814f-eada1e8ec771  running        az-3  30.0.3.5  vm-bbf46438-cfab-4c6a-b536-78f6ad3eef74  large        true
+worker/e6b37840-fe60-4776-86e2-c304ac5fb71a  running        az-2  30.0.3.4  vm-441269ba-1aa2-4f3e-ad8c-9af37bd6a928  large        true
+
+4 vms
+
+Succeeded
+kubo@jumper:~$ bosh -d service-instance_ca0e7b72-f3a9-4f03-8ef4-50b30e5cc54f task -a
+Using environment '30.0.0.11' as client 'ops_manager'
+
+Task 288
+
+Task 288 | 07:29:22 | Preparing deployment: Preparing deployment
+Task 288 | 07:29:27 | Preparing package compilation: Finding packages to compile (00:00:00)
+Task 288 | 07:29:27 | Preparing deployment: Preparing deployment (00:00:05)
+Task 288 | 07:29:27 | Creating missing vms: apply-addons/dc9da312-f6a3-4cb3-b10e-f625655f2684 (0)^C
+kubo@jumper:~$ ^C
+kubo@jumper:~$ bosh -d service-instance_ca0e7b72-f3a9-4f03-8ef4-50b30e5cc54f errands
+Using environment '30.0.0.11' as client 'ops_manager'
+
+Using deployment 'service-instance_ca0e7b72-f3a9-4f03-8ef4-50b30e5cc54f'
+
+Name
+apply-addons
+apply-specs
+drain-cluster
+smoke-tests
+telemetry-pod
+wavefront-proxy-errand
+
+6 errands
+
+Succeeded
+kubo@jumper:~$ bosh -d service-instance_ca0e7b72-f3a9-4f03-8ef4-50b30e5cc54f errands --help
+Usage:
+  bosh [OPTIONS] errands
+
+List errands
+
+https://bosh.io/docs/cli-v2#errands
+
+Application Options:
+  -v, --version          Show CLI version
+      --config=          Config file path (default: ~/.bosh/config) [$BOSH_CONFIG]
+  -e, --environment=     Director environment name or URL [$BOSH_ENVIRONMENT]
+      --ca-cert=         Director CA certificate path or value [$BOSH_CA_CERT]
+      --sha2             Use SHA256 checksums [$BOSH_SHA2]
+      --parallel=        The max number of parallel operations (default: 5)
+      --client=          Override username or UAA client [$BOSH_CLIENT]
+      --client-secret=   Override password or UAA client secret [$BOSH_CLIENT_SECRET]
+  -d, --deployment=      Deployment name [$BOSH_DEPLOYMENT]
+      --column=          Filter to show only given column(s)
+      --json             Output as JSON
+      --tty              Force TTY-like output
+      --no-color         Toggle colorized output
+  -n, --non-interactive  Don't ask for user input [$BOSH_NON_INTERACTIVE]
+
+Help Options:
+  -h, --help             Show this help message
+
+Succeeded
+#+END_EXAMPLE
+* TODO bosh vm status is failing                                   :noexport:
+#+BEGIN_EXAMPLE
+kubo@jumper:~/logs$ bosh vms
+Using environment '30.0.0.11' as client 'ops_manager'
+
+Task 70
+Task 69
+Task 70 done
+
+Task 69 done
+
+Deployment 'pivotal-container-service-16293915d1464682e13a'
+
+Instance                                                        Process State  AZ    IPs        VM CID                                   VM Type  Active
+pivotal-container-service/b2ba70e4-7f9f-4f21-b20f-868602a251f6  failing        az-1  30.0.0.12  vm-0dace0e6-a096-4915-9800-2709c9860dad  large    true
+
+1 vms
+
+Deployment 'service-instance_08dbd853-054b-40c9-a52b-13984144c23a'
+
+Instance                                     Process State  AZ    IPs       VM CID                                   VM Type  Active
+master/d9a71047-e729-45ab-b70e-550737382265  running        az-1  30.0.2.2  vm-0a76c028-9d64-47ab-b23b-62f3eead2759  medium   true
+worker/00ee6f45-b8c7-46f6-9251-f4238dc892ca  running        az-3  30.0.2.5  vm-538c3a86-0540-4f44-a1a2-f2c6ecb1de15  large    true
+worker/64cd48f8-0ee6-4664-80e8-10be94bb5331  running        az-1  30.0.2.3  vm-761e0e21-8814-4c75-a669-7fa1a12ea439  large    true
+worker/ad23d5ee-b7ac-4c44-9ffd-bcff76de09c1  running        az-2  30.0.2.4  vm-9de79982-1d28-4b6a-ab74-bfd0b41e52fb  large    true
+
+4 vms
+
+Succeeded
 #+END_EXAMPLE
