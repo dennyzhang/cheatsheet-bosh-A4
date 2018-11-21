@@ -35,7 +35,25 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 | Run errand, and avoid deleting the vms | =bosh -n -d <deployment> run-errand <errand_name> --keep-alive=                          |
 | Common Bosh Releases                   | [[https://github.com/cloudfoundry-incubator/kubo-release][kubo-release]], [[https://github.com/cloudfoundry-incubator/cfcr-etcd-release][cfcr-etcd-release]], [[https://github.com/cloudfoundry-incubator/docker-boshrelease][docker-boshrelease]], [[https://github.com/cloudfoundry-incubator/pxc-release][pxc-release]]                         |
 | Reference                              | [[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][Bosh CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][Tile CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-uaa-A4][UAA CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSheet]]                         |
-
+** Bosh Release - Basic
+| Name                    | Command                                                                                    |
+|-------------------------+--------------------------------------------------------------------------------------------|
+| List release            | =bosh -n releases=                                                                         |
+| Release folder          | =/var/tempest/releases=                                                                    |
+| Create a local release  | =bosh create-release --tarball=myrelease-0.4.0.tgz=                                        |
+| Export a release        | =bosh -d <deployment> export-release <my-release>/<release-version> ubuntu-xenial/170.9= |
+| Inspect a release       | =bosh inspect-release <my-release>/<release-version>=                                      |
+| Delete release          | =bosh -n delete-release <my-release>/<release-version> --force=                            |
+| Upload release          | =bosh -n upload-release=, =bosh -n upload-release /tmp/my-release-0.22.0.tgz=              |
+| Reset release           | =bosh reset-release= [[https://github.com/cloudfoundry/bosh-cli/issues/28][GitHub ticket]]                                                         |
+** Bosh Release - Creation
+| Name             | Command                                             |
+|------------------+-----------------------------------------------------|
+| Reference        | [[https://bosh.io/docs/cli-v2/#release-creation][Link: Release creation]]                              |
+| Create a release | =bosh create-release --tarball /tmp/my-release.tgz= |
+#+BEGIN_HTML
+<a href="https://www.dennyzhang.com"><img align="right" width="185" height="37" src="https://raw.githubusercontent.com/USDevOps/mywechat-slack-group/master/images/dns_small.png"></a>
+#+END_HTML
 ** Bosh vs Kubernetes
 | Bosh - VM Lifecycle Management | Kubernetes - Container Lifecycle Management      |
 |--------------------------------+--------------------------------------------------|
@@ -135,6 +153,9 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 | consumes  | Use resources from other bosh releases   |
 | packages  | Packages get installed by bosh           |
 | templates | Conf files                               |
+#+BEGIN_HTML
+<a href="https://www.dennyzhang.com"><img align="right" width="185" height="37" src="https://raw.githubusercontent.com/USDevOps/mywechat-slack-group/master/images/dns_small.png"></a>
+#+END_HTML
 ** Bosh Errand
 | Name                                  | Command                                                                              |
 |---------------------------------------+--------------------------------------------------------------------------------------|
@@ -151,22 +172,6 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 | Upload blobs           | =bosh upload-blobs=, make sure =config/private.yml= is correct. blobs.yml will be automatically updated          |
 | List blob              | =bosh blobs=                                                                                                     |
 | Remove blob            | =bosh remove-blob container-images/cadvisor-v0.31.0.tgz=                                                         |
-** Bosh Release - Basic
-| Name                   | Command                                                                                    |
-|------------------------+--------------------------------------------------------------------------------------------|
-| List release           | =bosh -n releases=                                                                         |
-| Release folder         | =/var/tempest/releases=                                                                    |
-| Create a local release | =bosh create-release --tarball=myrelease-0.4.0.tgz=                                        |
-| Inspect a release      | =bosh inspect-release <my-release>/<release-version>=                                      |
-| Export a release       | =bosh -d <deployment> export-release <my-release>/<release-version> ubuntu-trusty/3586.36= |
-| Delete release         | =bosh -n delete-release <my-release>/<release-version> --force=                            |
-| Upload release         | =bosh -n upload-release /tmp/my-release-0.22.0.tgz=                                        |
-| Reset release          | =bosh reset-release= [[https://github.com/cloudfoundry/bosh-cli/issues/28][GitHub ticket]]                                                         |
-** Bosh Release - Creation
-| Name             | Command                                             |
-|------------------+-----------------------------------------------------|
-| Reference        | [[https://bosh.io/docs/cli-v2/#release-creation][Link: Release creation]]                              |
-| Create a release | =bosh create-release --tarball /tmp/my-release.tgz= |
 ** Bosh Manifest
 | Name               | Command                                        |
 |--------------------+------------------------------------------------|
@@ -1112,3 +1117,38 @@ worker/ad23d5ee-b7ac-4c44-9ffd-bcff76de09c1  running        az-2  30.0.2.4  vm-9
 
 Succeeded
 #+END_EXAMPLE
+* #  --8<-------------------------- separator ------------------------>8-- :noexport:
+* TODO bosh: how we can run a job of ops-file                      :noexport:
+https://github.com/cloudfoundry-incubator/kubo-deployment/blob/develop/manifests/ops-files/enable-podsecuritypolicy.yml
+https://github.com/cloudfoundry-incubator/kubo-release/#deploying-cfcr
+
+bosh deploy -d wf-deployment-0-10-0-dev-12 kubo.yml -o manifests/ops-files/enable-podsecuritypolicy.yml
+* TODO bosh download release, instead of a simple inspect-release  :noexport:
+#+BEGIN_EXAMPLE
+kubo@jumper:/home/denny/p-pks-integrations$ bosh inspect-release pks-vrops/0.5.0+dev.3
+Using environment '30.0.0.11' as client 'ops_manager'
+
+Job                                                           Blobstore ID                          Digest                                    Links Consumed          Links Provided
+pks-vrops-ops-files/be20a32cf3d7fd55c81a93a980fd56ea434a0045  c459bdc2-783f-4065-93c0-0357ea9ce75a  c243156fa25dad0bcfcb1bc04aef6c6f90430726  -                       -
+register/bc6eade9e7526d5f9877ef3154e765dcc6100645             148f7017-755d-44ad-bd5a-7a18714c683c  3074da2d6a4424bafb6f48b5638da1e1d3ff7b32  - name: kube-apiserver  -
+                                                                                                                                                type: kube-apiserver
+unregister/c9455e11ace23e15936709ebddd2cb87b7c5e286           32ea30a1-abd7-48ef-83bf-6b4bc09c9278  981eb3923840d5c6c2245c319a7f0e2e35d472f8  - name: kube-apiserver  -
+                                                                                                                                                type: kube-apiserver
+vrops-cadvisor/4f15837f1076fd6f92352c4730390af5c7ec852d       f6f1ad76-7684-447e-ac90-fbf38bfcf6ae  340ce541a3a7d27f9f0c62fd75ed010a790c2284  - name: kube-apiserver  -
+                                                                                                                                                type: kube-apiserver
+
+4 jobs
+
+Package                                                     Compiled for  Blobstore ID                          Digest
+cadvisor-images/6b9c19495e5adc09837942443ba3d4baede821b9    (source)      a1562ae7-6ff7-4825-bd96-6690e0eb14b3  3f868d6c7638d85583992d12979332cb869f5439
+pks-vrops-jq/9fda5414600fee235633c1d35f133c4a37b61543       (source)      525e2092-3af3-4bf8-9e67-a41d3f9c1c74  1084386ea9eaa7d2a9d09116431e4371a725e5d3
+pks-vrops-scripts/be4034d4c5a6746b3be703baae8d70f19dd5e130  (source)      dbe5d367-570b-422a-9362-efbd1736a06c  18c84c37fc6457858678baaec5366e2340e4efd8
+
+0 packages
+
+Succeeded
+#+END_EXAMPLE
+* TODO bosh slow: it needs to compile packages                     :noexport:
+* TODO bosh release: manifest vs jobs                              :noexport:
+* TODO bosh update: pks-vrops-release/releases/pks-vrops           :noexport:
+https://gitlab.eng.vmware.com/PKS/pks-vrops-release/blob/master/releases/pks-vrops/pks-vrops-0.5.0.yml
