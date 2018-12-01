@@ -27,7 +27,8 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 ** Bosh Frequent-Used
 | Name                                   | Command                                                                                  |
 |----------------------------------------+------------------------------------------------------------------------------------------|
-| List tasks                             | =bosh -d <deployment> tasks -ar=, =bosh tasks -r=10=                                     |
+| List tasks                             | =bosh tasks -r=10=, =bosh -d <deployment> tasks -ar=                                     |
+| Tail latest bosh task                  | =bosh task -a=, =bosh task -a --debug=                                                   |
 | List deployments and vms               | =bosh deployments=, =bosh -d <deployment> vms=                                           |
 | Bosh get current task output           | =bosh -d <deployment> task $id --result=                                                 |
 | Bosh get task all detail log           | =bosh -d <deployment> task -a --debug=, =bosh -d <deployment> task $id --debug=          |
@@ -35,6 +36,16 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 | Run errand, and avoid deleting the vms | =bosh -n -d <deployment> run-errand <errand_name> --keep-alive=                          |
 | Common Bosh Releases                   | [[https://github.com/cloudfoundry-incubator/kubo-release][kubo-release]], [[https://github.com/cloudfoundry-incubator/cfcr-etcd-release][cfcr-etcd-release]], [[https://github.com/cloudfoundry-incubator/docker-boshrelease][docker-boshrelease]], [[https://github.com/cloudfoundry-incubator/pxc-release][pxc-release]]                         |
 | Reference                              | [[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][Bosh CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][Tile CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-uaa-A4][UAA CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSheet]]                         |
+** Bosh Challenges & Painpoints
+| Name                           | Comment                                                       |
+|--------------------------------+---------------------------------------------------------------|
+| Create deployment is very slow | Need to compile packages again, and canary update for all VMs |
+| Errands on non co-located vms  | It takes 5+ minutes to spin up and destroy a VM               |
+| More declarative               | End users define requirements via =yaml files=                |
+| More lightweight               | Use =containers=, instead of =VMs= to run errands             |
+| Support rolling upgrade        | Just like =kubectl rollout=                                   |
+| Retry a failed errand/task     | Currently we can do it. But it's a lengthy manual process     |
+| Support =tail -f=              | Personally I don't like the way of =bosh logs=                |
 ** Bosh Release - Basic
 | Name                    | Command                                                                                    |
 |-------------------------+--------------------------------------------------------------------------------------------|
@@ -71,14 +82,6 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 | =Bosh Agent=                   |                                                  |
 | =Bosh Addon=                   |                                                  |
 | =Bosh Ops manager=             | No related feature: UI to customize your service |
-** Bosh Challenges
-| Name                       | Comment                                                   |
-|----------------------------+-----------------------------------------------------------|
-| More declarative           | End users define requirements via =yaml files=            |
-| More lightweight           | Use =containers=, instead of =VMs= to run errands         |
-| Support rolling upgrade    | Just like =kubectl rollout=                               |
-| Retry a failed errand/task | Currently we can do it. But it's a lengthy manual process |
-| Support =tail -f=          | Personally I don't like the way of =bosh logs=            |
 ** Bosh Concepts List
 | Name               | Comment                                                                                   |
 |--------------------+-------------------------------------------------------------------------------------------|
@@ -1152,3 +1155,168 @@ Succeeded
 * TODO bosh release: manifest vs jobs                              :noexport:
 * TODO bosh update: pks-vrops-release/releases/pks-vrops           :noexport:
 https://gitlab.eng.vmware.com/PKS/pks-vrops-release/blob/master/releases/pks-vrops/pks-vrops-0.5.0.yml
+* TODO bosh check vm creation date                                 :noexport:
+* TODO bosh fail to delete vm                                      :noexport:
+#+BEGIN_EXAMPLE
+kubo@jumper:~$ bosh vms
+Using environment '30.0.0.11' as client 'ops_manager'
+
+Task 350
+Task 351
+Task 350 done
+
+Task 351 done
+
+Deployment 'pivotal-container-service-dc93ebcb0e0aab69543f'
+
+Instance                                                        Process State  AZ    IPs        VM CID                                   VM Type  Active
+pivotal-container-service/e900c49c-ef7e-45d8-9fce-42fa0b158831  running        az-1  30.0.0.12  vm-f39bbfd9-439a-4fbe-8e9f-03dfcb335bb7  large    true
+
+1 vms
+
+Deployment 'service-instance_9b9611f6-eb7b-4624-9b61-11457d948a55'
+
+Instance                                           Process State  AZ    IPs       VM CID                                   VM Type      Active
+apply-addons/475b8f27-7fa0-4b46-a283-617c47786c21  running        az-1  30.0.1.4  vm-905e3420-4cda-4c36-9b00-5990c9c3a5be  micro        true
+master/ffc903ec-b8f7-409b-ba27-12f312df5d06        running        az-1  30.0.1.2  vm-97e0dabb-9032-48d3-b03c-14fa5f69d5cc  medium.disk  true
+worker/91345ecb-9b1b-497a-9377-2be7f5ee8b7f        running        az-1  30.0.1.3  vm-90c1302f-0fd2-4910-9fc4-e7e55d80eb44  medium.disk  true
+
+3 vms
+
+Succeeded
+kubo@jumper:~$ bosh -d service-instance_9b9611f6-eb7b-4624-9b61-11457d948a55 delete-vm apply-addons/475b8f27-7fa0-4b46-a283-617c47786c21
+Using environment '30.0.0.11' as client 'ops_manager'
+
+Using deployment 'service-instance_9b9611f6-eb7b-4624-9b61-11457d948a55'
+
+Continue? [yN]: y
+
+Deleting VM 'apply-addons/475b8f27-7fa0-4b46-a283-617c47786c21':
+  Director responded with non-successful status code '404' response 'Endpoint '/vms/apply-addons/475b8f27-7fa0-4b46-a283-617c47786c21' not found. Please consider upgrading your director'
+
+Exit code 1
+#+END_EXAMPLE
+* TODO wavefront bosh job: bin/post-start vs bin/run               :noexport:
+#+BEGIN_EXAMPLE
+bash-3.2$ git status
+On branch vrops-tile-integration
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+	new file:   vrops-errand/templates/bin/run.sh
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	modified:   vrops-errand/spec
+	deleted:    vrops-errand/templates/bin/post-start.erb
+
+bash-3.2$ git diff
+diff --git a/jobs/vrops-errand/spec b/jobs/vrops-errand/spec
+index 33e9eea..ce40c81 100644
+--- a/jobs/vrops-errand/spec
++++ b/jobs/vrops-errand/spec
+@@ -2,7 +2,7 @@
+ name: vrops-errand
+
+ templates:
+-  bin/post-start.erb: bin/post-start
++  bin/run.sh: bin/run
+   config/kubeconfig.erb: config/kubeconfig
+   config/ca.pem.erb: config/ca.pem
+   specs/cadvisor.yml.erb: specs/cadvisor.yml
+diff --git a/jobs/vrops-errand/templates/bin/post-start.erb b/jobs/vrops-errand/templates/bin/post-start.erb
+deleted file mode 100755
+index be88d59..0000000
+--- a/jobs/vrops-errand/templates/bin/post-start.erb
++++ /dev/null
+@@ -1,86 +0,0 @@
+-#!/usr/bin/env bash
+-
+-set -e
+-
+-config_dir="/var/vcap/jobs/vrops-errand/config"
+-spec_dir="/var/vcap/jobs/vrops-errand/specs"
+-docker_socket="unix:///var/vcap/sys/run/docker/docker.sock"
+-container_image_dir="/var/vcap/packages/cadvisor-images/container-images"
+-
+-namespace="kube-system"
+-
+-kubectl="/var/vcap/packages/kubernetes/bin/kubectl --kubeconfig=${config_dir}/kubeconfig"
+-docker="/var/vcap/packages/docker/bin/docker -H ${docker_socket} "
+-jq="/var/vcap/packages/pks-vrops-jq/bin/jq"
+-
+-load_container() {
+-  local path=$1
+-
+-  echo "[$(date)] Loading cached container: ${path}"
+-  if ${docker} load < "${path}"; then
+-    echo "[$(date)] Successfully loaded container: ${path}"
+-  fi
+-}
+-
+-load_cached_containers() {
+-  for img in ${container_image_dir}/*.tgz; do
+-    load_container ${img}
+-  done
+-}
+-
+-apply_spec() {
+-  local spec_file="${spec_dir}/${1}"
+-  echo "[$(date)] Deploying $spec_file"
+-  ${kubectl} apply -f "${spec_file}"
+-}
+-
+-wait_for_node_port_service() {
+-  local service_name=${1}
+-  local times=${2}
+-
+-  for i in $(seq 1 ${times})
+-  do
+-    pod=$(${kubectl} get pod -n ${namespace} -l name=${service_name} -o json | ${jq} '.items[]|select(.status.phase == "Running" and .status.hostIP == "<%= spec.ip %>") | .metadata.name')
+-    if [ ! -z "${pod}" ]; then
+-      echo "[$(date)] Service ${service_name} is ready"
+-      break
+-    fi
+-    if [ $i -eq ${times} ]; then
+-      echo "[$(date)] Timeout to wait service ${service_name} ready"
+-      return 1
+-    fi
+-    echo "[$(date)] Wait for service ${service_name}: ${i}"
+-    sleep 1
+-  done
+-}
+-
+-delete_spec() {
+-  local spec_file="${spec_dir}/${1}"
+-  echo "[$(date)] Deleting $spec_file"
+-  # TODO: check status
+-  ${kubectl} delete -f "${spec_file}" || true
+-}
+-
+-if [ "<%= p("vrops_enabled") %>" == "false" ];
+-    echo "Uninstall vrops agent"
+-<% if spec.bootstrap %>
+-    # apply spec only while this is the first instance to bootup
+-    delete_spec "cadvisor.yml"
+-<% end %>
+-then
+-    echo "Install vrops agent"
+-    load_cached_containers
+-
+-    # Ensure kubelet is up and running
+-    echo "[$(date)] Waiting for kubelet to be up and running..."
+-    timeout 120 /var/vcap/jobs/kubelet/bin/ensure_kubelet_up_and_running
+-    <% if spec.bootstrap %>
+-    # apply spec only while this is the first instance to bootup
+-    apply_spec "cadvisor.yml"
+-    <% end %>
+-    wait_for_node_port_service "vrops-cadvisor" 120
+-
+-    # Ensure kubelet is up and running
+-    echo "[$(date)] Waiting for kubelet to be up and running..."
+-    timeout 120 /var/vcap/jobs/kubelet/bin/ensure_kubelet_up_and_running
+-fi
+#+END_EXAMPLE
+
