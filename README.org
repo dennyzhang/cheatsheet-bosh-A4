@@ -9,7 +9,7 @@
 <div id="the whole thing" style="overflow: hidden;">
 <div style="float: left; padding: 5px"> <a href="https://www.linkedin.com/in/dennyzhang001"><img src="https://www.dennyzhang.com/wp-content/uploads/sns/linkedin.png" alt="linkedin" /></a></div>
 <div style="float: left; padding: 5px"><a href="https://github.com/dennyzhang"><img src="https://www.dennyzhang.com/wp-content/uploads/sns/github.png" alt="github" /></a></div>
-<div style="float: left; padding: 5px"><a href="https://www.dennyzhang.com/slack" target="_blank" rel="nofollow"><img src="https://slack.dennyzhang.com/badge.svg" alt="slack"/></a></div>
+<div style="float: left; padding: 5px"><a href="https://www.dennyzhang.com/slack" target="_blank" rel="nofollow"><img src="https://www.dennyzhang.com/wp-content/uploads/sns/slack.png" alt="slack"/></a></div>
 </div>
 
 <br/><br/>
@@ -22,49 +22,123 @@
 
 File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or star [[https://github.com/DennyZhang/cheatsheet-bosh-A4][this repo]].
 
-[[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][https://raw.githubusercontent.com/dennyzhang/cheatsheet-bosh-A4/master/bosh-workflow-intro.jpg]]
-
+[[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][https://raw.githubusercontent.com/dennyzhang/cheatsheet-bosh-A4/master/bosh.jpg]]
 ** Bosh Frequent-Used
 | Name                                   | Command                                                                                  |
 |----------------------------------------+------------------------------------------------------------------------------------------|
-| List tasks                             | =bosh tasks -r=10=, =bosh -d <deployment> tasks -ar=                                     |
+| List tasks                             | =bosh tasks -r=10=, =bosh -d $deployment tasks -ar=                                      |
 | Tail latest bosh task                  | =bosh task -a=, =bosh task -a --debug=                                                   |
-| List deployments and vms               | =bosh deployments=, =bosh -d <deployment> vms=                                           |
-| Bosh get current task output           | =bosh -d <deployment> task $id --result=                                                 |
-| Bosh get task all detail log           | =bosh -d <deployment> task -a --debug=, =bosh -d <deployment> task $id --debug=          |
+| List deployments and vms               | =bosh deployments=, =bosh -d $deployment vms=                                            |
+| Bosh get current task output           | =bosh -d $deployment task $id --result=                                                  |
+| Bosh get task all detail log           | =bosh -d $deployment task -a --debug=, =bosh -d $deployment task $id --debug=            |
 | Delete a deployment                    | =bosh delete-deployment -d $deployment=, =bosh delete-deployment -d $deployment --force= |
-| Run errand, and avoid deleting the vms | =bosh -n -d <deployment> run-errand <errand_name> --keep-alive=                          |
-| Common Bosh Releases                   | [[https://github.com/cloudfoundry-incubator/kubo-release][kubo-release]], [[https://github.com/cloudfoundry-incubator/cfcr-etcd-release][cfcr-etcd-release]], [[https://github.com/cloudfoundry-incubator/docker-boshrelease][docker-boshrelease]], [[https://github.com/cloudfoundry-incubator/pxc-release][pxc-release]]                         |
-| Reference                              | [[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][Bosh CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][Tile CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-uaa-A4][UAA CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSheet]]                         |
-** Bosh Challenges & Painpoints
-| Name                           | Comment                                                       |
-|--------------------------------+---------------------------------------------------------------|
-| Create deployment is very slow | Need to compile packages again, and canary update for all VMs |
-| Errands on non co-located vms  | It takes 5+ minutes to spin up and destroy a VM               |
-| More declarative               | End users define requirements via =yaml files=                |
-| More lightweight               | Use =containers=, instead of =VMs= to run errands             |
-| Support rolling upgrade        | Just like =kubectl rollout=                                   |
-| Retry a failed errand/task     | Currently we can do it. But it's a lengthy manual process     |
-| Support =tail -f=              | Personally I don't like the way of =bosh logs=                |
-** Bosh Release - Basic
-| Name                    | Command                                                                                    |
-|-------------------------+--------------------------------------------------------------------------------------------|
-| List release            | =bosh -n releases=                                                                         |
-| Release folder          | =/var/tempest/releases=                                                                    |
-| Create a local release  | =bosh create-release --tarball=myrelease-0.4.0.tgz=                                        |
-| Export a release        | =bosh -d <deployment> export-release <my-release>/<release-version> ubuntu-xenial/170.9= |
-| Inspect a release       | =bosh inspect-release <my-release>/<release-version>=                                      |
-| Delete release          | =bosh -n delete-release <my-release>/<release-version> --force=                            |
-| Upload release          | =bosh -n upload-release=, =bosh -n upload-release /tmp/my-release-0.22.0.tgz=              |
-| Reset release           | =bosh reset-release= [[https://github.com/cloudfoundry/bosh-cli/issues/28][GitHub ticket]]                                                         |
-** Bosh Release - Creation
-| Name             | Command                                             |
-|------------------+-----------------------------------------------------|
-| Reference        | [[https://bosh.io/docs/cli-v2/#release-creation][Link: Release creation]]                              |
-| Create a release | =bosh create-release --tarball /tmp/my-release.tgz= |
+| Upload release                         | =bosh -n upload-release=, =bosh -n upload-release /tmp/my-release-0.22.0.tgz=            |
+| Get deployment manifest yaml           | =bosh -d $deployment manifest > my.yaml=                                                 |
+| Run bosh deployment from yaml          | =bosh -d $deployment deploy my.yaml=                                                     |
+| Run errand, and avoid deleting the vms | =bosh -n -d $deployment run-errand $errand_name --keep-alive=                            |
+| Common Bosh Releases                   | [[https://github.com/cloudfoundry-incubator/kubo-release][kubo-release]], [[https://github.com/cloudfoundry-incubator/cfcr-etcd-release][cfcr-etcd-release]], [[https://github.com/cloudfoundry-incubator/docker-boshrelease][docker-boshrelease]], [[https://github.com/cloudfoundry-incubator/pxc-release][pxc-release]], [[https://www.youtube.com/watch?v=l91q00Vu2h8][YouTube: BOSH Release]]  |
+| Reference                              | [[https://bosh.io/docs/terminology][Link: terminology]], [[https://github.com/cloudfoundry/bosh][GitHub: cloudfoundry/bosh]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][CheatSheet: Cloudfoundry Tile & OpsManager]] |
+| Reference                              | [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][Bosh CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][Tile CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-uaa-A4][UAA CheatSheet]]                         |
+
+** Bosh Challenges
+| Name                                | Comment                                                          |
+|-------------------------------------+------------------------------------------------------------------|
+| Create deployment is very slow      | Need to compile packages again, and canary update for all VMs    |
+| Errands on non co-located vms       | It takes 5+ minutes to spin up and destroy a VM                  |
+| No repo mechanism for Bosh releases | Duplicate packages are required to make no external dependencies |
+| Support =tail -f=                   | Personally I don't like the way of =bosh logs=                   |
+| Retry a failed errand/task          | Currently we can do it. But it's a lengthy manual process        |
+| More lightweight                    | Use =containers=, instead of =VMs= to run errands                |
+| Support rolling upgrade             | Just like =kubectl rollout=                                      |
+| More declarative                    | End users define requirements via =yaml files=                   |
+** Bosh Release
+| Name                   | Command                                                                                 |
+|------------------------+-----------------------------------------------------------------------------------------|
+| List release           | =bosh -n releases=                                                                      |
+| Release folder         | =/var/tempest/releases=                                                                 |
+| Create a local release | =bosh create-release --tarball=myrelease-0.4.0.tgz=                                     |
+| Export a release       | =bosh -d $deployment export-release <my-release>/<release-version> ubuntu-xenial/170.9= |
+| Inspect a release      | =bosh inspect-release <my-release>/<release-version>=                                   |
+| Delete release         | =bosh -n delete-release <my-release>/<release-version> --force=                         |
+| Upload release         | =bosh -n upload-release=, =bosh -n upload-release /tmp/my-release-0.22.0.tgz=           |
+| Reset release          | =bosh reset-release= [[https://github.com/cloudfoundry/bosh-cli/issues/28][GitHub ticket]]                                                      |
+| Reference              | [[https://bosh.io/docs/cli-v2/#release-creation][Link: Release creation]]                                                                  |
 #+BEGIN_HTML
 <a href="https://www.dennyzhang.com"><img align="right" width="185" height="37" src="https://raw.githubusercontent.com/USDevOps/mywechat-slack-group/master/images/dns_small.png"></a>
 #+END_HTML
+** Bosh Basic
+| Name                      | Command                                                                    |
+|---------------------------+----------------------------------------------------------------------------|
+| [[https://bosh.io/docs/cli-v2/][bosh]]                      | =apt install bosh-cli=, =/var/vcap/bosh/log=                               |
+| [[https://bosh.io/docs/cli-int/][Interpolates variables]]    | =bosh int /tmp/build/4dcXX/pks-lock/metadata --path=/ops_manager/username= |
+| List all bosh deployments | =bosh -n deployments=, =bosh -n deployments --json=                        |
+| Download log files        | =bosh -d $deployment_id logs=                                             |
+| Show deployment manifest  | =bosh manifest -d $deployment=                                            |
+| bosh config               | =bosh cloud-config=, =bosh configs=                                        |
+| List environment          | =bosh env=, =bosh env --json=, =bosh envs=                                 |
+| List all instances        | =bosh instances=                                                           |
+| Get vms per deployment    | =bosh -e $env -d $deployment vms=, =bosh instances=                       |
+| Cloud consistency check   | =bosh cloud-check -d $deployment=                                         |
+| List disks                | =bosh disks -o=                                                            |
+** Bosh Manifest
+| Name               | Command                                       |
+|--------------------+-----------------------------------------------|
+| Show bosh manifest | =bosh manifest -d $deployment= [[https://bosh.io/docs/cli-v2#manifest][Link: manifest]] |
+** Bosh VM
+| Name                       | Command                                                                       |
+|----------------------------+-------------------------------------------------------------------------------|
+| List vms                   | =bosh -d $deployment vms=                                                    |
+| List vms with verbose info | =bosh -d $deployment vms --vitals=                                           |
+| Delete a vm                | =bosh -d $deployment delete-vm <vm-cid>>=                                    |
+| SSH to vm                  | =bosh -e <env> -d $deployment ssh <vm-name>/<GUID>=                          |
+| Run SSH commands           | =bosh -e <env> -d $deployment ssh <vm-name>/<GUID> -c "sudo cat /etc/hosts"= |
+[[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][https://raw.githubusercontent.com/dennyzhang/cheatsheet-bosh-A4/master/bosh-workflow-intro.jpg]]
+** Bosh Errand
+| Name                                  | Command                                                                              |
+|---------------------------------------+--------------------------------------------------------------------------------------|
+| List errands                          | =bosh errands -d $deployment=                                                       |
+| Run errand in a new vm                | =bosh -n -d $deployment run-errand <errand_name>=  [[https://bosh.io/docs/cli-v2/#run-errand][Link: run-errand]]                 |
+| Run errand in a new vm with env alive | =bosh -n -d $deployment run-errand <errand_name> --keep-alive=                      |
+| Run errand in an existing vm          | =bosh -n -d $deployment run-errand <errand_name> --instance=worker/instance-id=XXX= |
+** Bosh Blob
+| Name                   | Command                                                                                                          |
+|------------------------+------------------------------------------------------------------------------------------------------------------|
+| Reference              | [[https://bosh.io/docs/release-blobs/][Link: Working with Blobs]]                                                                                         |
+| Configure credential   | If you need to upload/download with S3/GCP buckets, make sure =config/private.yml= has been configured correctly |
+| Add local file to blob | =bosh add-blob /tmp/<telegraf:1.7-alpine.tgz> container-images/telegraf:1.7-alpine.tgz=                          |
+| Upload blobs           | =bosh upload-blobs=, make sure =config/private.yml= is correct. blobs.yml will be automatically updated          |
+| List blob              | =bosh blobs=                                                                                                     |
+| Remove blob            | =bosh remove-blob container-images/cadvisor-v0.31.0.tgz=                                                         |
+** Bosh Task
+| Name                          | Command                                    |
+|-------------------------------+--------------------------------------------|
+| List recent tasks             | =bosh -d $deployment tasks --recent=      |
+| List all tasks                | =bosh -d $deployment tasks -ar=           |
+| Attach to current task        | =bosh -d $deployment task -a=             |
+| Get task by id                | =bosh -d $deployment task $id=            |
+| Get task detail msg           | =bosh -d $deployment task $id --debug=    |
+| Get all logs for a deployment | =bosh -d $deployment logs=                |
+| Get log for one vm            | =bosh -d $deployment logs $instance_name= |
+| List bosh events              | =bosh events=                              |
+** Bosh Job - Skeleton
+| Name      | Command                                  |
+|-----------+------------------------------------------|
+| Reference | [[https://github.com/cloudfoundry-incubator/kubo-release/tree/master/jobs][Example: kubo-release/jobs]]               |
+| provides  | Export resources for other bosh releases |
+| consumes  | Use resources from other bosh releases   |
+| packages  | Packages get installed by bosh           |
+| templates | Conf files                               |
+#+BEGIN_HTML
+<a href="https://www.dennyzhang.com"><img align="right" width="185" height="37" src="https://raw.githubusercontent.com/USDevOps/mywechat-slack-group/master/images/dns_small.png"></a>
+#+END_HTML
+** Bosh Deployment
+| Name                          | Command                                             |
+|-------------------------------+-----------------------------------------------------|
+| List bosh deployments         | =bosh deployments=                                  |
+| Show detail of one deployment | =bosh -d $deployment deployment=                   |
+| Delete bosh deployment        | =bosh -n -d $deployment delete-deployment --force= |
+| Get deployment manifest yaml  | =bosh -d $deployment manifest > my.yaml=           |
+| Run bosh deployment from yaml | =bosh -d $deployment deploy my.yaml=               |
 ** Bosh vs Kubernetes
 | Bosh - VM Lifecycle Management | Kubernetes - Container Lifecycle Management      |
 |--------------------------------+--------------------------------------------------|
@@ -85,8 +159,6 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 ** Bosh Concepts List
 | Name               | Comment                                                                                   |
 |--------------------+-------------------------------------------------------------------------------------------|
-| Reference          | [[https://bosh.io/docs/terminology][Link: terminology]], [[https://github.com/cloudfoundry/bosh][GitHub: cloudfoundry/bosh]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][CheatSheet: Cloudfoundry Tile & OpsManager]]  |
-| Reference          | [[https://www.youtube.com/watch?v=l91q00Vu2h8][YouTube: BOSH Release]]                                                                     |
 | [[https://bosh.cloudfoundry.org/stemcells/][Bosh Stemcells]]     | A versioned Operating System image. [[https://network.pivotal.io/][Download stemcell]]                                     |
 | [[https://bosh.io/docs/terminology/#deployment][Bosh Deployment]]    | An encapsulation of software and configuration that BOSH can deploy to the cloud.         |
 | [[https://bosh.io/docs/release/][Bosh Release]]       | Everything needed to make a software component deployable by BOSH.                        |
@@ -105,80 +177,6 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 | Bosh Jumpbox       | A VM that acts as a single access point for the Director and deployed VMs.                |
 | [[https://bosh.io/docs/release-blobs/][Director Blobstore]] | A repository where BOSH stores release artifacts, logs, stemcells, and other content, etc |
 | Cloud ID (CID)     | ID returned from the Cloud identifying particular resource such as VM or disk.            |
-** Bosh Basic
-| Name                      | Command                                                                    |
-|---------------------------+----------------------------------------------------------------------------|
-| [[https://bosh.io/docs/cli-v2/][bosh]]                      | =apt install bosh-cli=, =/var/vcap/bosh/log=                               |
-| [[https://bosh.io/docs/cli-int/][Interpolates variables]]    | =bosh int /tmp/build/4dcXX/pks-lock/metadata --path=/ops_manager/username= |
-| List all bosh deployments | =bosh -n deployments=, =bosh -n deployments --json=                        |
-| Download log files        | =bosh -d <deployment>_id logs=                                             |
-| Show deployment manifest  | =bosh manifest -d <deployment>=                                            |
-| bosh config               | =bosh cloud-config=, =bosh configs=                                        |
-| List environment          | =bosh env=, =bosh env --json=, =bosh envs=                                 |
-| List all instances        | =bosh instances=                                                           |
-| Get vms per deployment    | =bosh -e $env -d <deployment> vms=, =bosh instances=                       |
-| Cloud consistency check   | =bosh cloud-check -d <deployment>=                                         |
-| List disks                | =bosh disks -o=                                                            |
-** Bosh VM
-| Name                       | Command                                                                       |
-|----------------------------+-------------------------------------------------------------------------------|
-| List vms                   | =bosh -d <deployment> vms=                                                    |
-| List vms with verbose info | =bosh -d <deployment> vms --vitals=                                           |
-| Delete a vm                | =bosh -d <deployment> delete-vm <vm-name>/<GUID>=                             |
-| SSH to vm                  | =bosh -e <env> -d <deployment> ssh <vm-name>/<GUID>=                          |
-| Run SSH commands           | =bosh -e <env> -d <deployment> ssh <vm-name>/<GUID> -c "sudo cat /etc/hosts"= |
-
-[[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][https://raw.githubusercontent.com/dennyzhang/cheatsheet-bosh-A4/master/bosh.jpg]]
-** Bosh Deployment
-| Name                          | Command                                             |
-|-------------------------------+-----------------------------------------------------|
-| List bosh deployments         | =bosh deployments=                                  |
-| Show detail of one deployment | =bosh -d <deployment> deployment=                   |
-| Delete bosh deployment        | =bosh -n -d <deployment> delete-deployment --force= |
-| Get deployment manifest yaml  | =bosh manifest -d <deployment> > my.yaml=           |
-| Run bosh deployment from yaml | =bosh deploy -d <deployment> my.yaml=               |
-** Bosh Task
-| Name                          | Command                                    |
-|-------------------------------+--------------------------------------------|
-| List recent tasks             | =bosh -d <deployment> tasks --recent=      |
-| List all tasks                | =bosh -d <deployment> tasks -ar=           |
-| Attach to current task        | =bosh -d <deployment> task -a=             |
-| Get task by id                | =bosh -d <deployment> task $id=            |
-| Get task detail msg           | =bosh -d <deployment> task $id --debug=    |
-| Get all logs for a deployment | =bosh -d <deployment> logs=                |
-| Get log for one vm            | =bosh -d <deployment> logs $instance_name= |
-| List bosh events              | =bosh events=                              |
-** Bosh Job - Skeleton
-| Name      | Command                                  |
-|-----------+------------------------------------------|
-| Reference | [[https://github.com/cloudfoundry-incubator/kubo-release/tree/master/jobs][Example: kubo-release/jobs]]               |
-| provides  | Export resources for other bosh releases |
-| consumes  | Use resources from other bosh releases   |
-| packages  | Packages get installed by bosh           |
-| templates | Conf files                               |
-#+BEGIN_HTML
-<a href="https://www.dennyzhang.com"><img align="right" width="185" height="37" src="https://raw.githubusercontent.com/USDevOps/mywechat-slack-group/master/images/dns_small.png"></a>
-#+END_HTML
-** Bosh Errand
-| Name                                  | Command                                                                              |
-|---------------------------------------+--------------------------------------------------------------------------------------|
-| List errands                          | =bosh errands -d <deployment>=                                                       |
-| Run errand in a new vm                | =bosh -n -d <deployment> run-errand <errand_name>=  [[https://bosh.io/docs/cli-v2/#run-errand][Link: run-errand]]                 |
-| Run errand in a new vm with env alive | =bosh -n -d <deployment> run-errand <errand_name> --keep-alive=                      |
-| Run errand in an existing vm          | =bosh -n -d <deployment> run-errand <errand_name> --instance=worker/instance-id=XXX= |
-** Bosh Blob
-| Name                   | Command                                                                                                          |
-|------------------------+------------------------------------------------------------------------------------------------------------------|
-| Reference              | [[https://bosh.io/docs/release-blobs/][Link: Working with Blobs]]                                                                                         |
-| Configure credential   | If you need to upload/download with S3/GCP buckets, make sure =config/private.yml= has been configured correctly |
-| Add local file to blob | =bosh add-blob /tmp/<telegraf:1.7-alpine.tgz> container-images/telegraf:1.7-alpine.tgz=                          |
-| Upload blobs           | =bosh upload-blobs=, make sure =config/private.yml= is correct. blobs.yml will be automatically updated          |
-| List blob              | =bosh blobs=                                                                                                     |
-| Remove blob            | =bosh remove-blob container-images/cadvisor-v0.31.0.tgz=                                                         |
-** Bosh Manifest
-| Name               | Command                                        |
-|--------------------+------------------------------------------------|
-| Show bosh manifest | =bosh manifest -d <deployment>= [[https://bosh.io/docs/cli-v2#manifest][Link: manifest]] |
 ** Bosh Stemcell
 | Name              | Command                                                                                         |
 |-------------------+-------------------------------------------------------------------------------------------------|
@@ -194,9 +192,9 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 ** Bosh Tools
 | Name                        | Comment                                                                                         |
 |-----------------------------+-------------------------------------------------------------------------------------------------|
-| [[https://docs.cloudfoundry.org/bbr/][bbr]] bosh-backup-and-restore | a framework for backing up and restoring BOSH deployments and BOSH Directors.                   |
-| [[https://github.com/cloudfoundry/bosh-bootloader][bbl]] bosh-bootloader         | a command line utility for standing up BOSH on multi-clouds                                     |
-| [[https://github.com/cloudfoundry-incubator/bpm-release][bpm]] BOSH process manager    | isolation of BOSH jobs to make they run on many different work schedulers instead of monit only |
+| [[https://docs.cloudfoundry.org/bbr/][bbr]] bosh-backup-and-restore | A framework for backing up and restoring BOSH deployments and BOSH Directors.                   |
+| [[https://github.com/cloudfoundry/bosh-bootloader][bbl]] bosh-bootloader         | A command line utility for standing up BOSH on multi-clouds                                     |
+| [[https://github.com/cloudfoundry-incubator/bpm-release][bpm]] BOSH process manager    | Isolation of BOSH jobs to make they run on many different work schedulers instead of monit only |
 ** Online Help Usage
 #+BEGIN_EXAMPLE
  kubo@jumper:~$ bosh --help
@@ -316,8 +314,24 @@ License: Code is licensed under [[https://www.dennyzhang.com/wp-content/mit_lice
 
 <a href="https://www.linkedin.com/in/dennyzhang001"><img align="bottom" src="https://www.dennyzhang.com/wp-content/uploads/sns/linkedin.png" alt="linkedin" /></a>
 <a href="https://github.com/dennyzhang"><img align="bottom"src="https://www.dennyzhang.com/wp-content/uploads/sns/github.png" alt="github" /></a>
-<a href="https://www.dennyzhang.com/slack" target="_blank" rel="nofollow"><img align="bottom" src="https://slack.dennyzhang.com/badge.svg" alt="slack"/></a>
+<a href="https://www.dennyzhang.com/slack" target="_blank" rel="nofollow"><img align="bottom" src="https://www.dennyzhang.com/wp-content/uploads/sns/slack.png" alt="slack"/></a>
 #+END_HTML
+* TODO Bosh link                                                   :noexport:
+https://bosh.io/docs/links/
+* TODO Bosh instance process: failing                              :noexport:
+#+BEGIN_EXAMPLE
+Instance                                     Process State  AZ    IPs       VM CID                                   VM Type  Active
+master/13e0201e-3a68-4d21-94d5-a21ad9a86ae1  failing        az-1  30.0.2.2  vm-730f9c4a-729a-48d9-90e1-cb2808296989  medium   true
+worker/3f98cac2-542b-44ba-8d37-2a892970aaf8  running        az-1  30.0.2.3  vm-ceebe79e-4541-4c0d-976a-fbe3058f67fa  medium   true
+#+END_EXAMPLE
+* #  --8<-------------------------- separator ------------------------>8-- :noexport:
+* TODO bosh errands: what will be exported                         :noexport:
+* TODO bosh properties and bosh variables                          :noexport:
+* TODO bosh property: Where is kubernetes_master_port?             :noexport:
+* TODO bosh create-release with given format                       :noexport:
+bosh create-release --tarball=pks-vrops-0.11.0-dev.2.tgz
+
+scp pks-vrops-0.11.0-dev.2.tgz kubo@10.160.215.112:/home/kubo/p-pks-integrations/releases
 * org-mode configuration                                           :noexport:
 #+STARTUP: overview customtime noalign logdone showall
 #+DESCRIPTION:
@@ -1319,4 +1333,11 @@ index be88d59..0000000
 -    timeout 120 /var/vcap/jobs/kubelet/bin/ensure_kubelet_up_and_running
 -fi
 #+END_EXAMPLE
+* TODO In bosh manifest, what "redected" mean?                     :noexport:
+kubernetes-api-url: "<redacted>"
 
+https://ci.vcna.io/teams/oratos-vmware/pipelines/pks-vrops-release/jobs/run-tests/builds/67#L5c00a283:1756
+* #  --8<-------------------------- separator ------------------------>8-- :noexport:
+* TODO Bosh create/delete deployment                               :noexport:
+* DONE bosh property: value: <%= p('cluster-name', <%= spec.deployment %>) %> :noexport:
+  CLOSED: [2019-01-13 Sun 18:16]
