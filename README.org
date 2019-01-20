@@ -36,7 +36,8 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 | Get deployment manifest yaml           | =bosh -d $deployment manifest > my.yaml=                                                 |
 | Run bosh deployment from yaml          | =bosh -d $deployment deploy my.yaml=                                                     |
 | Run errand, and avoid deleting the vms | =bosh -n -d $deployment run-errand $errand_name --keep-alive=                            |
-| Bosh delete all deployments/releases   | [[https://github.com/dennyzhang/cheatsheet-bosh-A4/blob/master/cleanup-bosh-deployment.sh][cleanup-bosh-deployment.sh]], [[https://github.com/dennyzhang/cheatsheet-bosh-A4/blob/master/cleanup-bosh-releases.sh][cleanup-bosh-releases.sh]]                                     |
+| Delete all or a given bosh deployment  | [[https://github.com/dennyzhang/cheatsheet-bosh-A4/blob/master/cleanup-bosh-deployment.sh][cleanup-bosh-deployment.sh]]                                                               |
+| Delete all or a given bosh release     | [[https://github.com/dennyzhang/cheatsheet-bosh-A4/blob/master/cleanup-bosh-releases.sh][cleanup-bosh-releases.sh]]                                                                 |
 | Common Bosh Releases                   | [[https://github.com/cloudfoundry-incubator/kubo-release][kubo-release]], [[https://github.com/cloudfoundry-incubator/cfcr-etcd-release][cfcr-etcd-release]], [[https://github.com/cloudfoundry-incubator/docker-boshrelease][docker-boshrelease]], [[https://github.com/cloudfoundry-incubator/pxc-release][pxc-release]], [[https://www.youtube.com/watch?v=l91q00Vu2h8][YouTube: BOSH Release]]  |
 | Reference                              | [[https://bosh.io/docs/terminology][Link: terminology]], [[https://github.com/cloudfoundry/bosh][GitHub: cloudfoundry/bosh]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][CheatSheet: Cloudfoundry Tile & OpsManager]] |
 | Reference                              | [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][Bosh CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][Tile CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-uaa-A4][UAA CheatSheet]]                         |
@@ -68,18 +69,18 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 <a href="https://www.dennyzhang.com"><img align="right" width="185" height="37" src="https://raw.githubusercontent.com/USDevOps/mywechat-slack-group/master/images/dns_small.png"></a>
 #+END_HTML
 ** Bosh Basic
-| Name                      | Command                                                                    |
-|---------------------------+----------------------------------------------------------------------------|
-| [[https://bosh.io/docs/cli-v2/][bosh]]                      | =apt install bosh-cli=, =/var/vcap/bosh/log=                               |
-| List all bosh deployments | =bosh -n deployments=, =bosh -n deployments --json=                        |
-| Download log files        | =bosh -d $deployment_id logs=                                             |
-| Show deployment manifest  | =bosh manifest -d $deployment=                                            |
-| bosh config               | =bosh cloud-config=, =bosh configs=                                        |
-| List environment          | =bosh env=, =bosh env --json=, =bosh envs=                                 |
-| List all instances        | =bosh instances=                                                           |
-| Get vms per deployment    | =bosh -e $env -d $deployment vms=, =bosh instances=                       |
-| Cloud consistency check   | =bosh cloud-check -d $deployment=                                         |
-| List disks                | =bosh disks -o=                                                            |
+| Name                      | Command                                             |
+|---------------------------+-----------------------------------------------------|
+| [[https://bosh.io/docs/cli-v2/][bosh]]                      | =apt install bosh-cli=, =/var/vcap/bosh/log=        |
+| List all bosh deployments | =bosh -n deployments=, =bosh -n deployments --json= |
+| Download log files        | =bosh -d $deployment_id logs=                       |
+| Show deployment manifest  | =bosh manifest -d $deployment=                      |
+| bosh config               | =bosh cloud-config=, =bosh configs=                 |
+| List environment          | =bosh env=, =bosh env --json=, =bosh envs=          |
+| List all instances        | =bosh instances=                                    |
+| Get vms per deployment    | =bosh -e $env -d $deployment vms=, =bosh instances= |
+| Cloud consistency check   | =bosh cloud-check -d $deployment=                   |
+| List disks                | =bosh disks -o=                                     |
 ** Bosh Interpolate
 | Name                        | Command                                                                    |
 |-----------------------------+----------------------------------------------------------------------------|

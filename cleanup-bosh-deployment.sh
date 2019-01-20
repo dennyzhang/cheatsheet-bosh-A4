@@ -5,7 +5,15 @@
 ## Link: https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4
 ## --
 ## Created : <2019-01-18>
-## Updated: Time-stamp: <2019-01-20 10:25:18>
+## Updated: Time-stamp: <2019-01-20 11:23:57>
+## Usage:
+## # ssh
+## ssh -o StrictHostKeyChecking=no root@10.92.171.234 \
+##     "curl -L https://raw.githubusercontent.com/dennyzhang/cheatsheet-bosh-A4/master/cleanup-bosh-deployment.sh | bash"
+##
+## # ssh without password
+## sshpass -p 'MY_SSH_PASSWORD' ssh -o StrictHostKeyChecking=no root@10.92.171.234 \
+##     "curl -L https://raw.githubusercontent.com/dennyzhang/cheatsheet-bosh-A4/master/cleanup-bosh-deployment.sh | bash"
 ##-------------------------------------------------------------------
 # shellcheck disable=SC1091
 source /home/kubo/gw_scripts/bosh_env.sh
@@ -13,13 +21,13 @@ source /home/kubo/gw_scripts/bosh_env.sh
 if [ -z "$BOSH_DEPLOYMENT_DELETE" ]; then
     echo "BOSH_DEPLOYMENT_DELETE env is empty. Deleting all bosh deployments"
     for d in $(bosh deployments --json | jq -r .Tables[].Rows[].name); do
-        echo "echo y | bosh delete-deployment --force -d $d"
-        echo y | bosh delete-deployment --force -d "$d"
+        command="echo y | bosh delete-deployment --force -d $d"
+        echo "$command" && eval "$command"
     done
 else
-    echo "echo y | bosh delete-deployment --force -d $BOSH_DEPLOYMENT_DELETE"
-    echo y | bosh delete-deployment --force -d "$BOSH_DEPLOYMENT_DELETE"
+    command="echo y | bosh delete-deployment --force -d $BOSH_DEPLOYMENT_DELETE"
+    echo "$command" && eval "$command"
 fi
 
-echo "bosh deployments"
-bosh deployments
+command="bosh deployments"
+echo "$command" && eval "$command"
