@@ -42,17 +42,6 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 | Reference                              | [[https://bosh.io/docs/terminology][Link: terminology]], [[https://github.com/cloudfoundry/bosh][GitHub: cloudfoundry/bosh]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][CheatSheet: Cloudfoundry Tile & OpsManager]] |
 | Reference                              | [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][Bosh CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][Tile CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-uaa-A4][UAA CheatSheet]]                         |
 
-** Bosh Challenges
-| Name                                | Comment                                                          |
-|-------------------------------------+------------------------------------------------------------------|
-| Create deployment is very slow      | Need to compile packages again, and canary update for all VMs    |
-| Errands on non co-located vms       | It takes 5+ minutes to spin up and destroy a VM                  |
-| No repo mechanism for Bosh releases | Duplicate packages are required to make no external dependencies |
-| Support =tail -f=                   | Personally I don't like the way of =bosh logs=                   |
-| Retry a failed errand/task          | Currently we can do it. But it's a lengthy manual process        |
-| More lightweight                    | Use =containers=, instead of =VMs= to run errands                |
-| Support rolling upgrade             | Just like =kubectl rollout=                                      |
-| More declarative                    | End users define requirements via =yaml files=                   |
 ** Bosh Release
 | Name                   | Command                                                                                 |
 |------------------------+-----------------------------------------------------------------------------------------|
@@ -63,7 +52,7 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 | Inspect a release      | =bosh inspect-release <my-release>/<release-version>=                                   |
 | Delete release         | =bosh -n delete-release <my-release>/<release-version> --force=                         |
 | Upload release         | =bosh -n upload-release=, =bosh -n upload-release /tmp/my-release-0.22.0.tgz=           |
-| Reset release          | =bosh reset-release= [[https://github.com/cloudfoundry/bosh-cli/issues/28][GitHub ticket]]                                                      |
+| Reset release          | =bosh reset-release=                                                                    |
 | Reference              | [[https://bosh.io/docs/cli-v2/#release-creation][Link: Release creation]]                                                                  |
 #+BEGIN_HTML
 <a href="https://www.dennyzhang.com"><img align="right" width="185" height="37" src="https://raw.githubusercontent.com/USDevOps/mywechat-slack-group/master/images/dns_small.png"></a>
@@ -82,14 +71,18 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 | Cloud consistency check   | =bosh cloud-check -d $deployment=                   |
 | List disks                | =bosh disks -o=                                     |
 ** Bosh Interpolate
-| Name                        | Command                                                                    |
-|-----------------------------+----------------------------------------------------------------------------|
-| [[https://bosh.io/docs/cli-int/][Bosh Interpolates variables]] | =bosh int /tmp/build/4dcXX/pks-lock/metadata --path=/ops_manager/username= |
-| Parse json output           | =bosh int --path=/uuid -=, similar to [[https://cheatsheet.dennyzhang.com/cheatsheet-jq-A4][jq]] command                           |
+| Name                                   | Command                                                                    |
+|----------------------------------------+----------------------------------------------------------------------------|
+| [[https://bosh.io/docs/cli-int/][Bosh Interpolates variables]]            | =bosh int /tmp/build/4dcXX/pks-lock/metadata --path=/ops_manager/username= |
+| [[https://ultimateguidetobosh.com/properties/][Bosh use a property within a template]]  | <%= p('some-property') %>                                                  |
+| Bosh use a property with default value | <%= p('cluster-name', <%= spec.deployment %>) %>                           |
+| [[https://ultimateguidetobosh.com/properties/][Bosh use a property conditionally]]      | [[https://github.com/dennyzhang/cheatsheet-bosh-A4/blob/master/bosh-if-property.md][bosh-if-property.md]]                                                        |
+| Parse json output                      | =bosh int --path=/uuid -=, similar to [[https://cheatsheet.dennyzhang.com/cheatsheet-jq-A4][jq]] command                           |
 ** Bosh Manifest
-| Name               | Command                                       |
-|--------------------+-----------------------------------------------|
-| Show bosh manifest | =bosh manifest -d $deployment= [[https://bosh.io/docs/cli-v2#manifest][Link: manifest]] |
+| Name                              | Command                              |
+|-----------------------------------+--------------------------------------|
+| [[https://bosh.io/docs/cli-v2/#manifest][Show bosh manifest]]                | =bosh manifest -d $deployment=       |
+| Run bosh deployment from manifest | =bosh -d $deployment deploy my.yaml= |
 ** Bosh VM
 | Name                       | Command                                                                       |
 |----------------------------+-------------------------------------------------------------------------------|
@@ -107,14 +100,14 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 | Run errand in a new vm with env alive | =bosh -n -d $deployment run-errand <errand_name> --keep-alive=                      |
 | Run errand in an existing vm          | =bosh -n -d $deployment run-errand <errand_name> --instance=worker/instance-id=XXX= |
 ** Bosh Blob
-| Name                   | Command                                                                                                          |
-|------------------------+------------------------------------------------------------------------------------------------------------------|
-| Reference              | [[https://bosh.io/docs/release-blobs/][Link: Working with Blobs]]                                                                                         |
-| Configure credential   | If you need to upload/download with S3/GCP buckets, make sure =config/private.yml= has been configured correctly |
-| Add local file to blob | =bosh add-blob /tmp/<telegraf:1.7-alpine.tgz> container-images/telegraf:1.7-alpine.tgz=                          |
-| Upload blobs           | =bosh upload-blobs=, make sure =config/private.yml= is correct. blobs.yml will be automatically updated          |
-| List blob              | =bosh blobs=                                                                                                     |
-| Remove blob            | =bosh remove-blob container-images/cadvisor-v0.31.0.tgz=                                                         |
+| Name                   | Command                                                                                 |
+|------------------------+-----------------------------------------------------------------------------------------|
+| Reference              | [[https://bosh.io/docs/release-blobs/][Link: Working with Blobs]]                                                                |
+| Configure credential   | Prepare =config/private.yml=                                                            |
+| Add local file to blob | =bosh add-blob /tmp/<telegraf:1.7-alpine.tgz> container-images/telegraf:1.7-alpine.tgz= |
+| Upload blobs           | =bosh upload-blobs=                                                                     |
+| List blob              | =bosh blobs=                                                                            |
+| Remove blob            | =bosh remove-blob container-images/cadvisor-v0.31.0.tgz=                                |
 ** Bosh Task
 | Name                          | Command                                    |
 |-------------------------------+--------------------------------------------|
@@ -134,9 +127,6 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 | consumes  | Use resources from other bosh releases   |
 | packages  | Packages get installed by bosh           |
 | templates | Conf files                               |
-#+BEGIN_HTML
-<a href="https://www.dennyzhang.com"><img align="right" width="185" height="37" src="https://raw.githubusercontent.com/USDevOps/mywechat-slack-group/master/images/dns_small.png"></a>
-#+END_HTML
 ** Bosh Deployment
 | Name                          | Command                                             |
 |-------------------------------+-----------------------------------------------------|
@@ -162,6 +152,9 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 | =Bosh Agent=                   |                                                  |
 | =Bosh Addon=                   |                                                  |
 | =Bosh Ops manager=             | No related feature: UI to customize your service |
+#+BEGIN_HTML
+<a href="https://www.dennyzhang.com"><img align="right" width="185" height="37" src="https://raw.githubusercontent.com/USDevOps/mywechat-slack-group/master/images/dns_small.png"></a>
+#+END_HTML
 ** Bosh Concepts List
 | Name               | Comment                                                                                   |
 |--------------------+-------------------------------------------------------------------------------------------|
@@ -201,6 +194,17 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 | [[https://docs.cloudfoundry.org/bbr/][bbr]] bosh-backup-and-restore | A framework for backing up and restoring BOSH deployments and BOSH Directors.                   |
 | [[https://github.com/cloudfoundry/bosh-bootloader][bbl]] bosh-bootloader         | A command line utility for standing up BOSH on multi-clouds                                     |
 | [[https://github.com/cloudfoundry-incubator/bpm-release][bpm]] BOSH process manager    | Isolation of BOSH jobs to make they run on many different work schedulers instead of monit only |
+** Bosh Challenges
+| Name                                | Comment                                                          |
+|-------------------------------------+------------------------------------------------------------------|
+| Create deployment is very slow      | Need to compile packages again, and canary update for all VMs    |
+| Errands on non co-located vms       | It takes 5+ minutes to spin up and destroy a VM                  |
+| No repo mechanism for Bosh releases | Duplicate packages are required to make no external dependencies |
+| Support =tail -f=                   | Personally I don't like the way of =bosh logs=                   |
+| Retry a failed errand/task          | Currently we can do it. But it's a lengthy manual process        |
+| More lightweight                    | Use =containers=, instead of =VMs= to run errands                |
+| Support rolling upgrade             | Just like =kubectl rollout=                                      |
+| More declarative                    | End users define requirements via =yaml files=                   |
 ** Online Help Usage
 #+BEGIN_EXAMPLE
  kubo@jumper:~$ bosh --help
@@ -322,22 +326,6 @@ License: Code is licensed under [[https://www.dennyzhang.com/wp-content/mit_lice
 <a href="https://github.com/dennyzhang"><img align="bottom"src="https://www.dennyzhang.com/wp-content/uploads/sns/github.png" alt="github" /></a>
 <a href="https://www.dennyzhang.com/slack" target="_blank" rel="nofollow"><img align="bottom" src="https://www.dennyzhang.com/wp-content/uploads/sns/slack.png" alt="slack"/></a>
 #+END_HTML
-* TODO Bosh link                                                   :noexport:
-https://bosh.io/docs/links/
-* TODO Bosh instance process: failing                              :noexport:
-#+BEGIN_EXAMPLE
-Instance                                     Process State  AZ    IPs       VM CID                                   VM Type  Active
-master/13e0201e-3a68-4d21-94d5-a21ad9a86ae1  failing        az-1  30.0.2.2  vm-730f9c4a-729a-48d9-90e1-cb2808296989  medium   true
-worker/3f98cac2-542b-44ba-8d37-2a892970aaf8  running        az-1  30.0.2.3  vm-ceebe79e-4541-4c0d-976a-fbe3058f67fa  medium   true
-#+END_EXAMPLE
-* #  --8<-------------------------- separator ------------------------>8-- :noexport:
-* TODO bosh errands: what will be exported                         :noexport:
-* TODO bosh properties and bosh variables                          :noexport:
-* TODO bosh property: Where is kubernetes_master_port?             :noexport:
-* TODO bosh create-release with given format                       :noexport:
-bosh create-release --tarball=pks-vrops-0.11.0-dev.2.tgz
-
-scp pks-vrops-0.11.0-dev.2.tgz kubo@10.160.215.112:/home/kubo/p-pks-integrations/releases
 * org-mode configuration                                           :noexport:
 #+STARTUP: overview customtime noalign logdone showall
 #+DESCRIPTION:
@@ -363,7 +351,6 @@ scp pks-vrops-0.11.0-dev.2.tgz kubo@10.160.215.112:/home/kubo/p-pks-integrations
 #+SEQ_TODO: TODO HALF ASSIGN | DONE BYPASS DELEGATE CANCELED DEFERRED
 #+LINK_UP:
 #+LINK_HOME:
-* #  --8<-------------------------- separator ------------------------>8-- :noexport:
 * DONE local notes                                                 :noexport:
 ** DONE bosh get manifest for a failed task                        :noexport:
    CLOSED: [2018-10-19 Fri 21:44]
@@ -437,9 +424,22 @@ scp pks-vrops-0.11.0-dev.2.tgz kubo@10.160.215.112:/home/kubo/p-pks-integrations
 
  Succeeded
  #+END_EXAMPLE
-* DONE Login to vm and debug                                       :noexport:
-  CLOSED: [2018-10-19 Fri 21:45]
+* #  --8<-------------------------- separator ------------------------>8-- :noexport:
+* TODO Bosh link                                                   :noexport:
+https://bosh.io/docs/links/
+* TODO Bosh instance process: failing                              :noexport:
+#+BEGIN_EXAMPLE
+Instance                                     Process State  AZ    IPs       VM CID                                   VM Type  Active
+master/13e0201e-3a68-4d21-94d5-a21ad9a86ae1  failing        az-1  30.0.2.2  vm-730f9c4a-729a-48d9-90e1-cb2808296989  medium   true
+worker/3f98cac2-542b-44ba-8d37-2a892970aaf8  running        az-1  30.0.2.3  vm-ceebe79e-4541-4c0d-976a-fbe3058f67fa  medium   true
+#+END_EXAMPLE
+* TODO bosh errands: what will be exported                         :noexport:
+* TODO bosh properties and bosh variables                          :noexport:
+* TODO bosh property: Where is kubernetes_master_port?             :noexport:
+* TODO bosh create-release with given format                       :noexport:
+bosh create-release --tarball=pks-vrops-0.11.0-dev.2.tgz
 
+scp pks-vrops-0.11.0-dev.2.tgz kubo@10.160.215.112:/home/kubo/p-pks-integrations/releases
 * #  --8<-------------------------- separator ------------------------>8-- :noexport:
 * TODO Update errand setting                                       :noexport:
 https://bosh.io/docs/errands/
@@ -1340,22 +1340,11 @@ index be88d59..0000000
 kubernetes-api-url: "<redacted>"
 
 https://ci.vcna.io/teams/oratos-vmware/pipelines/pks-vrops-release/jobs/run-tests/builds/67#L5c00a283:1756
-* #  --8<-------------------------- separator ------------------------>8-- :noexport:
-* TODO Bosh create/delete deployment                               :noexport:
-* DONE bosh property: value: <%= p('cluster-name', <%= spec.deployment %>) %> :noexport:
-  CLOSED: [2019-01-13 Sun 18:16]
-* HALF bosh property: if                                           :noexport:
-https://ultimateguidetobosh.com/properties/
-
-<%= p('some-property') %>
-#  --8<-------------------------- separator ------------------------>8-- :noexport:
-
-<% if_p('some-property') do |value| %>
-optional-config-item: <%= value %>
-<% end %>
-
-service-instance_37434423-5b75-404d-93cd-9255d47a25d9
-k8s1_service-instance_37434423-5b75-404d-93cd-9255d47a25d9
-* #  --8<-------------------------- separator ------------------------>8-- :noexport:
 * TODO bosh release: manifest vs jobs                              :noexport:
 * TODO [#A] Bosh: why we need manifest/ops/file?                   :noexport:
+* #  --8<-------------------------- separator ------------------------>8-- :noexport:
+* TODO consolidate: https://github.com/mariash/bosh-101-release    :noexport:
+* TODO consolidate https://gist.github.com/bgandon/6b0826189b8513624e98475bc2f9a538 :noexport:
+* TODO consolidate: https://www.altoros.com/bosh-cli-cheat-sheet.html :noexport:
+* #  --8<-------------------------- separator ------------------------>8-- :noexport:
+* TODO What bosh cloud check is?                                   :noexport:
