@@ -20,28 +20,28 @@
 - Blog URL: https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4
 - Related posts: [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][Tile CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-chef-A4][Chef CheatSheet]], [[https://github.com/topics/denny-cheatsheets][#denny-cheatsheets]]
 
-File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or star [[https://github.com/DennyZhang/cheatsheet-bosh-A4][this repo]].
+File me [[https://github.com/dennyzhang/cheatsheet.dennyzhang.com/issues][Issues]] or star [[https://github.com/dennyzhang/cheatsheet.dennyzhang.com][this repo]].
 
 [[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][https://raw.githubusercontent.com/dennyzhang/cheatsheet-bosh-A4/master/bosh.jpg]]
 ** Bosh Frequent-Used
-| Name                                   | Command                                                                                  |
-|----------------------------------------+------------------------------------------------------------------------------------------|
-| List tasks                             | =bosh tasks -r=10=, =bosh -d $deployment tasks -ar=                                      |
-| Tail latest bosh task                  | =bosh task -a=, =bosh task -a --debug=                                                   |
-| List deployments and vms               | =bosh deployments=, =bosh -d $deployment vms=                                            |
-| Bosh get current task output           | =bosh -d $deployment task $id --result=                                                  |
-| Bosh get task all detail log           | =bosh -d $deployment task -a --debug=, =bosh -d $deployment task $id --debug=            |
-| Delete a deployment                    | =bosh delete-deployment -d $deployment=, =bosh delete-deployment -d $deployment --force= |
-| Upload release                         | =bosh -n upload-release=, =bosh -n upload-release /tmp/my-release-0.22.0.tgz=            |
-| Get deployment manifest yaml           | =bosh -d $deployment manifest > my.yaml=                                                 |
-| Run bosh deployment from yaml          | =bosh -d $deployment deploy my.yaml=                                                     |
-| Run errand, and avoid deleting the vms | =bosh -n -d $deployment run-errand $errand_name --keep-alive=                            |
-| Delete all or a given bosh deployment  | [[https://github.com/dennyzhang/cheatsheet-bosh-A4/blob/master/cleanup-bosh-deployment.sh][cleanup-bosh-deployment.sh]]                                                               |
-| Delete all or a given bosh release     | [[https://github.com/dennyzhang/cheatsheet-bosh-A4/blob/master/cleanup-bosh-releases.sh][cleanup-bosh-releases.sh]]                                                                 |
-| Common Bosh Releases                   | [[https://github.com/cloudfoundry-incubator/kubo-release][kubo-release]], [[https://github.com/cloudfoundry-incubator/cfcr-etcd-release][cfcr-etcd-release]], [[https://github.com/cloudfoundry-incubator/docker-boshrelease][docker-boshrelease]], [[https://github.com/cloudfoundry-incubator/pxc-release][pxc-release]], [[https://www.youtube.com/watch?v=l91q00Vu2h8][YouTube: BOSH Release]]  |
-| Reference                              | [[https://bosh.io/docs/terminology][Link: terminology]], [[https://github.com/cloudfoundry/bosh][GitHub: cloudfoundry/bosh]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][CheatSheet: Cloudfoundry Tile & OpsManager]] |
-| Reference                              | [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][Bosh CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][Tile CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-uaa-A4][UAA CheatSheet]]                         |
-
+| Name                                     | Command                                                                                  |
+|------------------------------------------+------------------------------------------------------------------------------------------|
+| List tasks                               | =bosh tasks -r=10=, =bosh -d $deployment tasks -ar=                                      |
+| Tail latest bosh task                    | =bosh task -a=, =bosh task -a --debug=                                                   |
+| List deployments and vms                 | =bosh deployments=, =bosh -d $deployment vms=                                            |
+| Bosh get current task output             | =bosh -d $deployment task $id --result=                                                  |
+| Bosh get task all detail log             | =bosh -d $deployment task -a --debug=, =bosh -d $deployment task $id --debug=            |
+| Delete a deployment                      | =bosh delete-deployment -d $deployment=, =bosh delete-deployment -d $deployment --force= |
+| Upload release                           | =bosh -n upload-release=, =bosh -n upload-release /tmp/my-release-0.22.0.tgz=            |
+| Create bosh release tar from source code | [[https://github.com/dennyzhang/cheatsheet-bosh-A4/blob/master/bosh-create-release.md][bosh-create-release.md]]                                                                   |
+| Get deployment manifest yaml             | =bosh -d $deployment manifest > my.yaml=                                                 |
+| Run bosh deployment from yaml            | =bosh -d $deployment deploy my.yaml=                                                     |
+| Run errand, and avoid deleting the vms   | =bosh -n -d $deployment run-errand $errand_name --keep-alive=                            |
+| Delete all or a given bosh deployment    | [[https://github.com/dennyzhang/cheatsheet-bosh-A4/blob/master/cleanup-bosh-deployment.sh][cleanup-bosh-deployment.sh]]                                                               |
+| Delete all or a given bosh release       | [[https://github.com/dennyzhang/cheatsheet-bosh-A4/blob/master/cleanup-bosh-releases.sh][cleanup-bosh-releases.sh]]                                                                 |
+| Common Bosh Releases                     | [[https://github.com/cloudfoundry-incubator/kubo-release][kubo-release]], [[https://github.com/cloudfoundry-incubator/cfcr-etcd-release][cfcr-etcd-release]], [[https://github.com/cloudfoundry-incubator/docker-boshrelease][docker-boshrelease]], [[https://github.com/cloudfoundry-incubator/pxc-release][pxc-release]], [[https://www.youtube.com/watch?v=l91q00Vu2h8][YouTube: BOSH Release]]  |
+| Reference                                | [[https://bosh.io/docs/terminology][Link: terminology]], [[https://github.com/cloudfoundry/bosh][GitHub: cloudfoundry/bosh]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][CheatSheet: Cloudfoundry Tile & OpsManager]] |
+| Reference                                | [[https://cheatsheet.dennyzhang.com/cheatsheet-pks-A4][PKS CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][Bosh CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-tile-A4][Tile CheatSheet]], [[https://cheatsheet.dennyzhang.com/cheatsheet-uaa-A4][UAA CheatSheet]]                         |
 ** Bosh Release
 | Name                   | Command                                                                                 |
 |------------------------+-----------------------------------------------------------------------------------------|
@@ -55,21 +55,22 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 | Reset release          | =bosh reset-release=                                                                    |
 | Reference              | [[https://bosh.io/docs/cli-v2/#release-creation][Link: Release creation]]                                                                  |
 #+BEGIN_HTML
-<a href="https://www.dennyzhang.com"><img align="right" width="185" height="37" src="https://raw.githubusercontent.com/USDevOps/mywechat-slack-group/master/images/dns_small.png"></a>
+<a href="https://cheatsheet.dennyzhang.com"><img align="right" width="185" height="37" src="https://raw.githubusercontent.com/dennyzhang/cheatsheet.dennyzhang.com/master/images/cheatsheet_dns.png"></a>
 #+END_HTML
 ** Bosh Basic
-| Name                      | Command                                             |
-|---------------------------+-----------------------------------------------------|
-| [[https://bosh.io/docs/cli-v2/][bosh]]                      | =apt install bosh-cli=, =/var/vcap/bosh/log=        |
-| List all bosh deployments | =bosh -n deployments=, =bosh -n deployments --json= |
-| Download log files        | =bosh -d $deployment_id logs=                       |
-| Show deployment manifest  | =bosh manifest -d $deployment=                      |
-| bosh config               | =bosh cloud-config=, =bosh configs=                 |
-| List environment          | =bosh env=, =bosh env --json=, =bosh envs=          |
-| List all instances        | =bosh instances=                                    |
-| Get vms per deployment    | =bosh -e $env -d $deployment vms=, =bosh instances= |
-| Cloud consistency check   | =bosh cloud-check -d $deployment=                   |
-| List disks                | =bosh disks -o=                                     |
+| Name                      | Command                                                           |
+|---------------------------+-------------------------------------------------------------------|
+| [[https://bosh.io/docs/cli-v2/][bosh]]                      | =apt install bosh-cli=, =/var/vcap/bosh/log=, =/var/vcap/sys/log= |
+| List all bosh deployments | =bosh -n deployments=, =bosh -n deployments --json=               |
+| Download log files        | =bosh -d $deployment_id logs=                                     |
+| Show deployment manifest  | =bosh manifest -d $deployment=                                    |
+| Show current cloud config | =bosh cloud-config=, =bosh cc=, =bosh configs=                    |
+| Show current CPI config   | =bosh cpi-config=                                                 |
+| List environment          | =bosh env=, =bosh env --json=, =bosh envs=                        |
+| List all instances        | =bosh instances=, =bosh -d $deployment_id instances --ps=         |
+| Get vms per deployment    | =bosh -e $env -d $deployment vms=, =bosh instances=               |
+| Cloud consistency check   | =bosh cloud-check -d $deployment=                                 |
+| List disks                | =bosh disks -o=                                                   |
 ** Bosh Interpolate
 | Name                                   | Command                                                                    |
 |----------------------------------------+----------------------------------------------------------------------------|
@@ -84,13 +85,14 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 | [[https://bosh.io/docs/cli-v2/#manifest][Show bosh manifest]]                | =bosh manifest -d $deployment=       |
 | Run bosh deployment from manifest | =bosh -d $deployment deploy my.yaml= |
 ** Bosh VM
-| Name                       | Command                                                                       |
-|----------------------------+-------------------------------------------------------------------------------|
-| List vms                   | =bosh -d $deployment vms=                                                    |
-| List vms with verbose info | =bosh -d $deployment vms --vitals=                                           |
-| Delete a vm                | =bosh -d $deployment delete-vm <vm-cid>>=                                    |
-| SSH to vm                  | =bosh -e <env> -d $deployment ssh <vm-name>/<GUID>=                          |
-| Run SSH commands           | =bosh -e <env> -d $deployment ssh <vm-name>/<GUID> -c "sudo cat /etc/hosts"= |
+| Name                       | Command                                                            |
+|----------------------------+--------------------------------------------------------------------|
+| List vms                   | =bosh -d $deployment vms=                                          |
+| List vms with verbose info | =bosh -d $deployment vms --vitals=                                 |
+| Delete a vm                | =bosh -d $deployment delete-vm <vm-cid>>=                          |
+| SSH to vm                  | =bosh -d $deployment ssh $vm_name/$GUID=                           |
+| Run SSH commands           | =bosh -d $deployment ssh $vm_name>/$GUID -c "sudo cat /etc/hosts"= |
+| bosh scp                   | =bosh -d $deployment scp /tmp/myfile $vm_name/$GUID:/tmp/=         |
 [[https://cheatsheet.dennyzhang.com/cheatsheet-bosh-A4][https://raw.githubusercontent.com/dennyzhang/cheatsheet-bosh-A4/master/bosh-workflow-intro.jpg]]
 ** Bosh Errand
 | Name                                  | Command                                                                              |
@@ -153,7 +155,7 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 | =Bosh Addon=                   |                                                  |
 | =Bosh Ops manager=             | No related feature: UI to customize your service |
 #+BEGIN_HTML
-<a href="https://www.dennyzhang.com"><img align="right" width="185" height="37" src="https://raw.githubusercontent.com/USDevOps/mywechat-slack-group/master/images/dns_small.png"></a>
+<a href="https://cheatsheet.dennyzhang.com"><img align="right" width="185" height="37" src="https://raw.githubusercontent.com/dennyzhang/cheatsheet.dennyzhang.com/master/images/cheatsheet_dns.png"></a>
 #+END_HTML
 ** Bosh Concepts List
 | Name               | Comment                                                                                   |
@@ -184,10 +186,11 @@ File me [[https://github.com/DennyZhang/cheatsheet-bosh-A4/issues][Issues]] or s
 | List stemcells    | =bosh -n stemcells=                                                                             |
 | Delete a stemcell | =bosh delete-stemcell <stemcell-name>/<stemcell-version>=                                       |
 ** Bosh Monit
-| Name                                | Comment                        |
-|-------------------------------------+--------------------------------|
-| List bosh deployed daemon processes | =sudo su -=, =monit summary=   |
-| Restart a given daemon processes    | =monit restart <process_name>= |
+| Name                                  | Comment                                               |
+|---------------------------------------+-------------------------------------------------------|
+| List bosh deployed daemon processes   | =sudo su -=, =monit summary=, =watch 'monit summary'= |
+| Restart a given daemon processes      | =monit restart <process_name>=                        |
+| Check a given daemon processes status | =monit status <process_name>=                         |
 ** Bosh Tools
 | Name                        | Comment                                                                                         |
 |-----------------------------+-------------------------------------------------------------------------------------------------|
@@ -319,8 +322,8 @@ http://engineering.pivotal.io/post/compiled-releases-for-pipelines/
 
 License: Code is licensed under [[https://www.dennyzhang.com/wp-content/mit_license.txt][MIT License]].
 #+BEGIN_HTML
-<a href="https://www.dennyzhang.com"><img align="right" width="201" height="268" src="https://raw.githubusercontent.com/USDevOps/mywechat-slack-group/master/images/denny_201706.png"></a>
-<a href="https://www.dennyzhang.com"><img align="right" src="https://raw.githubusercontent.com/USDevOps/mywechat-slack-group/master/images/dns_small.png"></a>
+<a href="https://cheatsheet.dennyzhang.com"><img align="right" width="201" height="268" src="https://raw.githubusercontent.com/USDevOps/mywechat-slack-group/master/images/denny_201706.png"></a>
+<a href="https://cheatsheet.dennyzhang.com"><img align="right" src="https://raw.githubusercontent.com/dennyzhang/cheatsheet.dennyzhang.com/master/images/cheatsheet_dns.png"></a>
 
 <a href="https://www.linkedin.com/in/dennyzhang001"><img align="bottom" src="https://www.dennyzhang.com/wp-content/uploads/sns/linkedin.png" alt="linkedin" /></a>
 <a href="https://github.com/dennyzhang"><img align="bottom"src="https://www.dennyzhang.com/wp-content/uploads/sns/github.png" alt="github" /></a>
@@ -1138,7 +1141,6 @@ worker/ad23d5ee-b7ac-4c44-9ffd-bcff76de09c1  running        az-2  30.0.2.4  vm-9
 
 Succeeded
 #+END_EXAMPLE
-* #  --8<-------------------------- separator ------------------------>8-- :noexport:
 * TODO bosh: how we can run a job of ops-file                      :noexport:
 https://github.com/cloudfoundry-incubator/kubo-deployment/blob/develop/manifests/ops-files/enable-podsecuritypolicy.yml
 https://github.com/cloudfoundry-incubator/kubo-release/#deploying-cfcr
@@ -1346,5 +1348,32 @@ https://ci.vcna.io/teams/oratos-vmware/pipelines/pks-vrops-release/jobs/run-test
 * TODO consolidate: https://github.com/mariash/bosh-101-release    :noexport:
 * TODO consolidate https://gist.github.com/bgandon/6b0826189b8513624e98475bc2f9a538 :noexport:
 * TODO consolidate: https://www.altoros.com/bosh-cli-cheat-sheet.html :noexport:
+* TODO consolidate: http://www.productiondown.com/devops/2018/08/02/Bosh-Commands-Cheatsheet.html :noexport:
 * #  --8<-------------------------- separator ------------------------>8-- :noexport:
 * TODO What bosh cloud check is?                                   :noexport:
+* #  --8<-------------------------- separator ------------------------>8-- :noexport:
+* TODO Bosh manifest -> properties -> service_catalog -> global_properties -> ops_files_paths :noexport:
+* HALF bosh jobs vs bosh errands                                   :noexport:
+https://bosh.io/docs/terminology/#errand
+An errand is a short-lived job that can be triggered by an operator any time after the deploy. Examples:
+
+https://bosh.io/docs/jobs/
+Each release job represents a specific chunk of work that the release performs.
+* TODO bosh lifecycle_errands post_deploy                          :noexport:
+https://bosh.io/docs/post-deploy/
+* TODO bosh s3 access key                                          :noexport:
+https://bosh.io/docs/director-configure-blobstore/
+https://bosh.io/docs/s3-release-blobstore/
+https://xfilespro.com/generate-access-secret-key-google-cloud-platform/
+* TODO bosh director protocal                                      :noexport:
+* TODO bosh health chck long-live tcp or peroidical check          :noexport:
+* TODO bosh task: status is done, but errand has failed            :noexport:
+#+BEGIN_EXAMPLE
+150  done   Thu Feb 21 21:46:46 UTC 2019  Thu Feb 21 21:51:07 UTC 2019  pivotal-container-service-7b567eb611b2ec79ab43  service-instance_c19df4d2-5f91-4120-8974-6f9184fe402d  run errand wavefront-proxy-errand from deployment service-instance_c19df4d2-5f91-4120-8974-6f9184fe402d  0 succeeded, 1 errored, 0 canceled
+149  done   Thu Feb 21 21:46:16 UTC 2019  Thu Feb 21 21:46:43 UTC 2019  pivotal-container-service-7b567eb611b2ec79ab43  service-instance_c19df4d2-5f91-4120-8974-6f9184fe402d  run errand apply-addons from deployment service-instance_c19df4d2-5f91-4120-8974-6f9184fe402d            1 succeeded, 0 errored, 0 canceled
+148  done   Thu Feb 21 21:45:45 UTC 2019  Thu Feb 21 21:46:10 UTC 2019  pivotal-container-service-7b567eb611b2ec79ab43  service-instance_c19df4d2-5f91-4120-8974-6f9184fe402d  create deployment                                                                                        /deployments/service-instance_c19df4d2-5f91-4120-8974-6f9184fe402d
+147  done   Thu Feb 21 21:40:50 UTC 2019  Thu Feb 21 21:42:56 UTC 2019  ops_manager                                     service-instance_c19df4d2-5f91-4120-8974-6f9184fe402d  run errand wavefront-proxy-errand from deployment service-instance_c19df4d2-5f91-4120-8974-6f9184fe402d  1 succeeded, 0 errored, 0 canceled
+136  done   Thu Feb 21 21:10:07 UTC 2019  Thu Feb 21 21:14:26 UTC 2019  pivotal-container-service-7b567eb611b2ec79ab43  service-instance_c19df4d2-5f91-4120-8974-6f9184fe402d  run errand wavefront-proxy-errand from deployment service-instance_c19df4d2-5f91-4120-8974-6f9184fe402d  0 succeeded, 1 errored, 0 canceled
+134  done   Thu Feb 21 21:07:46 UTC 2019  Thu Feb 21 21:10:05 UTC 2019  pivotal-container-service-7b567eb611b2ec79ab43  service-instance_c19df4d2-5f91-4120-8974-6f9184fe402d  run errand apply-addons from deployment service-instance_c19df4d2-5f91-4120-8974-6f9184fe402d            1 succeeded, 0 errored, 0 canceled
+#+END_EXAMPLE
+* TODO bosh-notes: https://github.com/cloudfoundry/bosh-notes
