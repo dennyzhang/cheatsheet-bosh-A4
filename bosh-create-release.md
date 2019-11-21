@@ -24,6 +24,8 @@ blobstore:
 EOF
 ```
 
+Link: https://bosh.io/docs/release-blobs/
+
 3. Run bosh command to create release
 
 ```
